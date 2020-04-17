@@ -1,6 +1,6 @@
 import argparse
-from engage import engage, disengage
-from compare import compare, checkhashes
+from .engage import engage, disengage
+from .compare import compare, checkhashes
 
 
 def main():
@@ -42,6 +42,8 @@ def main():
 
     disengage_parser = parser.add_subparsers("disengage", description="", help="")
     disengage_parser.set_defaults(func=checkhashes)
+
+    parser.parse_args()
 
 
 if __name__ == "__main__":
