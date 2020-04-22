@@ -1,4 +1,6 @@
 import argparse
+import textwrap
+
 from .engage import engage, disengage
 from .compare import compare, check_hashes
 
