@@ -1,6 +1,6 @@
 import argparse
 from .engage import engage, disengage
-from .compare import compare, checkhashes
+from .compare import compare, check_hashes
 
 
 def main():
