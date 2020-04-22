@@ -15,7 +15,7 @@ def main():
 
     engage_parser = subparsers.add_parser("engage", description="", help="")
     engage_parser.set_defaults(func=engage)
-    
+
     engage_parser.add_argument(
         '--input_data',
         type=str,
@@ -60,8 +60,8 @@ def main():
         help=textwrap.dedent(""),
         default=None)
 
-    parser.parse_args()
-
+    args = parser.parse_args()
+    args.func(args)
 
 if __name__ == "__main__":
     main()
