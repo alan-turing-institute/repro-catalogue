@@ -2,10 +2,10 @@ import catalogue as ct
 
 
 def compare(args):
+    pass
 
-
-def checkhashes(args):
-
+# def checkhashes(args):
+#     pass
 
 
 def check_hashes(args):
