@@ -11,6 +11,7 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
+    subparsers = parser.add_subparsers()
 
     parser.add_argument(
         '--output_data',
@@ -33,17 +34,17 @@ def main():
         help=textwrap.dedent(""),
         default=None)
 
-    compare_parser = parser.add_subparsers("compare", description="", help="")
+    compare_parser = subparsers.add_parser("engage", description="", help="")
     compare_parser.set_defaults(func=engage)
 
-    checkhashes_parser = parser.add_subparsers("checkhashes", description="", help="")
-    checkhashes_parser.set_defaults(func=disengage)
+    checkhashes_parser = subparsers.add_parser("checkhashes", description="", help="")
+    checkhashes_parser.set_defaults(func=check_hashes)
 
-    engage_parser = parser.add_subparsers("engage", description="", help="")
+    engage_parser = subparsers.add_parser("compare", description="", help="")
     engage_parser.set_defaults(func=compare)
 
-    disengage_parser = parser.add_subparsers("disengage", description="", help="")
-    disengage_parser.set_defaults(func=checkhashes)
+    disengage_parser = subparsers.add_parser("disengage", description="", help="")
+    disengage_parser.set_defaults(func=disengage)
 
     parser.parse_args()
 
