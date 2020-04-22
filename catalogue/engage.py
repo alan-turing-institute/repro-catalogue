@@ -8,7 +8,6 @@ def engage(args):
         except:
             print("Already engaged. To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
-            break
         print("'catalogue engage' succeeded. Proceed with analysis")
 
 
@@ -20,7 +19,6 @@ def disengage(args):
     except FileNotFoundError:
         print("Not currently engaged. To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")
-        break
     hash_dict = ct.construct_dict(args.input_data, args.code, args.output_data, timestamp)
     lock_match, messages = check_against_lock(hash_dict, lock_dict)
     if lock_match:
