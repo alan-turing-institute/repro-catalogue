@@ -1,4 +1,7 @@
+
 import catalogue as ct
+
+from datetime import datetime
 
 
 def git_query():
@@ -31,16 +34,6 @@ def unlock(args):
     pass
 
 
-def construct_dict(args):
-    """
-    Params:
-        input_data, code, output_data, timestamp
-    Returns:
-        dict with hashes of all inputs
-    """
-    pass
-
-
 def check_against_lock():
     """
     Compares two dictionaries (latest hash vs. lock hash)
@@ -51,8 +44,12 @@ def check_against_lock():
     pass
 
 
+def create_timestamp():
+    return datetime.now().strftime("%Y%m%d-%H%M%S")
+
+
 def engage(args):
-    timestamp = ...
+    timestamp = create_timestamp()
     if git_query(args.code):
         try:
             lock(args.input_data, args.code, store, timestamp)
@@ -64,13 +61,13 @@ def engage(args):
 
 
 def disengage(args):
-    timestamp = ...
+    timestamp = create_timestamp()
     try:
         lock_dict = unlock(args.input_data, args.code, store)
     except FileNotFoundError:
         print("Not currently engaged. To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")
-    hash_dict = construct_dict(args.input_data, args.code, args.output_data, timestamp)
+    hash_dict = ct.construct_dict(args.input_data, args.code, args.output_data, timestamp)
     lock_match, messages = check_against_lock(hash_dict, lock_dict)
     if lock_match:
         # add engage timestamp to hash_dict
