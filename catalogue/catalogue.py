@@ -123,7 +123,7 @@ def hash_dir_full(folder, **kwargs):
     return m.digest()
 
 
-def hash_input():
+def hash_input(input_data):
     """
     TODO: IMPLEMENT!
 
@@ -132,7 +132,7 @@ def hash_input():
     pass
 
 
-def hash_output():
+def hash_output(output_data):
     """
     TODO: IMPLEMENT!
 
@@ -142,7 +142,7 @@ def hash_output():
     pass
 
 
-def hash_code():
+def hash_code(code):
     """
     TODO: IMPLEMENT!
 
@@ -176,7 +176,7 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage
     results = {
         "timestamp": {
             mode: timestamp
-        }
+        },
         "input_data": {
             input_data : hash_input(input_data)
         },
@@ -185,7 +185,9 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage
         }
     }
     if output_data is not None:
-        results["output_data"].update({output_data : hash_output(output_data)})
+        results["output_data"] = {}
+        for file in output_data:
+            results["output_data"].update({file : hash_output(file)})
     return results
 
 

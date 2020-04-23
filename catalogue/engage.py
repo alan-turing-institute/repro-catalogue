@@ -51,7 +51,7 @@ def check_against_lock(*args):
         dictionary1, dictionary2
     returns: boolean (lock match), str (messages)
     """
-    pass
+    return False, ""
 
 
 def create_timestamp():
