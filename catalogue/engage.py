@@ -1,10 +1,10 @@
 
-import catalogue as ct
+from . import catalogue as ct
 
 from datetime import datetime
 
 
-def git_query():
+def git_query(*args):
     """
     Checks the git status of the code directory (hence the args.code argument)
     - if clean, returns true
@@ -15,26 +15,26 @@ def git_query():
     pass
 
 
-def lock(args):
+def lock(*args):
     """
     creates .loc file (json structure) (requires hashing inputs)
     Parameters:
-        input_data, code, store (where place file?), timestamp
+        input_data, code, timestamp
     """
     pass
 
 
-def unlock(args):
+def unlock(*args):
     """
     reads .loc file and deletes it
     Parameters:
-        args.input_data, args.code, store (location of file?)
+        args.input_data, args.code
     Returns file contents (dictionary)
     """
     pass
 
 
-def check_against_lock():
+def check_against_lock(*args):
     """
     Compares two dictionaries (latest hash vs. lock hash)
     Paremeters:
@@ -52,7 +52,7 @@ def engage(args):
     timestamp = create_timestamp()
     if git_query(args.code):
         try:
-            lock(args.input_data, args.code, store, timestamp)
+            lock(args.input_data, args.code, timestamp)
         except:
             print("Already engaged. To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
@@ -63,7 +63,7 @@ def engage(args):
 def disengage(args):
     timestamp = create_timestamp()
     try:
-        lock_dict = unlock(args.input_data, args.code, store)
+        lock_dict = unlock(args.input_data, args.code)
     except FileNotFoundError:
         print("Not currently engaged. To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")

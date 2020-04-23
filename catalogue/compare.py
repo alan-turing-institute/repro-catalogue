@@ -1,7 +1,6 @@
-import catalogue as ct
+from . import catalogue as ct
 
-
-def compare(args):
+def compare(*args):
     pass
 
 # def checkhashes(args):

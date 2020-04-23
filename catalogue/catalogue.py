@@ -52,7 +52,7 @@ def modified_walk(folder, subdirs=[], exts=[], ignore_dot_files=True):
     for path, directories, files in os.walk(folder):
         # loop over files in the top directory
         for f in sorted(files):
-            root, ext os.path.splitext(f)[1]
+            root, ext = os.path.splitext(f)[1]
             if not (
                 (ext in ignore_exts) or (
                 ignore_dot_files and root.startswith("."))):
@@ -91,7 +91,7 @@ def hash_dir_by_file(folder, **kwargs):
     '''
     hashes = {}
     for path in modified_walk(
-            folder, **kwargs)
+            folder, **kwargs):
         hashes[path] = hash_file(path).digest()
     return hashes
 
@@ -115,12 +115,12 @@ def hash_dir_full(folder, **kwargs):
     '''
     m = hashlib.sha512()
     for path in sorted(modified_walk(
-            folder, **kwargs))
+        folder, **kwargs)):
         m = hash_file(path, m)
     return m.digest()
 
 
-def construct_dict(args):
+def construct_dict(*args):
     """
     Params:
         input_data, code, output_data, timestamp
@@ -130,7 +130,7 @@ def construct_dict(args):
     pass
 
 
-def get_h():
+def get_h(*args):
     """
     Parameters:
         dictionary wish hashes (output of above function)
@@ -142,7 +142,7 @@ def get_h():
 
 def store_hash(hash_dict, store, timestamp):
     with open(
-            os.path.join(os.path.dirname(store), "{}.json".format(timestamp),
+            os.path.join(os.path.dirname(store), "{}.json".format(timestamp)),
             "w") as f:
         json.dump(hash_dict, f)
 
