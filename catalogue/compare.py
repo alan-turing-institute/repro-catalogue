@@ -7,6 +7,25 @@ def compare(args):
 # def checkhashes(args):
 #     pass
 
+def hash_input():
+    """
+    Hash input data
+    """
+    pass
+
+
+def hash_output():
+    """
+    Hash output data
+    """
+    pass
+
+
+def hash_code():
+    """
+    Hash code files
+    """
+    pass
 
 def check_hashes(args):
     get_h = lambda x: x.values()[0]
@@ -16,7 +35,7 @@ def check_hashes(args):
     differs = []
     if args.input_data:
         try:
-            input1 = get_h(hash_dict["input_data"])
+            input1 = ct.get_h(hash_dict["input_data"])
         except:
             failures.append("input_data")
         if get_h(ct.hash_input(args.input_data)) == input1:
@@ -25,10 +44,10 @@ def check_hashes(args):
             differs.append("input_data")
     if args.code:
         try:
-            code1 = get_h(hash_dict["code"])
+            code1 = ct.get_h(hash_dict["code"])
         except:
             failures.append("code")
-        if get_h(ct.hash_code(args.code)) == code1:
+        if ct.get_h(ct.hash_code(args.code)) == code1:
             matches.append("code")
         else:
             differs.append("code")

@@ -27,11 +27,12 @@ def hash_file(filepath, m=hashlib.sha512()):
             m.update(b)
     return m
 
+
 def modified_walk(folder, subdirs=[], exts=[], ignore_dot_files=True):
     '''
     A wrapper on os.walk() to return a list of paths inside directory "folder"
     that do not meet the ignore criteria.
-    
+
     Parameters
     ----------
     folder : str
@@ -70,7 +71,7 @@ def modified_walk(folder, subdirs=[], exts=[], ignore_dot_files=True):
             )
     return path_list
 
- 
+
 def hash_dir_by_file(folder, **kwargs):
     '''
     Create a dictionary mapping filepaths to hashes. Includes all files
@@ -119,6 +120,26 @@ def hash_dir_full(folder, **kwargs):
     return m.digest()
 
 
+def construct_dict(args):
+    """
+    Params:
+        input_data, code, output_data, timestamp
+    Returns:
+        dict with hashes of all inputs
+    """
+    pass
+
+
+def get_h():
+    """
+    Parameters:
+        dictionary wish hashes (output of above function)
+    Returns:
+        the hash
+    """
+    pass
+
+
 def store_hash(hash_dict, store, timestamp):
     with open(
             os.path.join(os.path.dirname(store), "{}.json".format(timestamp),
@@ -129,5 +150,3 @@ def store_hash(hash_dict, store, timestamp):
 def load_hash(filepath):
     with open(filepath, "r") as f:
         return json.load(f)
-            
-            
