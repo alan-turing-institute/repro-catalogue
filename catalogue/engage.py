@@ -6,18 +6,24 @@ from datetime import datetime
 
 def git_query(*args):
     """
+    TODO: IMPLEMENT!
+
     Checks the git status of the code directory (hence the args.code argument)
     - if clean, returns true
     - if there are uncommitted changes, ask for the users input
         offer to stage and commit all and continues (returning True)
         or to quit (returning False)
     """
-    pass
+    return True
 
 
 def lock(*args):
     """
-    creates .loc file (json structure) (requires hashing inputs)
+    TODO: IMPLEMENT!
+
+    - uses ct.create_dictionary() to process inputs
+    - creates .loc file (json structure)
+
     Parameters:
         input_data, code, timestamp
     """
@@ -26,6 +32,8 @@ def lock(*args):
 
 def unlock(*args):
     """
+    TODO: IMPLEMENT!
+
     reads .loc file and deletes it
     Parameters:
         args.input_data, args.code
@@ -36,6 +44,8 @@ def unlock(*args):
 
 def check_against_lock(*args):
     """
+    TODO: IMPLEMENT!
+
     Compares two dictionaries (latest hash vs. lock hash)
     Paremeters:
         dictionary1, dictionary2
@@ -67,9 +77,15 @@ def disengage(args):
     except FileNotFoundError:
         print("Not currently engaged. To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")
-    hash_dict = ct.construct_dict(args.input_data, args.code, args.output_data, timestamp)
+    hash_dict = ct.construct_dict(
+        timestamp,
+        args.input_data,
+        args.code,
+        args.output_data,
+        mode = "disengage",
+    )
     lock_match, messages = check_against_lock(hash_dict, lock_dict)
     if lock_match:
         # add engage timestamp to hash_dict
         hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]})
-        ct.store_hash(hash_dict)
+        ct.store_hash(hash_dict, timestamp)

@@ -1,30 +1,13 @@
 from . import catalogue as ct
 
 def compare(*args):
+    """
+    TODO: IMPLEMENT!
+    """
     pass
 
 # def checkhashes(args):
 #     pass
-
-def hash_input():
-    """
-    Hash input data
-    """
-    pass
-
-
-def hash_output():
-    """
-    Hash output data
-    """
-    pass
-
-
-def hash_code():
-    """
-    Hash code files
-    """
-    pass
 
 def check_hashes(args):
     get_h = lambda x: x.values()[0]
