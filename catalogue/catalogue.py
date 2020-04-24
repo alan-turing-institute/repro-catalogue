@@ -191,18 +191,6 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage
     return results
 
 
-def get_h(*args):
-    """
-    TODO: IMPLEMENT!
-
-    Parameters:
-        dictionary wish hashes (output of above function)
-    Returns:
-        the hash
-    """
-    pass
-
-
 def store_hash(hash_dict, timestamp):
     with open(
             os.path.join(os.path.dirname(store), "{}.json".format(timestamp)),
