@@ -1,12 +1,13 @@
-import catalogue as ct
+from . import catalogue as ct
 
+def compare(*args):
+    """
+    TODO: IMPLEMENT!
+    """
+    pass
 
-def compare(args):
-
-
-def checkhashes(args):
-
-
+# def checkhashes(args):
+#     pass
 
 def check_hashes(args):
     get_h = lambda x: x.values()[0]
@@ -16,21 +17,19 @@ def check_hashes(args):
     differs = []
     if args.input_data:
         try:
-            input1 = get_h(hash_dict["input_data"])
+            input1 = ct.get_h(hash_dict["input_data"])
         except:
             failures.append("input_data")
-            break
         if get_h(ct.hash_input(args.input_data)) == input1:
             matches.append("input_data")
         else:
             differs.append("input_data")
     if args.code:
         try:
-            code1 = get_h(hash_dict["code"])
+            code1 = ct.get_h(hash_dict["code"])
         except:
             failures.append("code")
-            break
-        if get_h(ct.hash_code(args.code))) == code1:
+        if ct.get_h(ct.hash_code(args.code)) == code1:
             matches.append("code")
         else:
             differs.append("code")
@@ -40,12 +39,12 @@ def check_hashes(args):
         except:
             failures.append("output_data")
         output2 = hash_output(args.output_data)
-        n = min(len(output1, output2)
+        n = min(len(output1, output2))
         for i in range(n):
-                a, b, c = ct.compare_folders(output1[i], output2[i])
-                failures.extend(a)
-                matches.extend(b)
-                differs.extend(c)
+            a, b, c = ct.compare_folders(output1[i], output2[i])
+            failures.extend(a)
+            matches.extend(b)
+            differs.extend(c)
         else:
             differs.append("timestamp")
     return "\n".join(
