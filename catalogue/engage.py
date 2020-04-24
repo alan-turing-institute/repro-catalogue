@@ -2,6 +2,7 @@
 import os
 import json
 import git
+from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 
@@ -42,7 +43,7 @@ def git_query(repo_path, commit_changes=False):
     try:
         repo = git.Repo(repo_path)
     except InvalidGitRepositoryError:
-        raise(InvalidGitRepositoryError, "provided code directory is not a valid git repository")
+        raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 
     if repo.is_dirty():
         if commit_changes:
