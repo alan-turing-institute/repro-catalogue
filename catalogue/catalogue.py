@@ -1,4 +1,5 @@
 import os
+import json
 import hashlib
 
 
@@ -93,9 +94,9 @@ def hash_dir_by_file(folder, **kwargs):
     dict (str : bytes)
     '''
     hashes = {}
-    for path in modified_walk(
-            folder, **kwargs):
-        hashes[path] = hash_file(path).digest()
+    for path in modified_walk(folder, **kwargs):
+        hashes[path] = hash_file(path).hex
+        digest()
     return hashes
 
 
@@ -117,52 +118,73 @@ def hash_dir_full(folder, **kwargs):
     bytes
     '''
     m = hashlib.sha512()
-    for path in sorted(modified_walk(
-        folder, **kwargs)):
+    for path in sorted(modified_walk(folder, **kwargs)):
         m = hash_file(path, m)
-    return m.digest()
+    return m.hexdigest()
 
 
 def hash_input(input_data):
     """
-    TODO: IMPLEMENT!
+    Hash directory with input data.
 
-    Hash input data
+    Parameters
+    ----------
+    input_data: str
+        Path to directory with input data.
+
+    Returns
+    -------
+    str
+        Hash of the directory.
     """
-    pass
+    return hash_dir_full(input_data)
 
 
 def hash_output(output_data):
     """
-    TODO: IMPLEMENT!
+    Hash analysis output files.
 
-    Hash output data
-        - uses hash_dir_by_file()
+    Parameters
+    ----------
+    output_data:
+        Path to output data directory.
+
+    Returns
+    -------
+    dict (str : str)
     """
-    pass
+    return hash_dir_by_file(output_data)
 
 
 def hash_code(code):
     """
-    TODO: IMPLEMENT!
+    Hash directory with code.
 
-    Hash code files
+    Parameters
+    ----------
+    code: str
+        Path to analysis directory.
+
+    Returns
+    -------
+    str
+        Hash of the directory.
     """
-    pass
+    return hash_dir_full(code)
 
 
-def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage"):
+def construct_dict(timestamp, input_data, code, output_data=None, mode="engage"):
     """
     Create dictionary with hashes of input files.
 
     Parameters
     ----------
     timestamp : str
-
+        Datetime.
     input_data : str
-        Path to input data file.
+        Path to input data directory.
     code : str
-        Path to analysis file.
+        Path to analysis directory.
     output_data : str
         Path to analysis results directory.
     mode : str
@@ -191,7 +213,7 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage
     return results
 
 
-def store_hash(hash_dict, timestamp):
+def store_hash(hash_dict, timestamp, store="."):
     with open(
             os.path.join(os.path.dirname(store), "{}.json".format(timestamp)),
             "w") as f:

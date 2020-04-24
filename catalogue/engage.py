@@ -17,17 +17,23 @@ def git_query(*args):
     return True
 
 
-def lock(*args):
+def lock(timestamp, input_data, code):
     """
     TODO: IMPLEMENT!
 
-    - uses ct.create_dictionary() to process inputs
-    - creates .loc file (json structure)
+    Creates dictionary with hashed inputs and saves to file.
 
-    Parameters:
-        input_data, code, timestamp
+    Parameters
+    ----------
+    timestamp : str
+        Datetime.
+    input_data : str
+        Path to input data directory.
+    code : str
+        Path to analysis directory.
     """
-    pass
+    hash_dict = ct.construct_dict(timestamp, input_data, code)
+    ct.store_hash(hash_dict, timestamp)
 
 
 def unlock(*args):
@@ -62,13 +68,11 @@ def engage(args):
     timestamp = create_timestamp()
     if git_query(args.code):
         try:
-            lock(args.input_data, args.code, timestamp)
+            lock(timestamp, args.input_data, args.code)
+            print("'catalogue engage' succeeded. Proceed with analysis")
         except:
             print("Already engaged. To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
-        print("'catalogue engage' succeeded. Proceed with analysis")
-
-
 
 def disengage(args):
     timestamp = create_timestamp()

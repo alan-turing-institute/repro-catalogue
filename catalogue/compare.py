@@ -17,7 +17,7 @@ def check_hashes(args):
     differs = []
     if args.input_data:
         try:
-            input1 = ct.get_h(hash_dict["input_data"])
+            input1 = get_h(hash_dict["input_data"])
         except:
             failures.append("input_data")
         if get_h(ct.hash_input(args.input_data)) == input1:
@@ -26,7 +26,7 @@ def check_hashes(args):
             differs.append("input_data")
     if args.code:
         try:
-            code1 = ct.get_h(hash_dict["code"])
+            code1 = get_h(hash_dict["code"])
         except:
             failures.append("code")
         if ct.get_h(ct.hash_code(args.code)) == code1:
