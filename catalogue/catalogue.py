@@ -40,9 +40,9 @@ def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=Tr
     ----------
     folder : str
         a filepath
-    subdirs : list of str, optional
+    ignore_subdirs : list of str, optional
         a list of subdirectories to ignore. Must include folder in the filepath.
-    exts : list of str, optional
+    ignore_exts : list of str, optional
         a list of file extensions to ignore.
     ignore_dot_files : bool
 
@@ -91,12 +91,11 @@ def hash_dir_by_file(folder, **kwargs):
 
     Returns
     -------
-    dict (str : bytes)
+    dict (str : str)
     '''
     hashes = {}
     for path in modified_walk(folder, **kwargs):
-        hashes[path] = hash_file(path).hex
-        digest()
+        hashes[path] = hash_file(path).hexdigest()
     return hashes
 
 
@@ -115,7 +114,7 @@ def hash_dir_full(folder, **kwargs):
 
     Returns
     -------
-    bytes
+    str
     '''
     m = hashlib.sha512()
     for path in sorted(modified_walk(folder, **kwargs)):
@@ -208,15 +207,14 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode="engage")
     }
     if output_data is not None:
         results["output_data"] = {}
-        for file in output_data:
-            results["output_data"].update({file : hash_output(file)})
+        results["output_data"].update({output_data : hash_output(output_data)})
     return results
 
 
-def store_hash(hash_dict, timestamp, store="."):
-    with open(
-            os.path.join(os.path.dirname(store), "{}.json".format(timestamp)),
-            "w") as f:
+def store_hash(hash_dict, timestamp, store):
+    if not os.path.exists(store):
+        os.makedirs(store)
+    with open(os.path.join(store, "{}.json".format(timestamp)),"w") as f:
         json.dump(hash_dict, f)
 
 

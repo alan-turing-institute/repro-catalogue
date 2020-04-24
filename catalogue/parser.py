@@ -55,8 +55,8 @@ def main():
 
     disengage_parser.add_argument(
         '--output_data',
-        type=list,
-        metavar='output_directories',
+        type=str,
+        metavar='output_data',
         help=textwrap.dedent(""),
         default=None)
 
