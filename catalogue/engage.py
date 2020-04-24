@@ -26,7 +26,7 @@ def git_query(*args):
 
 def lock(timestamp, input_data, code):
     """
-    Create dictionary with hashed inputs and saves to file.
+    Create dictionary with hashed inputs and save to .lock file in CATALOGUE_DIR.
 
     Parameters
     ----------
@@ -46,12 +46,12 @@ def lock(timestamp, input_data, code):
 
 def unlock():
     """
-    TODO: IMPLEMENT!
+    Read .loc file in CATALOGUE_DIR.
 
-    reads .loc file and deletes it
-    Parameters:
-        args.input_data, args.code
-    Returns file contents (dictionary)
+    Returns
+    -------
+    dict: (str : str)
+     File contents.
     """
     return ct.load_hash(CATALOGUE_LOCK_PATH)
 
