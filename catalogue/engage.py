@@ -1,27 +1,71 @@
 
 import os
 import json
+import git
 
 from . import catalogue as ct
 
 from datetime import datetime
 
-
 CATALOGUE_DIR = "catalogue_results"
 CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
 
-
-def git_query(*args):
+def git_query(repo_path, commit_changes=False):
     """
-    TODO: IMPLEMENT!
+    Check status of a git repository
 
-    Checks the git status of the code directory (hence the args.code argument)
+    Checks the git status of the repository on the provided path
     - if clean, returns true
-    - if there are uncommitted changes, ask for the users input
-        offer to stage and commit all and continues (returning True)
-        or to quit (returning False)
+    - if there are uncommitted changes, and the `commit_changes` flag is
+        `True`, ask for the users offer to stage and commit all and continue
+        (returning `True`)
+        otherwise, returns `False`
+
+    If the `commit_changes` flag is `True` and the user accepts the offer
+    to commit changes, a new branch is created with the name
+    `"catalogue-%Y%m%d-%H%M%S"` and all tracked files that have been
+    changed will be staged and committed.
+
+    Parameters:
+    ------------
+    repo_path : str
+        path to the code directory
+    commit_changes : bool
+        boolean indicating if the user should be prompted to stage and commit changes
+        (optional, default is False)
+
+    Returns:
+    ---------
+    Boolean indicating if git directory is clean
     """
-    return True
+
+    try:
+        repo = git.Repo(repo_path)
+    except InvalidGitRepositoryError:
+        raise(InvalidGitRepositoryError, "provided code directory is not a valid git repository")
+
+    if repo.is_dirty():
+        if commit_changes:
+            print("Working directory contains uncommitted changes.")
+            print("Do you want to stage and commit all changes? (y/[n])")
+            user_choice = input().strip().lower()
+            if user_choice == "y" or user_choice == "yes":
+                timestamp = create_timestamp()
+                new_branch = repo.create_head("catalogue-" + timestamp)
+                new_branch.checkout()
+                changed_files = [ item.a_path for item in repo.index.diff(None) ]
+                repo.index.add(changed_files)
+                repo.index.commit("repro-catalogue tool auto commit at " + timestamp)
+                return True
+            elif user_choice == "n" or user_choice == "no" or user_choice == "":
+                return False
+            else:
+                print("Unrecognized response, leaving repository unchaged")
+                return False
+        else:
+            return False
+    else:
+        return True
 
 
 def lock(timestamp, input_data, code):
@@ -116,7 +160,7 @@ def create_timestamp():
 
 def engage(args):
     timestamp = create_timestamp()
-    if git_query(args.code):
+    if git_query(args.code, True):
         try:
             lock(timestamp, args.input_data, args.code)
             print("'catalogue engage' succeeded. Proceed with analysis")
