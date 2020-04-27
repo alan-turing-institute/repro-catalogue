@@ -38,7 +38,7 @@ def main():
         metavar='input_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containint the input data. Default value is data"),
-        default="data")
+        default='data')
 
     engage_parser.add_argument(
         '--code',
@@ -47,7 +47,7 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the code directory." +
                              " The code directory must be a git repository, or must have a parent directory" +
                              " that is a git repository. Default is the current working directory."),
-        default=".")
+        default='.')
 
     checkhashes_parser = subparsers.add_parser("checkhashes", description="", help="")
     checkhashes_parser.set_defaults(func=check_hashes)
@@ -63,7 +63,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
-        default="data)
+        default="data")
 
     disengage_parser.add_argument(
         '--code',
