@@ -6,7 +6,23 @@ from .compare import compare, check_hashes
 
 
 def main():
-    """Main function"""
+    """
+    Main function
+
+    This is the main function that is called when running the tool. The function parses
+    the arguments supplied and calls the appropriate function (`engage`, `disengage`,
+    `checkhashes`, or `compare`). The details of each of these functions is described in
+    the appropriate docstrings.
+
+    engage
+    -------
+    When running in `engage` mode, two options can be set: `--input_data` and `--code`.
+    These arguments should be strings specifing the directories where the input data
+    and code reside, respectively. Defaults are assumed to be `"data"` (relative to the
+    current working directory) for the input data argument, and the current directory
+    for the code. The code argument must be a git repository, or a directory whose
+    parent directory contains a git repository.
+    """
     parser = argparse.ArgumentParser(
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
@@ -20,17 +36,18 @@ def main():
         '--input_data',
         type=str,
         metavar='input_data',
-        help=textwrap.dedent(""),
-        required=True,
-        default=None)
+        help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
+                             " containint the input data. Default value is data"),
+        default="data")
 
     engage_parser.add_argument(
         '--code',
         type=str,
-        metavar='input_data',
-        help=textwrap.dedent(""),
-        required=True,
-        default=None)
+        metavar='code',
+        help=textwrap.dedent("This argument should be the path (full or relative) to the code directory." +
+                             " The code directory must be a git repository, or must have a parent directory" +
+                             " that is a git repository. Default is the current working directory."),
+        default=".")
 
     checkhashes_parser = subparsers.add_parser("checkhashes", description="", help="")
     checkhashes_parser.set_defaults(func=check_hashes)
@@ -46,24 +63,21 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
-        required=True,
-        default=None)
+        default="data)
 
     disengage_parser.add_argument(
         '--code',
         type=str,
-        metavar='input_data',
+        metavar='code',
         help=textwrap.dedent(""),
-        required=True,
-        default=None)
+        default=".")
 
     disengage_parser.add_argument(
         '--output_data',
         type=str,
         metavar='output_data',
         help=textwrap.dedent(""),
-        required=True,
-        default=None)
+        default="results")
 
     args = parser.parse_args()
     args.func(args)

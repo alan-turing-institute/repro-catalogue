@@ -1,7 +1,8 @@
 import os
 import json
 import hashlib
-
+import git
+from git import InvalidGitRepositoryError, RepositoryDirtyError
 
 def hash_file(filepath, m=hashlib.sha512()):
     '''
@@ -155,21 +156,33 @@ def hash_output(output_data):
     return hash_dir_by_file(output_data)
 
 
-def hash_code(code):
+def hash_code(repo_path):
     """
-    Hash directory with code.
+    Get commit digest for current HEAD commit
+
+    Returns the current HEAD commit digest for the code that is run. If the current working
+    directory is not clean, it raises a `RepositoryDirtyError`.
 
     Parameters
     ----------
-    code: str
-        Path to analysis directory.
+    repo_path: str
+        Path to analysis directory git repository.
 
     Returns
     -------
     str
-        Hash of the directory.
+        Git commit digest for the current HEAD commit of the git repository
     """
-    return hash_dir_full(code)
+
+    try:
+        repo = git.Repo(repo_path)
+    except InvalidGitRepositoryError:
+        raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
+
+    if repo.is_dirty():
+        raise RepositoryDirtyError(repo, "git repository contains uncommitted changes")
+
+    return repo.head.commit.hexsha
 
 
 def construct_dict(timestamp, input_data, code, output_data=None, mode="engage"):
