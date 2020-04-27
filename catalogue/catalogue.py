@@ -175,7 +175,7 @@ def hash_code(repo_path):
     """
 
     try:
-        repo = git.Repo(repo_path)
+        repo = git.Repo(repo_path, search_parent_directories=True)
     except InvalidGitRepositoryError:
         raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 

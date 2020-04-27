@@ -41,7 +41,7 @@ def git_query(repo_path, commit_changes=False):
     """
 
     try:
-        repo = git.Repo(repo_path)
+        repo = git.Repo(repo_path, search_parent_directories=True)
     except InvalidGitRepositoryError:
         raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 
@@ -85,7 +85,7 @@ def lock(timestamp, input_data, code):
     assert not os.path.exists(CATALOGUE_LOCK_PATH)
     if not os.path.exists(CATALOGUE_DIR):
         os.makedirs(CATALOGUE_DIR)
-        
+
     hash_dict = ct.construct_dict(timestamp, input_data, code)
     with open(CATALOGUE_LOCK_PATH, "w") as f:
         json.dump(hash_dict, f)
