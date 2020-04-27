@@ -10,14 +10,14 @@ def compare(*args):
 #     pass
 
 def check_hashes(args):
-    get_h = lambda x: x.values()[0]
+    get_h = lambda x: list(x.values())[0]
     hash_dict = ct.load_hash(args.filepath)
     failures = []
     matches = []
     differs = []
     if args.input_data:
         try:
-            input1 = ct.get_h(hash_dict["input_data"])
+            input1 = get_h(hash_dict["input_data"])
         except:
             failures.append("input_data")
         if get_h(ct.hash_input(args.input_data)) == input1:
@@ -26,10 +26,10 @@ def check_hashes(args):
             differs.append("input_data")
     if args.code:
         try:
-            code1 = ct.get_h(hash_dict["code"])
+            code1 = get_h(hash_dict["code"])
         except:
             failures.append("code")
-        if ct.get_h(ct.hash_code(args.code)) == code1:
+        if get_h(ct.hash_code(args.code)) == code1:
             matches.append("code")
         else:
             differs.append("code")
@@ -47,7 +47,7 @@ def check_hashes(args):
             differs.extend(c)
         else:
             differs.append("timestamp")
-    return "\n".join(
+    return "\n".join([
         "results differ in {} places:".format(len(differs)),
         "===========================",
         *differs,
@@ -57,4 +57,4 @@ def check_hashes(args):
         "results could not be compared in {} places:".format(len(failures)),
         "==========================================",
         *failures
-    )
+    ])

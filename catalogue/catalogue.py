@@ -1,6 +1,8 @@
 import os
+import json
 import hashlib
-
+import git
+from git import InvalidGitRepositoryError, RepositoryDirtyError
 
 def hash_file(filepath, m=hashlib.sha512()):
     '''
@@ -39,9 +41,9 @@ def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=Tr
     ----------
     folder : str
         a filepath
-    subdirs : list of str, optional
+    ignore_subdirs : list of str, optional
         a list of subdirectories to ignore. Must include folder in the filepath.
-    exts : list of str, optional
+    ignore_exts : list of str, optional
         a list of file extensions to ignore.
     ignore_dot_files : bool
 
@@ -90,12 +92,11 @@ def hash_dir_by_file(folder, **kwargs):
 
     Returns
     -------
-    dict (str : bytes)
+    dict (str : str)
     '''
     hashes = {}
-    for path in modified_walk(
-            folder, **kwargs):
-        hashes[path] = hash_file(path).digest()
+    for path in modified_walk(folder, **kwargs):
+        hashes[path] = hash_file(path).hexdigest()
     return hashes
 
 
@@ -114,55 +115,88 @@ def hash_dir_full(folder, **kwargs):
 
     Returns
     -------
-    bytes
+    str
     '''
     m = hashlib.sha512()
-    for path in sorted(modified_walk(
-        folder, **kwargs)):
+    for path in sorted(modified_walk(folder, **kwargs)):
         m = hash_file(path, m)
-    return m.digest()
+    return m.hexdigest()
 
 
 def hash_input(input_data):
     """
-    TODO: IMPLEMENT!
+    Hash directory with input data.
 
-    Hash input data
+    Parameters
+    ----------
+    input_data: str
+        Path to directory with input data.
+
+    Returns
+    -------
+    str
+        Hash of the directory.
     """
-    pass
+    return hash_dir_full(input_data)
 
 
 def hash_output(output_data):
     """
-    TODO: IMPLEMENT!
+    Hash analysis output files.
 
-    Hash output data
-        - uses hash_dir_by_file()
+    Parameters
+    ----------
+    output_data:
+        Path to output data directory.
+
+    Returns
+    -------
+    dict (str : str)
     """
-    pass
+    return hash_dir_by_file(output_data)
 
 
-def hash_code(code):
+def hash_code(repo_path):
     """
-    TODO: IMPLEMENT!
+    Get commit digest for current HEAD commit
 
-    Hash code files
+    Returns the current HEAD commit digest for the code that is run. If the current working
+    directory is not clean, it raises a `RepositoryDirtyError`.
+
+    Parameters
+    ----------
+    repo_path: str
+        Path to analysis directory git repository.
+
+    Returns
+    -------
+    str
+        Git commit digest for the current HEAD commit of the git repository
     """
-    pass
+
+    try:
+        repo = git.Repo(repo_path)
+    except InvalidGitRepositoryError:
+        raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
+
+    if repo.is_dirty():
+        raise RepositoryDirtyError(repo, "git repository contains uncommitted changes")
+
+    return repo.head.commit.hexsha
 
 
-def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage"):
+def construct_dict(timestamp, input_data, code, output_data=None, mode="engage"):
     """
     Create dictionary with hashes of input files.
 
     Parameters
     ----------
     timestamp : str
-
+        Datetime.
     input_data : str
-        Path to input data file.
+        Path to input data directory.
     code : str
-        Path to analysis file.
+        Path to analysis directory.
     output_data : str
         Path to analysis results directory.
     mode : str
@@ -186,15 +220,14 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode = "engage
     }
     if output_data is not None:
         results["output_data"] = {}
-        for file in output_data:
-            results["output_data"].update({file : hash_output(file)})
+        results["output_data"].update({output_data : hash_output(output_data)})
     return results
 
 
-def store_hash(hash_dict, timestamp):
-    with open(
-            os.path.join(os.path.dirname(store), "{}.json".format(timestamp)),
-            "w") as f:
+def store_hash(hash_dict, timestamp, store):
+    if not os.path.exists(store):
+        os.makedirs(store)
+    with open(os.path.join(store, "{}.json".format(timestamp)),"w") as f:
         json.dump(hash_dict, f)
 
 
