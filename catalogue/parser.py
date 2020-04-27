@@ -52,8 +52,33 @@ def main():
     checkhashes_parser = subparsers.add_parser("checkhashes", description="", help="")
     checkhashes_parser.set_defaults(func=check_hashes)
 
+    checkhashes_parser.add_argument("--hashes", type=str, metavar="hashes", help="")
+
+    checkhashes_parser.add_argument(
+        '--input_data',
+        type=str,
+        metavar='input_data',
+        help=textwrap.dedent(""),
+        default="data")
+
+    checkhashes_parser.add_argument(
+        '--code',
+        type=str,
+        metavar='code',
+        help=textwrap.dedent(""),
+        default=".")
+
+    checkhashes_parser.add_argument(
+        '--output_data',
+        type=str,
+        metavar='output_data',
+        help=textwrap.dedent(""),
+        default="results")
+
     compare_parser = subparsers.add_parser("compare", description="", help="")
     compare_parser.set_defaults(func=compare)
+
+    compare_parser.add_argument("hashes", type=str, nargs=2, help="")
 
     disengage_parser = subparsers.add_parser("disengage", description="", help="")
     disengage_parser.set_defaults(func=disengage)

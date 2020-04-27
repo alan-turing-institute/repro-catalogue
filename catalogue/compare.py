@@ -1,13 +1,31 @@
 from . import catalogue as ct
+from .engage import create_timestamp
 
-def compare(*args):
+def compare(args):
     """
-    TODO: IMPLEMENT!
+    Compares two hash files
+
+    Compares two hash files, given as input arguments to the command line tool. Prints results
+    on the command line.
     """
-    pass
+
+    hash_dict_1 = ct.load_hash(args.hashes[0])
+    hash_dict_2 = ct.load_hash(args.hashes[1])
+
+    print(compare_hashes(hash_dict_1, hash_dict_2))
 
 def check_hashes(args):
-    pass
+    """
+    Checks hash against results
+
+    Checks the values in a provided hash file with the results from hashing the provided locations
+    (input_data, code, and output_data) in the input arguments. Prints results on the command line
+    """
+
+    hash_dict_1 = ct.load_hash(args.hashes)
+    hash_dict_2 = ct.construct_dict(create_timestamp(), args.input_data, args.code, args.output_data, "disengage")
+
+    print(compare_hashes(hash_dict_1, hash_dict_2))
 
 def compare_hashes(hash_dict_1, hash_dict_2):
     """
