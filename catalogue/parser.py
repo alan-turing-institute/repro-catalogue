@@ -63,21 +63,21 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
-        default=None)
+        default="data)
 
     disengage_parser.add_argument(
         '--code',
         type=str,
-        metavar='input_data',
+        metavar='code',
         help=textwrap.dedent(""),
-        default=None)
+        default=".")
 
     disengage_parser.add_argument(
         '--output_data',
         type=str,
         metavar='output_data',
         help=textwrap.dedent(""),
-        default=None)
+        default="results")
 
     args = parser.parse_args()
     args.func(args)

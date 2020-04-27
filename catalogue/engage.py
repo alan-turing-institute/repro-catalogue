@@ -82,9 +82,11 @@ def lock(timestamp, input_data, code):
     code : str
         Path to analysis directory.
     """
-    hash_dict = ct.construct_dict(timestamp, input_data, code)
+    assert not os.path.exists(CATALOGUE_LOCK_PATH)
     if not os.path.exists(CATALOGUE_DIR):
         os.makedirs(CATALOGUE_DIR)
+        
+    hash_dict = ct.construct_dict(timestamp, input_data, code)
     with open(CATALOGUE_LOCK_PATH, "w") as f:
         json.dump(hash_dict, f)
 
