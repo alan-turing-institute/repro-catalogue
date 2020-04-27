@@ -21,6 +21,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
+        required=True,
         default=None)
 
     engage_parser.add_argument(
@@ -28,6 +29,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
+        required=True,
         default=None)
 
     checkhashes_parser = subparsers.add_parser("checkhashes", description="", help="")
@@ -44,6 +46,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
+        required=True,
         default=None)
 
     disengage_parser.add_argument(
@@ -51,6 +54,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent(""),
+        required=True,
         default=None)
 
     disengage_parser.add_argument(
@@ -58,6 +62,7 @@ def main():
         type=str,
         metavar='output_data',
         help=textwrap.dedent(""),
+        required=True,
         default=None)
 
     args = parser.parse_args()
