@@ -22,6 +22,14 @@ def main():
     current working directory) for the input data argument, and the current directory
     for the code. The code argument must be a git repository, or a directory whose
     parent directory contains a git repository.
+
+    disengage
+    ---------
+    When running in `disengage` mode, three options can be set: `--input_data`, `--code`
+    and `output_data`. The meaning and defaults for `--input_data` and `code` are the
+    same as when in `engage` mode (see above). The `output_data` argument should also
+    be a string, specifying the directory with the analysis results. The default for
+    the `output_data` argument is `"results"` (relative to the current working directory).
     """
     parser = argparse.ArgumentParser(
         description="",
