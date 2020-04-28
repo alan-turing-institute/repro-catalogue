@@ -6,7 +6,7 @@ from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 from .compare import compare_hashes
-from .utils import create_timestamp
+from .utils import create_timestamp, check_paths_exists
 
 CATALOGUE_DIR = "catalogue_results"
 CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
@@ -70,6 +70,8 @@ def git_query(repo_path, commit_changes=False):
 
 
 def engage(args):
+    assert check_paths_exists(args), 'Not all provided filepaths exist.'
+
     if git_query(args.code, True):
         try:
             assert not os.path.exists(CATALOGUE_LOCK_PATH)
@@ -87,6 +89,8 @@ def engage(args):
 
 
 def disengage(args):
+    assert check_paths_exists(args), 'Not all provided filepaths exist.'
+
     timestamp = create_timestamp()
     try:
         lock_dict = ct.load_hash(CATALOGUE_LOCK_PATH)
