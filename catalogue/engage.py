@@ -75,7 +75,7 @@ def engage(args):
     if git_query(args.code, True):
         try:
             assert not os.path.exists(CATALOGUE_LOCK_PATH)
-        except:
+        except AssertionError:
             print("Already engaged (.lock file exists). To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
         else:
