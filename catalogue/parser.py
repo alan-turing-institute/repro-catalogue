@@ -27,7 +27,7 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(dest="command")
 
     engage_parser = subparsers.add_parser("engage", description="", help="")
     engage_parser.set_defaults(func=engage)
