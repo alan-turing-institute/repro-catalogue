@@ -10,9 +10,17 @@ def create_timestamp():
 
 def check_paths_exists(args):
     """
-    Check whether all provided paths to catalogue exist.
+    Check whether all filepaths provided to catalogue exist.
+
+    Parameters:
+    ------------
+    args : obj
+        Command line input arguments (argparse.Namespace).
+
+    Returns:
+    ---------
+    Boolean indicating if all filepaths exist.
     """
-    attributes = vars(args)
-    inputs = [arg for arg in attributes if arg not in ["command", "func"]]
-    path_checks = [os.path.exists(attributes[i]) for i in inputs]
+    paths = [value for key, value in vars(args).items() if key not in ["command", "func"]]
+    path_checks = [os.path.exists(path) for path in paths]
     return all(path_checks)
