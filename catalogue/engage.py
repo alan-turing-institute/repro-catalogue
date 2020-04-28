@@ -69,115 +69,38 @@ def git_query(repo_path, commit_changes=False):
         return True
 
 
-def lock(timestamp, args):
-    """
-    Create dictionary with hashed inputs and save to .lock file in CATALOGUE_DIR.
-
-    Parameters
-    ----------
-    timestamp : str
-        Datetime.
-    args : obj
-        Command line input arguments (argparse.Namespace).
-    """
-    try:
-        assert not os.path.exists(CATALOGUE_LOCK_PATH)
-    except:
-        print("Already engaged. To disengage run 'catalogue disengage...'")
-        print("See 'catalogue disengage --help' for details")
-
-    if not os.path.exists(CATALOGUE_DIR):
-        os.makedirs(CATALOGUE_DIR)
-
-    hash_dict = ct.construct_dict(timestamp, args)
-    with open(CATALOGUE_LOCK_PATH, "w") as f:
-        json.dump(hash_dict, f)
-
-
-def unlock():
-    """
-    Read .loc file in CATALOGUE_DIR.
-
-    Returns
-    -------
-    dict: (str : str)
-        File contents.
-    """
-    return ct.load_hash(CATALOGUE_LOCK_PATH)
-
-
-def check_hashes(dict1, dict2, param):
-    """
-    Compare values (hashes) of dict1[param] and dict2[param].
-
-    Parameters
-    ----------
-    dict1 : dict
-        Dictionary of file/directory hashes.
-    dict2: dict
-        Dictionary of file/directory hashes.
-    param: str
-        Key in both dict1 and dict2, the hash to retrieve.
-
-    Returns
-    -------
-    boolean, str
-    """
-    get_h = lambda x: list(x.values())[0]
-    passed = (get_h(dict1[param]) == get_h(dict2[param]))
-
-    if not passed:
-        return passed, "Hashes of {} failed the check".format(param)
-    elif passed:
-        return passed, "Hashes of {} passed the check".format(param)
-
-
-def check_against_lock(dict1, dict2):
-    """
-    Indicate whether two dictionaries contain same hashes of input_data and code.
-
-    Parameters
-    ----------
-    dict1 : dict
-        Dictionary of file/directory hashes (contains keys: ["code", "input_data"]).
-    dict2: dict
-        Dictionary of file/directory hashes (contains keys: ["code", "input_data"]).
-
-    Returns
-    -------
-    boolean, str
-    """
-    check_input, msg_input = check_hashes(dict1, dict2, "input_data")
-    check_code, msg_code = check_hashes(dict1, dict2, "code")
-
-    return (check_input and check_code), "\n".join([
-        "===========================",
-        "CATALOGUE RESULTS",
-        "===========================",
-        msg_input,
-        msg_code,
-        "==========================="]
-        )
-
-
 def engage(args):
     if git_query(args.code, True):
-        lock(create_timestamp(), args)
-        print("'catalogue engage' succeeded. Proceed with analysis")
+        try:
+            assert not os.path.exists(CATALOGUE_LOCK_PATH)
+        except:
+            print("Already engaged (.lock file exists). To disengage run 'catalogue disengage...'")
+            print("See 'catalogue disengage --help' for details")
+        else:
+            if not os.path.exists(CATALOGUE_DIR):
+                os.makedirs(CATALOGUE_DIR)
+
+            hash_dict = ct.construct_dict(create_timestamp(), args)
+            with open(CATALOGUE_LOCK_PATH, "w") as f:
+                json.dump(hash_dict, f)
+            print("'catalogue engage' succeeded. Proceed with analysis")
 
 
 def disengage(args):
     timestamp = create_timestamp()
     try:
-        lock_dict = unlock()
-    except FileNotFoundError:
-        print("Not currently engaged. To engage run 'catalogue engage...'")
-        print("See 'catalogue engage --help' for details")
-    hash_dict = ct.construct_dict(timestamp, args)
-    lock_match, messages = check_against_lock(hash_dict, lock_dict)
-    if lock_match:
-        # add engage timestamp to hash_dict
-        hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]})
-        ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
+        lock_dict = ct.load_hash(CATALOGUE_LOCK_PATH)
         os.remove(CATALOGUE_LOCK_PATH)
-    print(messages)
+    except FileNotFoundError:
+        print("Not currently engaged (could not find .lock file). To engage run 'catalogue engage...'")
+        print("See 'catalogue engage --help' for details")
+    else:
+        hash_dict = ct.construct_dict(timestamp, args)
+        compare = compare_hashes(hash_dict, lock_dict)
+        # check if 'input_data' and 'code' were in matches
+        match_str = compare.split("places")[2]
+        if 'input_data' in match_str and 'code' in match_str:
+            # add engage timestamp to hash_dict
+            hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]})
+            ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
+        print(compare)
