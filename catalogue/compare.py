@@ -1,5 +1,5 @@
 from . import catalogue as ct
-from .engage import create_timestamp
+from .utils import create_timestamp
 
 def compare(args):
     """
@@ -23,7 +23,7 @@ def check_hashes(args):
     """
 
     hash_dict_1 = ct.load_hash(args.hashes)
-    hash_dict_2 = ct.construct_dict(create_timestamp(), args.input_data, args.code, args.output_data, "disengage")
+    hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 
     print(compare_hashes(hash_dict_1, hash_dict_2))
 
