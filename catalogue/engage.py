@@ -5,7 +5,7 @@ import git
 from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
-from .compare import compare_hashes
+from .compare import compare_hashes, print_comparison
 from .utils import create_timestamp, check_paths_exists
 
 CATALOGUE_DIR = "catalogue_results"
@@ -102,9 +102,9 @@ def disengage(args):
         hash_dict = ct.construct_dict(timestamp, args)
         compare = compare_hashes(hash_dict, lock_dict)
         # check if 'input_data' and 'code' were in matches
-        match_str = compare.split("places")[2]
-        if 'input_data' in match_str and 'code' in match_str:
+        assert "matches" in compare.keys(), "Error in constructing comparison dictionary"
+        if 'input_data' in compare["matches"] and 'code' in compare["matches"]:
             # add engage timestamp to hash_dict
             hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]})
             ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
-        print(compare)
+        print_comparison(compare)

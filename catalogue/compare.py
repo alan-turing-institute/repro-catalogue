@@ -12,7 +12,7 @@ def compare(args):
     hash_dict_1 = ct.load_hash(args.hashes[0])
     hash_dict_2 = ct.load_hash(args.hashes[1])
 
-    print(compare_hashes(hash_dict_1, hash_dict_2))
+    print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
 
 def check_hashes(args):
     """
@@ -25,15 +25,16 @@ def check_hashes(args):
     hash_dict_1 = ct.load_hash(args.hashes)
     hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 
-    print(compare_hashes(hash_dict_1, hash_dict_2))
+    print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
 
 def compare_hashes(hash_dict_1, hash_dict_2):
     """
     Compare two hash dictionaries
 
-    Compare two hash dictionaries. Returns a string summarizing the matches (when two hashes are
-    identical), differences (when a hash has been computed for the same entity twice and they
-    are different), and failures (when an entry only exists in one of the two hash dictionaries).
+    Compare two hash dictionaries. Returns a dictionary mapping a string to a list, which
+    summarizes the matches (when two hashes are identical), differences (when a hash has been
+    computed for the same entity twice and they are different), and failures (when an entry
+    only exists in one of the two hash dictionaries).
 
     Parameters
     ----------
@@ -44,7 +45,7 @@ def compare_hashes(hash_dict_1, hash_dict_2):
 
     Returns
     -------
-    str
+    dict {str: list}
     """
 
     get_h = lambda x: list(x.values())[0]
@@ -94,14 +95,30 @@ def compare_hashes(hash_dict_1, hash_dict_2):
             except KeyError:
                 failures.append(out_file)
 
-    return "\n".join([
-        "results differ in {} places:".format(len(differs)),
-        "===========================",
-        *differs,
-        "results match in {} places:".format(len(matches)),
-        "==========================",
-        *matches,
-        "results could not be compared in {} places:".format(len(failures)),
-        "==========================================",
-        *failures
-    ])
+    return { "matches" : matches, "differs" : differs, "failures" : failures }
+
+def print_comparison(compare_dict):
+    """
+    Print a nicely formatted summary of hash comparisons
+
+    Accepts the dictionary output from `compare_hashes` (mapping a string to a list), no return value.
+    """
+
+    try:
+        matches = compare_dict["matches"]
+        differs = compare_dict["differs"]
+        failures = compare_dict["failures"]
+    except KeyError:
+        raise KeyError("comparison dictionary input to print_comparison is missing a value")
+
+    print("\n".join([
+            "results differ in {} places:".format(len(differs)),
+            "===========================",
+            *differs,
+            "results match in {} places:".format(len(matches)),
+            "==========================",
+            *matches,
+            "results could not be compared in {} places:".format(len(failures)),
+            "==========================================",
+            *failures
+            ]))
