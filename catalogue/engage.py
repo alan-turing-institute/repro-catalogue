@@ -80,7 +80,12 @@ def lock(timestamp, args):
     args : obj
         Command line input arguments (argparse.Namespace).
     """
-    assert not os.path.exists(CATALOGUE_LOCK_PATH)
+    try:
+        assert not os.path.exists(CATALOGUE_LOCK_PATH)
+    except:
+        print("Already engaged. To disengage run 'catalogue disengage...'")
+        print("See 'catalogue disengage --help' for details")
+
     if not os.path.exists(CATALOGUE_DIR):
         os.makedirs(CATALOGUE_DIR)
 
@@ -161,12 +166,8 @@ def create_timestamp():
 
 def engage(args):
     if git_query(args.code, True):
-        try:
-            lock(create_timestamp(), args)
-            print("'catalogue engage' succeeded. Proceed with analysis")
-        except:
-            print("Already engaged. To disengage run 'catalogue disengage...'")
-            print("See 'catalogue disengage --help' for details")
+        lock(create_timestamp(), args)
+        print("'catalogue engage' succeeded. Proceed with analysis")
 
 
 def disengage(args):
