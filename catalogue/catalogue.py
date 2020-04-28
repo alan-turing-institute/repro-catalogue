@@ -189,7 +189,7 @@ def hash_code(repo_path):
     return repo.head.commit.hexsha
 
 
-def construct_dict(timestamp, input_data, code, output_data=None, mode="engage"):
+def construct_dict(timestamp, args):
     """
     Create dictionary with hashes of input files.
 
@@ -197,14 +197,8 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode="engage")
     ----------
     timestamp : str
         Datetime.
-    input_data : str
-        Path to input data directory.
-    code : str
-        Path to analysis directory.
-    output_data : str
-        Path to analysis results directory.
-    mode : str
-        Either of engage/disengage. Indicates what mode catalogue tool is in.
+    args : obj
+        Command line input arguments (argparse.Namespace).
 
     Returns
     -------
@@ -213,18 +207,18 @@ def construct_dict(timestamp, input_data, code, output_data=None, mode="engage")
     """
     results = {
         "timestamp": {
-            mode: timestamp
+            args.command: timestamp
         },
         "input_data": {
-            input_data : hash_input(input_data)
+            args.input_data : hash_input(args.input_data)
         },
         "code": {
-            code : hash_code(code)
+            args.code : hash_code(args.code)
         }
     }
-    if output_data is not None:
+    if hasattr(args, 'output_data'):
         results["output_data"] = {}
-        results["output_data"].update({output_data : hash_output(output_data)})
+        results["output_data"].update({args.output_data : hash_output(args.output_data)})
     return results
 
 

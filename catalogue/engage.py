@@ -69,7 +69,7 @@ def git_query(repo_path, commit_changes=False):
         return True
 
 
-def lock(timestamp, input_data, code):
+def lock(timestamp, args):
     """
     Create dictionary with hashed inputs and save to .lock file in CATALOGUE_DIR.
 
@@ -77,16 +77,14 @@ def lock(timestamp, input_data, code):
     ----------
     timestamp : str
         Datetime.
-    input_data : str
-        Path to input data directory.
-    code : str
-        Path to analysis directory.
+    args : obj
+        Command line input arguments (argparse.Namespace).
     """
     assert not os.path.exists(CATALOGUE_LOCK_PATH)
     if not os.path.exists(CATALOGUE_DIR):
         os.makedirs(CATALOGUE_DIR)
 
-    hash_dict = ct.construct_dict(timestamp, input_data, code)
+    hash_dict = ct.construct_dict(timestamp, args)
     with open(CATALOGUE_LOCK_PATH, "w") as f:
         json.dump(hash_dict, f)
 
@@ -98,7 +96,7 @@ def unlock():
     Returns
     -------
     dict: (str : str)
-     File contents.
+        File contents.
     """
     return ct.load_hash(CATALOGUE_LOCK_PATH)
 
@@ -162,10 +160,9 @@ def create_timestamp():
 
 
 def engage(args):
-    timestamp = create_timestamp()
     if git_query(args.code, True):
         try:
-            lock(timestamp, args.input_data, args.code)
+            lock(create_timestamp(), args)
             print("'catalogue engage' succeeded. Proceed with analysis")
         except:
             print("Already engaged. To disengage run 'catalogue disengage...'")
@@ -179,13 +176,7 @@ def disengage(args):
     except FileNotFoundError:
         print("Not currently engaged. To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")
-    hash_dict = ct.construct_dict(
-        timestamp,
-        args.input_data,
-        args.code,
-        args.output_data,
-        mode = "disengage",
-    )
+    hash_dict = ct.construct_dict(timestamp, args)
     lock_match, messages = check_against_lock(hash_dict, lock_dict)
     if lock_match:
         # add engage timestamp to hash_dict
