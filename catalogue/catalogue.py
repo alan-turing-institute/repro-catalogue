@@ -4,7 +4,7 @@ import hashlib
 import git
 from git import InvalidGitRepositoryError, RepositoryDirtyError
 
-def hash_file(filepath, m=hashlib.sha512()):
+def hash_file(filepath, m=None):
     '''
     Hash the contents of a file
 
@@ -12,13 +12,17 @@ def hash_file(filepath, m=hashlib.sha512()):
     ----------
     filepath : str
         A string pointing to the file you want to hash
-    m : hashlib hash object, optional
+    m : hashlib hash object, optional (default is None to create a new object)
         hash_file updates m with the contents of filepath and returns m
 
     Returns
     -------
     hashlib hash object
     '''
+
+    if m is None:
+        m = hashlib.sha512()
+
     with open(filepath, 'rb') as f:
         # The following construction lets us read f in chunks,
         # instead of loading an arbitrary file in all at once.
