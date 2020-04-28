@@ -2,7 +2,7 @@ import argparse
 import textwrap
 
 from .engage import engage, disengage
-from .compare import compare, check_hashes
+from .compare import compare
 
 
 def main():
@@ -30,6 +30,18 @@ def main():
     same as when in `engage` mode (see above). The `output_data` argument should also
     be a string, specifying the directory with the analysis results. The default for
     the `output_data` argument is `"results"` (relative to the current working directory).
+
+    compare
+    -------
+    The `compare` mode is used to check if two hashes are identical, or if the corrent
+    state of the input, code, and output match the state from a previous run. The
+    `compare` mode accepts either 1 or 2 unnamed input arguments which are strings holding the
+    path of existing json files output from the code. If 2 inputs are given, `compare` checks the
+    two inputs, while if 1 input is given that input is compared to the current state.
+    If 1 input is given, the usual flags for input, code, and output paths apply.
+
+    Note that if `compare` mode is used with 1 input, any use of flags to set data or code
+    paths must come before the hash file due to how arguments are parsed.
     """
     parser = argparse.ArgumentParser(
         description="",
@@ -71,15 +83,10 @@ def main():
     )
     engage_parser.set_defaults(func=engage)
 
-    checkhashes_parser = subparsers.add_parser(
-        "checkhashes", parents=[common_parser, output_parser], description="", help=""
-    )
-    checkhashes_parser.set_defaults(func=check_hashes)
-    checkhashes_parser.add_argument("--hashes", type=str, metavar="hashes", help="")
-
-    compare_parser = subparsers.add_parser("compare", description="", help="")
+    compare_parser = subparsers.add_parser("compare", parents=[common_parser, output_parser],
+                                           description="", help="")
     compare_parser.set_defaults(func=compare)
-    compare_parser.add_argument("hashes", type=str, nargs=2, help="")
+    compare_parser.add_argument("hashes", type=str, nargs='+', help="")
 
     disengage_parser = subparsers.add_parser(
         "disengage", parents=[common_parser, output_parser], description="", help=""

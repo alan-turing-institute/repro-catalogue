@@ -9,21 +9,13 @@ def compare(args):
     on the command line.
     """
 
+    assert len(args.hashes) == 1 or len(args.hashes) == 2, "compare can only accept 1 or 2 hash files"
+
     hash_dict_1 = ct.load_hash(args.hashes[0])
-    hash_dict_2 = ct.load_hash(args.hashes[1])
-
-    print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
-
-def check_hashes(args):
-    """
-    Checks hash against results
-
-    Checks the values in a provided hash file with the results from hashing the provided locations
-    (input_data, code, and output_data) in the input arguments. Prints results on the command line
-    """
-
-    hash_dict_1 = ct.load_hash(args.hashes)
-    hash_dict_2 = ct.construct_dict(create_timestamp(), args)
+    if len(args.hashes) == 2:
+        hash_dict_2 = ct.load_hash(args.hashes[1])
+    else:
+        hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 
     print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
 
