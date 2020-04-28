@@ -42,7 +42,7 @@ def main():
         type=str,
         metavar='input_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
-                             " containint the input data. Default value is data"),
+                             " containing the input data. Default value is data."),
         default='data')
 
     common_parser.add_argument(
@@ -59,7 +59,8 @@ def main():
         '--output_data',
         type=str,
         metavar='output_data',
-        help=textwrap.dedent(""),
+        help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
+                             " containing the analysis output data. Default value is results."),
         default="results")
 
     # create subparsers
