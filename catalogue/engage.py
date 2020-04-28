@@ -5,8 +5,8 @@ import git
 from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
-
-from datetime import datetime
+from .compare import compare_hashes
+from .utils import create_timestamp
 
 CATALOGUE_DIR = "catalogue_results"
 CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
@@ -158,10 +158,6 @@ def check_against_lock(dict1, dict2):
         msg_code,
         "==========================="]
         )
-
-
-def create_timestamp():
-    return datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
 def engage(args):
