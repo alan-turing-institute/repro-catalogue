@@ -29,6 +29,8 @@ To ensure reproducibility of any scientific results we need to reliably record:
 
 To aid reproducibility, `catalogue` provides a command line interface for recording a hash value of the dataset that was used and the outputs that were produced in an analysis. It also saves the latest git commit hash of the code that was run to do the analysis.
 
+Hash functions map arbitrary sized data to a fixed length value. The mapping is deterministic and the generated hash values are practically unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. As such comparing hash values is a quick way to check whether two datasets are the same.
+
 ## Installation
 
 ```{bash}
@@ -261,7 +263,9 @@ results could not be compared in *1* places:
 results/latest_results/summary.text
 ```
 
-Of course this is what we *want*. We might find that our `output.csv` file *had* changed, and these hashes alone would do nothing to help us recover TIMESTAMP4 version, but they are enough to inform us of the problem, and importantly they do this without us having to permanently store the output of every analysis we run.
+Of course this is what we *want*.
+
+Alternatively, we might find that our `output.csv` file *had* changed. In that case `catalogue` would inform us of the problem without us having to permanently store the output of every analysis we run. The hashes alone would not be enough to recover the original TIMESTAMP4 version. But since we have recorded the timestamp, that information can help us track down the data version, and the git commit digest tells us exactly what version of the code is used, making it easier to try and reproduce those results should we wish to do so.
 
 ### Share outputs
 
@@ -270,7 +274,7 @@ We can then send a zip file of the results to a colleague along with the hash js
 They can rerun the analysis and use `catalogue` to check that the json they received is the same as their state:
 
 ```{bash}
-catalogue compare --hashes TIMESTAMP4.json
+catalogue compare TIMESTAMP4.json
 ```
 
 ## FAQs
