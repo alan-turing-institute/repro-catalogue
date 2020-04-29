@@ -29,7 +29,7 @@ To ensure reproducibility of any scientific results we need to reliably record:
 
 To aid reproducibility, `catalogue` provides a command line interface for recording a hash value of the dataset that was used and the outputs that were produced in an analysis. It also saves the latest git commit hash of the code that was run to do the analysis.
 
-Hash functions map arbitrary sized data to a fixed length value. The mapping is deterministic and the generated hash values are practically unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. As such comparing hash values is a quick way to check whether two datasets are the same.
+Hash functions map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
 
 ## Installation
 
