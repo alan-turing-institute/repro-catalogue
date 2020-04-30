@@ -147,10 +147,22 @@ def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash):
         }
 
 
-def test_store_hash():
+def test_store_hash(tmpdir):
 
-    # TODO
-    pass
+    timestamp = "TIMESTAMP"
+    hash_dict = {"hello": "world"}
+    store = "."
+
+    # save to temporary file
+    file = tmpdir.join('{}.json'.format(timestamp))
+    ct.store_hash(hash_dict, timestamp, tmpdir.strpath)
+    assert file.read() == '{"hello": "world"}'
+
+    # not all inputs provided
+    with pytest.raises(TypeError):
+        ct.store_hash()
+    with pytest.raises(TypeError):
+        ct.store_hash(hash_dict, timestamp)
 
 
 def test_load_hash(fixture1, fixture2):

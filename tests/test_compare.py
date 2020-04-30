@@ -6,11 +6,6 @@ import catalogue.catalogue as ct
 import catalogue.compare as comp
 
 
-def test_compare():
-    pass
-
-
-
 def test_compare_hashes(fixture1, fixture2):
 
     # dict1 contains timestamp, input_data, code but is missing output_data
