@@ -1,6 +1,7 @@
 
 import os
 import git
+import argparse
 import hashlib
 import pytest
 
@@ -29,3 +30,12 @@ def git_hash():
     """Git commit digest for the current HEAD commit of the git repository"""
     repo = git.Repo(".", search_parent_directories=True)
     return repo.head.commit.hexsha
+
+@pytest.fixture
+def test_args(fixtures_dir):
+    args = argparse.Namespace(
+        command = "engage",
+        input_data = fixtures_dir,
+        code = ".",
+    )
+    return args

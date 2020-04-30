@@ -1,10 +1,8 @@
 
 import os
 import git
-import filecmp
 import hashlib
 import pytest
-import argparse
 
 import catalogue.catalogue as ct
 
@@ -117,25 +115,17 @@ def test_hash_code(git_hash):
     assert ct.hash_code(".") == git_hash
 
 
-def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash):
+def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash, test_args):
 
     timestamp = "TIMESTAMP"
-    command = "engage"
-    code = "."
-    args = argparse.Namespace(
-        command = command,
-        input_data = fixtures_dir,
-        code = code
-    )
-    hash_dict_1 = ct.construct_dict(timestamp, args)
-
-    args.output_data = fixtures_dir
-    hash_dict_2 = ct.construct_dict(timestamp, args)
+    hash_dict_1 = ct.construct_dict(timestamp, test_args)
+    test_args.output_data = fixtures_dir
+    hash_dict_2 = ct.construct_dict(timestamp, test_args)
 
     for hash_dict in [hash_dict_1, hash_dict_2]:
-        assert hash_dict["timestamp"] == {command: timestamp}
+        assert hash_dict["timestamp"] == {"engage": timestamp}
         assert hash_dict["input_data"] == {fixtures_dir: ct.hash_input(fixtures_dir)}
-        assert hash_dict["code"] == {code: git_hash}
+        assert hash_dict["code"] == {".": git_hash}
 
     assert "output_data" not in hash_dict_1.keys()
 
