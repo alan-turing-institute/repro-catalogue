@@ -1,5 +1,7 @@
 import os
 import json
+import csv
+from itertools import chain
 import hashlib
 import git
 from git import InvalidGitRepositoryError, RepositoryDirtyError
@@ -246,3 +248,117 @@ def store_hash(hash_dict, timestamp, store):
 def load_hash(filepath):
     with open(filepath, "r") as f:
         return json.load(f)
+
+def save_csv(hash_dict, timestamp, store):
+    """
+    Save hash information to CSV file
+
+    Dumps the relevant hash information into a line in a CSV file. If the file does not
+    exist, a new file is created. If the file exists, it appends the record to the existing
+    file as long as the header information is consistent with the desired output format.
+
+    Parameters
+    ----------
+    hash_dict: dict { str: dict }
+        hash dictionary after completing analysis
+    timestamp: str
+        timestamp (will be used as an id for this run)
+    store: str
+        path to CSV file where
+
+    Returns
+    -------
+    None
+    """
+
+    headers = ["id" ,"disngage", "engage", "input_data", "input_hash",
+               "code", "code_hash", "output_data", "output_file1", "output_hash1"]
+
+    os.makedirs(os.path.dirname(store), exist_ok=True)
+
+    try:
+        needs_header = False
+        with open(store, 'r') as f:
+            line = f.readline().strip().split(",")
+            print(line)
+            assert line == headers, "Existing CSV file header is not formatted correctly"
+    except FileNotFoundError:
+        needs_header = True
+    finally:
+        with open(store, 'a') as f:
+            fwriter = csv.writer(f)
+            if needs_header:
+                fwriter.writerow(headers)
+            output_key = list(hash_dict["output_data"].keys())[0]
+            fwriter.writerow([timestamp, hash_dict["timestamp"]["disengage"], hash_dict["timestamp"]["engage"]] +
+                        list(hash_dict["input_data"].keys()) + list(hash_dict["input_data"].values()) +
+                        list(hash_dict["code"].keys())       + list(hash_dict["code"].values()) +
+                        [ output_key ] +
+                        list(chain.from_iterable((i, j) for (i, j) in zip(hash_dict["output_data"][output_key].keys(),
+                                                                          hash_dict["output_data"][output_key].values()))))
+
+def load_csv(filepath, timestamp):
+    """
+    Load hashes from a specific time stamp from a CSV file
+
+    Load hash information from a CSV file from a specific time stamp. Returns a hash
+    dictionary of the standard form outlined above.
+
+    The timestamp must be a 15 character timestamp string. If the specific entry is not found
+    in the CSV file, an EOFError is thrown. Also performs a number of checks of the length
+    of the existing record, and confirms that the timestamps and hashes are of the correct
+    length.
+
+    Parameters
+    ----------
+    filepath : str
+        path to CSV file to be loaded
+    timestamp : str
+        timestamp of desired analysis to be loaded. Must be a 15 character string of the form
+        "%Y%m%d-%H%M%S"
+
+    Returns
+    -------
+    dict { str : dict }
+    """
+
+    assert isinstance(timestamp, str)
+    assert len(timestamp) == 15, "bad format for timestamp"
+
+    found_record = None
+
+    with open(filepath, "r") as f:
+        freader = csv.reader(f)
+        for line in freader:
+            if line[0] == timestamp:
+                found_record = list(line)
+                break
+
+    if found_record is None:
+        raise EOFError("Unable to find desired record in {}".format(filepath))
+
+    assert len(found_record) >= 9, "bad length for record {} in {}".format(timestamp, filepath)
+    assert len(found_record) % 2 == 0, "bad length for record {} in {}".format(timestamp, filepath)
+    for i in range(3):
+        assert len(found_record[i]) == 15
+    for i in [4] + list(range(9, len(found_record), 2)):
+        assert len(found_record[i]) == 128
+    assert len(found_record[6]) == 40
+
+    result = {
+        "timestamp": {
+            "disengage": found_record[1],
+            "engage" : found_record[2]
+        },
+        "input_data": {
+            found_record[3] : found_record[4]
+        },
+        "code": {
+            found_record[5] : found_record[6]
+        },
+        "output_data": {
+            found_record[7]: { found_record[i]: found_record[i + 1] for i in range(8,len(found_record), 2)}
+        }
+    }
+
+    return result
