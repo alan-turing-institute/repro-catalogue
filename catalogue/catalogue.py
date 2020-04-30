@@ -98,6 +98,8 @@ def hash_dir_by_file(folder, **kwargs):
     -------
     dict (str : str)
     '''
+    assert os.path.exists(folder), "Path {} does not exist".format(folder)
+    
     hashes = {}
     for path in modified_walk(folder, **kwargs):
         hashes[path] = hash_file(path).hexdigest()
@@ -121,6 +123,8 @@ def hash_dir_full(folder, **kwargs):
     -------
     str
     '''
+    assert os.path.exists(folder), "Path {} does not exist".format(folder)
+
     m = hashlib.sha512()
     for path in sorted(modified_walk(folder, **kwargs)):
         m = hash_file(path, m)

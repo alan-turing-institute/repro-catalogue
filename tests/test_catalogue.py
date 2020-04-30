@@ -48,7 +48,7 @@ def test_hash_dir_by_file(fixtures_dir, fixture1, empty_hash):
     # input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_dir_by_file()
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(AssertionError):
         ct.hash_dir_by_file("abc")
 
 
@@ -65,7 +65,7 @@ def test_hash_dir_full(fixtures_dir, fixture1, empty_hash):
     # input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_dir_full()
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(AssertionError):
         ct.hash_dir_full("abc")
 
 
@@ -114,7 +114,7 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
 
 def test_hash_code():
 
-    git_hash = ct.hash_code()
+    git_hash = ct.hash_code(".")
     repo = git.Repo(".", search_parent_directories=True)
     assert git_hash == repo.head.commit.hexsha
 
