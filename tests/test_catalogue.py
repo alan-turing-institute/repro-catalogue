@@ -138,9 +138,12 @@ def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash):
         assert hash_dict["code"] == {code: git_hash}
 
     assert "output_data" not in hash_dict_1.keys()
+
     assert hash_dict_2["output_data"] == {
-        fixture1: ct.hash_file(fixture1),
-        fixture2: ct.hash_file(fixture2)
+        fixtures_dir: {
+            fixture1: ct.hash_file(fixture1).hexdigest(),
+            fixture2: ct.hash_file(fixture2).hexdigest()
+            }
         }
 
 
