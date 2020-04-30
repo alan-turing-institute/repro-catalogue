@@ -105,6 +105,6 @@ def disengage(args):
         assert "matches" in compare.keys(), "Error in constructing comparison dictionary"
         if 'input_data' in compare["matches"] and 'code' in compare["matches"]:
             # add engage timestamp to hash_dict
-            hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]})
+            hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]["engage"]})
             ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
         print_comparison(compare)
