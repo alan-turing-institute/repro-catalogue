@@ -84,7 +84,7 @@ def test_hash_input(fixtures_dir, fixture1, empty_hash):
     # input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_input()
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(AssertionError):
         ct.hash_input("abc")
 
 
@@ -108,7 +108,7 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
     # input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_output()
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(AssertionError):
         ct.hash_output("abc")
 
 
