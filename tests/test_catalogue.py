@@ -108,34 +108,40 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
     # input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_output()
-    # with pytest.raises(AssertionError):
-    #     ct.hash_output("abc")
+    with pytest.raises(AssertionError):
+        ct.hash_output("abc")
 
 
-def test_hash_code():
+def test_hash_code(git_hash):
 
-    git_hash = ct.hash_code(".")
-    repo = git.Repo(".", search_parent_directories=True)
-    assert git_hash == repo.head.commit.hexsha
+    assert ct.hash_code(".") == git_hash
 
 
-def test_construct_dir(fixtures_dir):
+def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash):
 
-    # TODO
+    timestamp = "TIMESTAMP"
+    command = "engage"
+    code = "."
+    args = argparse.Namespace(
+        command = command,
+        input_data = fixtures_dir,
+        code = code
+    )
+    hash_dict_1 = ct.construct_dict(timestamp, args)
 
-    # args = argparse.Namespace(
-    #     command = "engage",
-    #     input_data = fixtures_dir,
-    #     code = "."
-    # )
-    #
-    # hash_dict = ct.construct_dict("TIMESTAMP", args)
-    # assert type(hash_dict) == dict
-    #
-    # keys = ["timestamp", "input_data", "code"]
-    # assert sorted(hash_dict.keys()) == sorted(keys)
+    args.output_data = fixtures_dir
+    hash_dict_2 = ct.construct_dict(timestamp, args)
 
-    pass
+    for hash_dict in [hash_dict_1, hash_dict_2]:
+        assert hash_dict["timestamp"] == {command: timestamp}
+        assert hash_dict["input_data"] == {fixtures_dir: ct.hash_input(fixtures_dir)}
+        assert hash_dict["code"] == {code: git_hash}
+
+    assert "output_data" not in hash_dict_1.keys()
+    assert hash_dict_2["output_data"] == {
+        fixture1: ct.hash_file(fixture1),
+        fixture2: ct.hash_file(fixture2)
+        }
 
 
 def test_store_hash():

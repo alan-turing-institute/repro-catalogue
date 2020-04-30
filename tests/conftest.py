@@ -1,5 +1,6 @@
 
 import os
+import git
 import hashlib
 import pytest
 
@@ -22,3 +23,9 @@ def fixture2():
 def empty_hash():
     """Hash produced if no input is provided"""
     return hashlib.sha512().hexdigest()
+
+@pytest.fixture
+def git_hash():
+    """Git commit digest for the current HEAD commit of the git repository"""
+    repo = git.Repo(".", search_parent_directories=True)
+    return repo.head.commit.hexsha
