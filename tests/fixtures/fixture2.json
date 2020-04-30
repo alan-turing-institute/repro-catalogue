@@ -1,1 +1,17 @@
-{"foo": 1234}
+{"timestamp": {
+    "disengage": "20200428-141757",
+    "engage": "20200428-141753"
+      },
+  "input_data":  {
+    "data": "abc"
+  },
+  "code": {
+    "code": "xyz"
+  },
+  "output_data": {
+    "results": {
+      "results/output.csv": "efg",
+       "results/output2.csv": "jkl"
+     }
+   }
+ }
