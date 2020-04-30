@@ -99,7 +99,7 @@ def hash_dir_by_file(folder, **kwargs):
     dict (str : str)
     '''
     assert os.path.exists(folder), "Path {} does not exist".format(folder)
-    
+
     hashes = {}
     for path in modified_walk(folder, **kwargs):
         hashes[path] = hash_file(path).hexdigest()
@@ -145,8 +145,10 @@ def hash_input(input_data):
     str
         Hash of the directory.
     """
-    return hash_dir_full(input_data)
-
+    if os.path.isdir(input_data):
+        return hash_dir_full(input_data)
+    elif os.path.isfile(input_data):
+        return hash_file(input_data).hexdigest()
 
 def hash_output(output_data):
     """
@@ -161,8 +163,10 @@ def hash_output(output_data):
     -------
     dict (str : str)
     """
-    return hash_dir_by_file(output_data)
-
+    if os.path.isdir(output_data):
+        return hash_dir_by_file(output_data)
+    elif os.path.isfile(output_data):
+        return {output_data: hash_file(output_data).hexdigest()}
 
 def hash_code(repo_path):
     """
