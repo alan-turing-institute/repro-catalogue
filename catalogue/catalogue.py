@@ -151,6 +151,8 @@ def hash_input(input_data):
         return hash_dir_full(input_data)
     elif os.path.isfile(input_data):
         return hash_file(input_data).hexdigest()
+    else:
+        raise AssertionError("Provided input {} is not a file or directory".format(input_data))
 
 def hash_output(output_data):
     """
@@ -169,6 +171,8 @@ def hash_output(output_data):
         return hash_dir_by_file(output_data)
     elif os.path.isfile(output_data):
         return {output_data: hash_file(output_data).hexdigest()}
+    else:
+        raise AssertionError("Provided input {} is not a file or directory".format(output_data))
 
 def hash_code(repo_path):
     """
