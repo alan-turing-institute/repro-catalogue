@@ -1,5 +1,8 @@
+import os
 from . import catalogue as ct
 from .utils import create_timestamp
+
+import catalogue.engage
 
 def compare(args):
     """
@@ -11,9 +14,16 @@ def compare(args):
 
     assert len(args.hashes) == 1 or len(args.hashes) == 2, "compare can only accept 1 or 2 hash files"
 
-    hash_dict_1 = ct.load_hash(args.hashes[0])
+    if args.csv is None:
+        hash_dict_1 = ct.load_hash(args.hashes[0])
+    else:
+        hash_dict_1 = ct.load_csv(os.path.join(catalogue.engage.CATALOGUE_DIR, args.csv), args.hashes[0])
+
     if len(args.hashes) == 2:
-        hash_dict_2 = ct.load_hash(args.hashes[1])
+        if args.csv is None:
+            hash_dict_2 = ct.load_hash(args.hashes[1])
+        else:
+            hash_dict_2 = ct.load_csv(os.path.join(catalogue.engage.CATALOGUE_DIR, args.csv), args.hashes[1])
     else:
         hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 
