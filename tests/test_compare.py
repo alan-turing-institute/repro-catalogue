@@ -16,7 +16,8 @@ def test_compare(fixture1, fixture2, capsys, test_args):
 
     # provide valid file paths for comparison
     args = argparse.Namespace(
-        hashes = [fixture1, fixture2]
+        hashes = [fixture1, fixture2],
+        csv = None
     )
     compare(args)
 

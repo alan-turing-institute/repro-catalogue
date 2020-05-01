@@ -55,5 +55,6 @@ def test_args(git_repo):
         command = "engage",
         input_data = os.path.join(git_repo, "data"),
         code = git_repo,
+        csv = None
     )
     return args

@@ -6,9 +6,8 @@ from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 from .compare import compare_hashes, print_comparison
-from .utils import create_timestamp, check_paths_exists
+from .utils import create_timestamp, check_paths_exists, CATALOGUE_DIR
 
-CATALOGUE_DIR = "catalogue_results"
 CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
 
 def git_query(repo_path, commit_changes=False):
