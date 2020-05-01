@@ -95,13 +95,13 @@ If we choose to proceed `catalogue` will stage and commit all changes in the cod
 //catalogue_results/.lock
 {
 "timestamp" : {
-    "engage": <timestamp (of catalogue engage)>
+    "engage": "<timestamp (of catalogue engage)>"
   },
 "input_data": {
-     <data_directory> : <hash of directory>
+     "<data_directory>" : "<hash of directory>"
    },
 "code" : {
-     <code_directory>: <latest git commit hash>
+     "<code_directory>": "<latest git commit hash>"
      }
 }
 ```
@@ -123,21 +123,21 @@ This checks that the `input_data` and `code` hashes match the hashes in `.lock` 
 // catalogue_results/TIMESTAMP.json
 {
 "timestamp" : {
-     "engage": <timestamp (of .lock)>,
-     "disengage": <timestamp (new)>
+     "engage": "<timestamp (of .lock)>",
+     "disengage": "<timestamp (new)>"
    },
 "input_data": {
-     <data directory>: <hash of directory>
+     "<data directory>": "<hash of directory>"
    },
 "output_data": {
-       <results directory>:{
-           <output file 1>: <hash of file>,
-           <output file 2>: <hash of file>,
+       "<results directory>":{
+           "<output file 1>": "<hash of file>",
+           "<output file 2>": "<hash of file>",
            ...
            }
      },
 "code" : {
-     <code directory>: <git commit hash>
+     "<code directory>": "<git commit hash>"
      }
 }
 ```
@@ -215,21 +215,21 @@ This will produce the following file:
 // catalogue_results/TIMESTAMP5.json
 {
 "timestamp" : {
-     "engage": <timestamp (of .lock)>,
-     "disengage": <timestamp (new)>
+     "engage": "<timestamp (of .lock)>",
+     "disengage": "<timestamp (new)>"
    },
 "input_data": {
-     "latest_data" : <hash of directory>
+     "latest_data" : "<hash of directory>"
    },
 "output_data": {
        "results/latest results":{
-           "summary.txt": <hash of file>,
-           "output.csv": <hash of file>,
-           "metadata.json": <hash of file>
+           "summary.txt": "<hash of file>",
+           "output.csv": "<hash of file>",
+           "metadata.json": "<hash of file>"
            }
      },
 "code" : {
-     "latest_code": <git commit hash>
+     "latest_code": "<git commit hash>"
      }
 }
 ```
