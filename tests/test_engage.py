@@ -3,30 +3,40 @@ import os
 import glob
 import pytest
 
-import catalogue.engage as ct_eng
+from catalogue.engage import engage, disengage
 
 def test_engage(test_args, fixtures_dir, capsys):
 
     # engage
-    ct_eng.engage(test_args)
+    engage(test_args)
     assert os.path.exists(os.path.join("catalogue_results", ".lock"))
 
     # already engaged
-    ct_eng.engage(test_args)
+    engage(test_args)
     captured = capsys.readouterr()
     assert "Already engaged" in captured.out
 
+    # call disengage - output_data path does not exist
+    setattr(test_args, "output_data", "results")
+    with pytest.raises(AssertionError):
+        disengage(test_args)
+
     # disengage
-    test_args.output_data = fixtures_dir
-    ct_eng.disengage(test_args)
+    setattr(test_args, "output_data", fixtures_dir)
+    disengage(test_args)
     output_file = glob.glob("catalogue_results/*.json")
     assert len(output_file) == 1
 
     # already disengaged
-    ct_eng.disengage(test_args)
+    disengage(test_args)
     captured = capsys.readouterr()
     assert "Not currently engaged" in captured.out
 
-    # delete files
+    # clean up: delete files
     os.remove(output_file[0])
     os.rmdir("catalogue_results")
+
+    # call engage with - input_data path does not exist
+    setattr(test_args, "input_data", "data")
+    with pytest.raises(AssertionError):
+        engage(test_args)

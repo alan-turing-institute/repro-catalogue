@@ -117,9 +117,11 @@ def test_hash_code(git_hash):
 
 def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash, test_args):
 
+    # valid inputs
     timestamp = "TIMESTAMP"
     hash_dict_1 = ct.construct_dict(timestamp, test_args)
-    test_args.output_data = fixtures_dir
+
+    setattr(test_args, "output_data", fixtures_dir)
     hash_dict_2 = ct.construct_dict(timestamp, test_args)
 
     for hash_dict in [hash_dict_1, hash_dict_2]:
@@ -135,6 +137,15 @@ def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash, test_args):
             fixture2: ct.hash_file(fixture2).hexdigest()
             }
         }
+
+    # invalid input
+    setattr(test_args, "input_data", "data")
+    with pytest.raises(AssertionError):
+        ct.construct_dict(timestamp, test_args)
+
+    # missing inputs
+    with pytest.raises(TypeError):
+        ct.construct_dict()
 
 
 def test_store_hash(tmpdir):
