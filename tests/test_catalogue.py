@@ -101,6 +101,7 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
     hashes = ct.hash_output(fixture1)
     assert hashes == ct.hash_output(fixture1)
     assert fixture1 in hashes.keys()
+    assert ct.hash_output(fixture1)[fixture1] == ct.hash_file(fixture1).hexdigest()
     assert ct.hash_output(fixture1)[fixture1] != empty_hash
 
     # input not provided or does not exist
@@ -110,36 +111,41 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
         ct.hash_output("abc")
 
 
-def test_hash_code(git_hash):
+def test_hash_code(git_repo, git_hash):
 
-    assert ct.hash_code(".") == git_hash
+    assert ct.hash_code(git_repo) == git_hash
 
 
-def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash, test_args):
+def test_construct_dir(git_repo, git_hash, test_args):
+
+    data_path = os.path.join(git_repo, "data")
+    results_path = os.path.join(git_repo, "results")
 
     # valid inputs
     timestamp = "TIMESTAMP"
     hash_dict_1 = ct.construct_dict(timestamp, test_args)
 
-    setattr(test_args, "output_data", fixtures_dir)
+    setattr(test_args, "output_data", results_path)
     hash_dict_2 = ct.construct_dict(timestamp, test_args)
 
     for hash_dict in [hash_dict_1, hash_dict_2]:
-        assert hash_dict["timestamp"] == {"engage": timestamp}
-        assert hash_dict["input_data"] == {fixtures_dir: ct.hash_input(fixtures_dir)}
-        assert hash_dict["code"] == {".": git_hash}
+        assert hash_dict["timestamp"] == {test_args.command: timestamp}
+        assert hash_dict["input_data"] == {data_path: ct.hash_input(data_path)}
+        assert hash_dict["code"] == {git_repo: git_hash}
 
     assert "output_data" not in hash_dict_1.keys()
 
+    tmp_fixture1 = os.path.join(results_path, "fixture1.json")
+    tmp_fixture2 = os.path.join(results_path, "fixture2.json")
     assert hash_dict_2["output_data"] == {
-        fixtures_dir: {
-            fixture1: ct.hash_file(fixture1).hexdigest(),
-            fixture2: ct.hash_file(fixture2).hexdigest()
+        results_path: {
+            tmp_fixture1: ct.hash_file(tmp_fixture1).hexdigest(),
+            tmp_fixture2: ct.hash_file(tmp_fixture2).hexdigest()
             }
         }
 
     # invalid input
-    setattr(test_args, "input_data", "data")
+    setattr(test_args, "input_data", "xyz")
     with pytest.raises(AssertionError):
         ct.construct_dict(timestamp, test_args)
 

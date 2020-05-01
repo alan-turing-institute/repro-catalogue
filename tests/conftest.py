@@ -5,6 +5,8 @@ import argparse
 import hashlib
 import pytest
 
+pytest_plugins = ['pytest_shutil']
+
 _ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 _FIXTURES_DIR = os.path.join(_ROOT_DIR, "fixtures")
 
@@ -26,16 +28,32 @@ def empty_hash():
     return hashlib.sha512().hexdigest()
 
 @pytest.fixture
-def git_hash():
-    """Git commit digest for the current HEAD commit of the git repository"""
-    repo = git.Repo(".", search_parent_directories=True)
+def git_repo(workspace, fixtures_dir):
+    """
+    Create git repository in temporary workspace (from pytest-shutil).
+    Add and commit files from fixtures.
+    Return path to repo.
+    """
+    repo = git.Repo.init(workspace.workspace)
+    workspace.run("cp -R {} data/".format(fixtures_dir))
+    workspace.run("cp -R {} results/".format(fixtures_dir))
+    workspace.run("git add .")
+    repo.index.commit("Initial commit")
+    return workspace.workspace
+
+@pytest.fixture
+def git_hash(git_repo):
+    """
+    Git commit digest for the current HEAD commit of the temp git repository.
+    """
+    repo = git.Repo(git_repo)
     return repo.head.commit.hexsha
 
 @pytest.fixture
-def test_args(fixtures_dir):
+def test_args(git_repo):
     args = argparse.Namespace(
         command = "engage",
-        input_data = fixtures_dir,
-        code = ".",
+        input_data = os.path.join(git_repo, "data"),
+        code = git_repo,
     )
     return args
