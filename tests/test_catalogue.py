@@ -190,3 +190,31 @@ def test_load_hash(fixture1, fixture2):
         ct.load_hash()
     with pytest.raises(FileNotFoundError):
         ct.load_hash("abc")
+
+
+def test_save_csv(tmpdir, fixture3, fixture4):
+
+    hash_dict = ct.load_hash(fixture3)
+
+    timestamp = hash_dict["timestamp"]["disengage"]
+
+    # save to new temporary file
+    file = tmpdir.join('test.csv')
+    ct.save_csv(hash_dict, timestamp, file.strpath)
+
+    with open(fixture4, 'r') as csv_expected:
+        assert file.read() == csv_expected.read()
+
+    # append to existing file
+    file = tmpdir.join('test.csv')
+    file.write("id,disengage,engage,input_data,input_hash,code,code_hash,output_data,output_file1,output_hash1\n")
+    ct.save_csv(hash_dict, timestamp, file.strpath)
+
+    with open(fixture4, 'r') as csv_expected:
+        assert file.read() == csv_expected.read()
+
+    # raise error if bad headers
+    file = tmpdir.join('test.csv')
+    file.write("id,disengage,engage,input_data\n")
+    with pytest.raises(AssertionError):
+        ct.save_csv(hash_dict, timestamp, file.strpath)
