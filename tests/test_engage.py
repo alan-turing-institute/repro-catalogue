@@ -1,9 +1,82 @@
 
 import os
+import sys
+import git
 import glob
 import pytest
 
-from catalogue.engage import engage, disengage
+from git import InvalidGitRepositoryError
+from catalogue.engage import engage, disengage, git_query
+
+
+def test_git_query(git_repo, capsys, workspace, monkeypatch):
+
+    repo = git.Repo(git_repo)
+
+    #==================================================
+    # 1: use with default commit_changes=False
+    #==================================================
+
+    # repo is clean
+    assert git_query(git_repo) == True
+
+    # create new file -- untracked
+    workspace.run("touch test.csv")
+    assert git_query(git_repo) == True
+
+    # git add file without commit
+    workspace.run("git add .")
+    assert git_query(git_repo) == False
+
+    # commit new file
+    repo.index.commit("Add new file")
+    assert git_query(git_repo) == True
+
+    #==================================================
+    # 2: use with commit_changes=True
+    # --> user will get asked to commit changes
+    #==================================================
+
+    # repo is clean
+    assert git_query(git_repo, True) == True
+
+    # create new file -- untracked
+    workspace.run("touch test2.csv")
+    assert git_query(git_repo, True) == True
+
+    # git add file without commit -> will ask for user input
+    workspace.run("git add .")
+
+    # A: user responds no
+    monkeypatch.setattr('builtins.input', lambda: "n")
+    git_query(git_repo, True)
+
+    captured = capsys.readouterr()
+    assert "uncommitted changes" in captured.out
+
+    assert git_query(git_repo, True) == False
+
+    # B: user responds yes
+    monkeypatch.setattr('builtins.input', lambda: "y")
+    git_query(git_repo, True)
+
+    captured = capsys.readouterr()
+    assert "uncommitted changes" in captured.out
+
+    assert git_query(git_repo, True) == True
+
+    #==================================================
+    # 3: invalid or missing repo path
+    #==================================================
+
+    # make temp directory no longer a git repo
+    workspace.run("rm -rf .git")
+
+    with pytest.raises(InvalidGitRepositoryError):
+        git_query(git_repo)
+    with pytest.raises(TypeError):
+        git_query()
+
 
 def test_engage(git_repo, test_args, capsys):
 
