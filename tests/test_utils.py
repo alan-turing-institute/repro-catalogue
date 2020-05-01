@@ -1,17 +1,15 @@
 
 import pytest
+import argparse
 
 from catalogue.utils import check_paths_exists
 
 def test_check_paths_exists(test_args):
 
     # valid inputs
-    assert check_paths_exists(test_args) == True
-
-    # some args are ignored, check passes even if value is not a valid path
-    setattr(test_args, "command", "xyz")
+    # (includes arg with value that is not a valid path but that is skipped in check)
     assert check_paths_exists(test_args) == True
 
     # invalid path given
-    setattr(test_args, "input_data", "xyz")
+    setattr(test_args, "output_data", "xyz")
     assert check_paths_exists(test_args) == False

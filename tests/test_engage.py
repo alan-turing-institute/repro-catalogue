@@ -5,11 +5,14 @@ import pytest
 
 from catalogue.engage import engage, disengage
 
-def test_engage(test_args, fixtures_dir, capsys):
+def test_engage(git_repo, test_args, capsys):
+
+    # NOTE: all catalogue_results directory and files are created in CWD
 
     # engage
     engage(test_args)
-    assert os.path.exists(os.path.join("catalogue_results", ".lock"))
+    lock_file = os.path.join("catalogue_results", ".lock")
+    assert os.path.exists(lock_file)
 
     # already engaged
     engage(test_args)
@@ -22,7 +25,8 @@ def test_engage(test_args, fixtures_dir, capsys):
         disengage(test_args)
 
     # disengage
-    setattr(test_args, "output_data", fixtures_dir)
+    results_path = os.path.join(git_repo, "results")
+    setattr(test_args, "output_data", results_path)
     disengage(test_args)
     output_file = glob.glob("catalogue_results/*.json")
     assert len(output_file) == 1
@@ -32,7 +36,7 @@ def test_engage(test_args, fixtures_dir, capsys):
     captured = capsys.readouterr()
     assert "Not currently engaged" in captured.out
 
-    # clean up: delete files
+    # clean up: delete files created in CWD
     os.remove(output_file[0])
     os.rmdir("catalogue_results")
 
