@@ -1,59 +1,180 @@
-import unittest
-import catalogue.catalogue as ct
+
 import os
-import filecmp
+import git
+import hashlib
+import pytest
 
-class Test_Hashing(unittest.TestCase):
-    @classmethod
-    def SetUp(self):
-        os.mkdir("HashTesting")
-        self.fixtures = "fixtures"
-        self.engagefixtures = os.path.join(self.fixtures, "engagefixtures")
-        self.comparefixtures = os.path.join(self.fixtures, "comparefixtures")
-        self.fixture1 = os.path.join(self.fixtures, "fixture1.json")
-        self.fixture2 = os.path.join(self.fixtures, "fixture2.json")
-        self.hash1 = ""
-        self.json1 = os.path.join("HashTesting", "test1")
-        self.json2 = os.path.join("HashTesting", "test2")
-        ct.store_hash({"foo": 1234}, "HashTesting", "test1")
-        ct.store_hash({"foo": 1234}, "HashTesting", "test2")
-        
-    @classmethod
-    def TearDown(self):
-        os.remove(self.json1)
-        os.remove(self.json2)
-        os.rmdir("HashTesting")
-        
-    def test_load_hash_consistent(self):
-        assert ct.load_hash(self.fixture1) == ct.load_hash(self.fixture2)
+import catalogue.catalogue as ct
 
-    def test_store_hash_consistent(self):
-        assert filecmp.cmp(self.json1, self.json2)
 
-    def test_store_hash_fixture(self):
-        assert filecmp.cmp(self.json1, self.fixture1)
+def test_hash_file(fixtures_dir, empty_hash):
 
-    def test_load_hash_fixture(self):
-        assert ct.load_hash(self.fixture1) == {"foo": 1234}
+    # input is a directory
+    with pytest.raises(IsADirectoryError):
+        ct.hash_file(fixtures_dir)
 
-    def test_store_and_load(self):
-        assert ct.load_hash(self.json1) == {"foo": 1234}
+    # input is a file
+    for path, directories, files in os.walk(fixtures_dir):
+        for f in files:
+            file_path = os.path.join(path, f)
+            assert ct.hash_file(file_path).hexdigest() == ct.hash_file(file_path).hexdigest()
+            assert ct.hash_file(file_path).hexdigest() != empty_hash
 
-    def test_hash_file(self):
-        assert ct.hash_file(self.fixture1).digest() == self.hash1
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.hash_file()
+    with pytest.raises(FileNotFoundError):
+        ct.hash_file("abc")
 
-    def test_hash_file_consistent(self):
-        assert ct.hash_file(self.fixture1).digest() == ct.hash_file(self.fixture2).digest()
 
-    def test_hash_dir_by_file(self):
-        d = ct.hash_dir_by_file(self.fixtures, kwargs={"subdirs": [self.engagefixtures,self.comparefixtures]})
-        d["fixture1.json"] = self.hash1
-        d["fixture2.json"] = self.hash2
+def test_modified_walk(fixtures_dir, fixture1, fixture2):
 
-    def test_modified_walk_fixtures(self):
-        d = ct.modified_walk("fixtures", kwargs={"subdirs": [self.engagefixtures,self.comparefixtures]})
-        assert d = ["fixture1.json", "fixture2.json"]
-        
-        
+    paths = ct.modified_walk(fixtures_dir)
+    assert paths == [fixture1, fixture2]
 
-    
+
+def test_hash_dir_by_file(fixtures_dir, fixture1, empty_hash):
+
+    # input is a directory
+    assert ct.hash_dir_by_file(fixtures_dir) == ct.hash_dir_by_file(fixtures_dir)
+    assert ct.hash_dir_by_file(fixtures_dir) != empty_hash
+
+    # input is a file
+    with pytest.raises(AssertionError):
+        ct.hash_dir_by_file(fixture1)
+
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.hash_dir_by_file()
+    with pytest.raises(AssertionError):
+        ct.hash_dir_by_file("abc")
+
+
+def test_hash_dir_full(fixtures_dir, fixture1, empty_hash):
+
+    # input is a directory
+    assert ct.hash_dir_full(fixtures_dir) == ct.hash_dir_full(fixtures_dir)
+    assert ct.hash_dir_full(fixtures_dir) != empty_hash
+
+    # input is a file
+    with pytest.raises(AssertionError):
+        ct.hash_dir_full(fixture1)
+
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.hash_dir_full()
+    with pytest.raises(AssertionError):
+        ct.hash_dir_full("abc")
+
+
+def test_hash_input(fixtures_dir, fixture1, empty_hash):
+
+    # input is a directory
+    assert ct.hash_input(fixtures_dir) == ct.hash_input(fixtures_dir)
+    assert ct.hash_input(fixtures_dir) == ct.hash_dir_full(fixtures_dir)
+    assert ct.hash_input(fixtures_dir) != empty_hash
+
+    # input is a file
+    assert ct.hash_input(fixture1) == ct.hash_input(fixture1)
+    assert ct.hash_input(fixture1) == ct.hash_file(fixture1).hexdigest()
+    assert ct.hash_input(fixture1) != empty_hash
+
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.hash_input()
+    with pytest.raises(AssertionError):
+        ct.hash_input("abc")
+
+
+def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
+
+    # input is a directory
+    hashes = ct.hash_output(fixtures_dir)
+    assert hashes == ct.hash_dir_by_file(fixtures_dir)
+
+    assert hashes == {
+        fixture1: ct.hash_file(fixture1).hexdigest(),
+        fixture2: ct.hash_file(fixture2).hexdigest(),
+    }
+
+    # input is a file
+    hashes = ct.hash_output(fixture1)
+    assert hashes == ct.hash_output(fixture1)
+    assert fixture1 in hashes.keys()
+    assert ct.hash_output(fixture1)[fixture1] != empty_hash
+
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.hash_output()
+    with pytest.raises(AssertionError):
+        ct.hash_output("abc")
+
+
+def test_hash_code(git_hash):
+
+    assert ct.hash_code(".") == git_hash
+
+
+def test_construct_dir(fixtures_dir, fixture1, fixture2, git_hash, test_args):
+
+    # valid inputs
+    timestamp = "TIMESTAMP"
+    hash_dict_1 = ct.construct_dict(timestamp, test_args)
+
+    setattr(test_args, "output_data", fixtures_dir)
+    hash_dict_2 = ct.construct_dict(timestamp, test_args)
+
+    for hash_dict in [hash_dict_1, hash_dict_2]:
+        assert hash_dict["timestamp"] == {"engage": timestamp}
+        assert hash_dict["input_data"] == {fixtures_dir: ct.hash_input(fixtures_dir)}
+        assert hash_dict["code"] == {".": git_hash}
+
+    assert "output_data" not in hash_dict_1.keys()
+
+    assert hash_dict_2["output_data"] == {
+        fixtures_dir: {
+            fixture1: ct.hash_file(fixture1).hexdigest(),
+            fixture2: ct.hash_file(fixture2).hexdigest()
+            }
+        }
+
+    # invalid input
+    setattr(test_args, "input_data", "data")
+    with pytest.raises(AssertionError):
+        ct.construct_dict(timestamp, test_args)
+
+    # missing inputs
+    with pytest.raises(TypeError):
+        ct.construct_dict()
+
+
+def test_store_hash(tmpdir):
+
+    timestamp = "TIMESTAMP"
+    hash_dict = {"hello": "world"}
+    store = "."
+
+    # valid inputs - save to temporary file
+    file = tmpdir.join('{}.json'.format(timestamp))
+    ct.store_hash(hash_dict, timestamp, tmpdir.strpath)
+    assert file.read() == '{"hello": "world"}'
+
+    # not all inputs provided
+    with pytest.raises(TypeError):
+        ct.store_hash()
+    with pytest.raises(TypeError):
+        ct.store_hash(hash_dict, timestamp)
+
+
+def test_load_hash(fixture1, fixture2):
+
+    # valid inputs
+    assert ct.load_hash(fixture1) == ct.load_hash(fixture1)
+    assert ct.load_hash(fixture2) == ct.load_hash(fixture2)
+    assert ct.load_hash(fixture1) != ct.load_hash(fixture2)
+
+    # input not provided or does not exist
+    with pytest.raises(TypeError):
+        ct.load_hash()
+    with pytest.raises(FileNotFoundError):
+        ct.load_hash("abc")
