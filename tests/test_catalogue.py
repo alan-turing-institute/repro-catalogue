@@ -218,3 +218,25 @@ def test_save_csv(tmpdir, fixture3, fixture4):
     file.write("id,disengage,engage,input_data\n")
     with pytest.raises(AssertionError):
         ct.save_csv(hash_dict, timestamp, file.strpath)
+
+def test_load_csv(tmpdir, fixture3, fixture4):
+
+    hash_dict_1 = ct.load_hash(fixture3)
+
+    timestamp = hash_dict_1["timestamp"]["disengage"]
+
+    # correct functioning
+    hash_dict_2 = ct.load_csv(fixture4, timestamp)
+    assert hash_dict_1 == hash_dict_2
+
+    # badly formatted timestamp
+    with pytest.raises(AssertionError):
+        ct.load_csv(fixture4, "abc")
+
+    # bad type for timestamp
+    with pytest.raises(AssertionError):
+        ct.load_csv(fixture4, 1)
+
+    # well formatted timestamp, but not in file
+    with pytest.raises(EOFError):
+        ct.load_csv(fixture4, "20200430-120000")
