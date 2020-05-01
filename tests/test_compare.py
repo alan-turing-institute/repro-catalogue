@@ -29,7 +29,7 @@ def test_compare(fixture1, fixture2, capsys, test_args):
 def test_compare_hashes(fixture1, fixture2):
 
     # dict1 contains timestamp, input_data, code but is missing output_data
-    # --> the missing keyword should lead to a failure
+    # --> the missing keyword leads to 1 failure
     dict1 = ct.load_hash(fixture1)
     same_output1 = compare_hashes(dict1, dict1)
     assert len(same_output1["matches"]) == 3
@@ -43,7 +43,7 @@ def test_compare_hashes(fixture1, fixture2):
     assert len(same_output2["differs"]) == 0
     assert len(same_output2["failures"]) == 0
 
-    # the timestamps between the two files differ
+    # the timestamps between the two dicts differ, dict2 has 2 extra files
     diff_output = compare_hashes(dict1, dict2)
     assert len(diff_output["matches"]) == 2
     assert len(diff_output['differs']) == 1

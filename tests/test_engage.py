@@ -36,7 +36,7 @@ def test_engage(test_args, fixtures_dir, capsys):
     os.remove(output_file[0])
     os.rmdir("catalogue_results")
 
-    # call engage with - input_data path does not exist
+    # call engage - input_data path does not exist
     setattr(test_args, "input_data", "data")
     with pytest.raises(AssertionError):
         engage(test_args)

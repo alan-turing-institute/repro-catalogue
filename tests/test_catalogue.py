@@ -154,7 +154,7 @@ def test_store_hash(tmpdir):
     hash_dict = {"hello": "world"}
     store = "."
 
-    # save to temporary file
+    # valid inputs - save to temporary file
     file = tmpdir.join('{}.json'.format(timestamp))
     ct.store_hash(hash_dict, timestamp, tmpdir.strpath)
     assert file.read() == '{"hello": "world"}'
@@ -168,6 +168,7 @@ def test_store_hash(tmpdir):
 
 def test_load_hash(fixture1, fixture2):
 
+    # valid inputs
     assert ct.load_hash(fixture1) == ct.load_hash(fixture1)
     assert ct.load_hash(fixture2) == ct.load_hash(fixture2)
     assert ct.load_hash(fixture1) != ct.load_hash(fixture2)
