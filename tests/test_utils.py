@@ -1,6 +1,5 @@
 
 import pytest
-import argparse
 
 from catalogue.utils import check_paths_exists
 
