@@ -12,6 +12,7 @@ from catalogue.engage import engage, disengage, git_query
 def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     repo = git.Repo(git_repo)
+    git_hash_0 = repo.head.commit.hexsha
 
     #==================================================
     # 1: use with default commit_changes=False
@@ -30,6 +31,8 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     # commit new file
     repo.index.commit("Add new file")
+    git_hash_1 = repo.head.commit.hexsha
+    assert git_hash_0 != git_hash_1
     assert git_query(git_repo) == True
 
     #==================================================
@@ -49,21 +52,29 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     # A: user responds no
     monkeypatch.setattr('builtins.input', lambda: "n")
-    git_query(git_repo, True)
-
-    captured = capsys.readouterr()
-    assert "uncommitted changes" in captured.out
-
     assert git_query(git_repo, True) == False
 
-    # B: user responds yes
-    monkeypatch.setattr('builtins.input', lambda: "y")
-    git_query(git_repo, True)
+    captured = capsys.readouterr()
+    assert "uncommitted changes" in captured.out
+    assert "Unrecognized response" not in captured.out
+
+    # B: user gives other response
+    monkeypatch.setattr('builtins.input', lambda: "x")
+    assert git_query(git_repo, True) == False
 
     captured = capsys.readouterr()
     assert "uncommitted changes" in captured.out
+    assert "Unrecognized response" in captured.out
 
+    # C: user responds yes
+    monkeypatch.setattr('builtins.input', lambda: "y")
     assert git_query(git_repo, True) == True
+    
+    captured = capsys.readouterr()
+    assert "uncommitted changes" in captured.out
+
+    git_hash_2 = repo.head.commit.hexsha
+    assert git_hash_1 != git_hash_2
 
     #==================================================
     # 3: invalid or missing repo path

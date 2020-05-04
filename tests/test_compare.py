@@ -6,25 +6,57 @@ import catalogue.catalogue as ct
 from catalogue.compare import compare, compare_hashes
 
 
-def test_compare(fixture1, fixture2, capsys, test_args):
+def test_compare_json(fixture1, fixture2, fixtures_dir, capsys, git_repo):
+    """
+    Test compare function with json inputs.
+    """
 
-    # if provide 1 file, will try to hash default paths that don't exist
-    setattr(test_args, "output_data", "results")
-    setattr(test_args, "hashes", [fixture1])
-    with pytest.raises(AssertionError):
-        compare(test_args)
-
-    # provide valid file paths for comparison
     args = argparse.Namespace(
-        hashes = [fixture1, fixture2],
+        hashes = [fixture1],
+        command = "compare",
+        input_data = "data",
+        output_data = "results",
+        code = git_repo,
         csv = None
     )
+
+    # provide 1 file - will try to hash default paths that do not exist
+    with pytest.raises(AssertionError):
+        compare(args)
+
+    # provide 1 file & set valid paths to a directory to hash
+    setattr(args, "input_data", fixtures_dir)
+    setattr(args, "output_data", fixtures_dir)
+    compare(args)
+
+    # fixture1 does not contain valid hashes for code and data &&
+    # fixture1 does not contain any "output_data", expect:
+    #   diff timestamp, code, data
+    #   no matches
+    #   no comparison for 4 files (4 fixtures in "output_data" directory)
+    captured = capsys.readouterr()
+    assert "differ in 3 places" in captured.out
+    assert "match in 0 places" in captured.out
+    assert "could not be compared in 4 places" in captured.out
+
+    # provide 1 file that does not exist
+    setattr(args, "hashes", ["my_output.json"])
+    with pytest.raises(FileNotFoundError):
+        compare(args)
+
+    # provide 2 valid file paths for comparison
+    setattr(args, "hashes", [fixture1, fixture2])
     compare(args)
 
     captured = capsys.readouterr()
     assert "differ in 1 places" in captured.out
     assert "match in 2 places" in captured.out
     assert "could not be compared in 2 places" in captured.out
+
+    # provide more than 2 files
+    setattr(args, "hashes", [fixture1, fixture2, fixture2])
+    with pytest.raises(AssertionError):
+        compare(args)
 
 
 def test_compare_hashes(fixture1, fixture2):

@@ -1,7 +1,14 @@
 
 import pytest
 
-from catalogue.utils import check_paths_exists
+from catalogue.utils import check_paths_exists, create_timestamp
+
+
+def test_create_timestamp():
+
+    assert type(create_timestamp()) == str
+    assert len(create_timestamp()) == 15
+
 
 def test_check_paths_exists(test_args):
 
