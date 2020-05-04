@@ -286,13 +286,13 @@ catalogue compare TIMESTAMP4.json
 
 The commands `catalogue engage` and `catalogue disengage` are meant to be run in that order.
 
-The `catalogue disengage` command will check that a `.lock` file exists. If it doesn't it will warn:
+The `catalogue engage` command will check that a `.lock` file does *not* exist. If it does, it will warn:
 ```
 Already engaged (.lock file exists). To disengage run 'catalogue disengage...
 See 'catalogue disengage --help' for details
 ```
 
-The `catalogue engage` command will check that a `.lock` file does *not* exist. If it does, it will warn:
+The `catalogue disengage` command will check that a `.lock` file exists. If it doesn't, it will warn:
 ```
 Not currently engaged (could not find .lock file). To engage run 'catalogue engage...
 See 'catalogue engage --help' for details
