@@ -32,7 +32,9 @@ def fixture4():
 
 @pytest.fixture
 def empty_hash():
-    """Hash produced if no input is provided"""
+    """
+    Hash produced if no input is provided.
+    """
     return hashlib.sha512().hexdigest()
 
 @pytest.fixture
@@ -66,3 +68,12 @@ def test_args(git_repo):
         csv = None
     )
     return args
+
+@pytest.fixture
+def copy_fixtures_dir(workspace, fixtures_dir):
+    """
+    Copy fixtures_dir to a temp workspace.
+    Return path.
+    """
+    workspace.run("cp -R {} fixtures/".format(fixtures_dir))
+    return os.path.join(workspace.workspace, "fixtures")
