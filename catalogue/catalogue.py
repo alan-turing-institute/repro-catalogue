@@ -64,24 +64,14 @@ def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=Tr
     for path, directories, files in os.walk(folder):
         # loop over files in the top directory
         for f in sorted(files):
-            root, ext = os.path.splitext(f)#[1]
+            root, ext = os.path.splitext(f)
             if not (
-                (ext in ignore_exts) or (
-                ignore_dot_files and root.startswith("."))):
-                # path_list.append(os.path.join(*directories, f))
+                (ext in ignore_exts) or
+                (ignore_dot_files and root.startswith(".")) or
+                (path in ignore_subdirs)
+                ):
                 path_list.append(os.path.join(path, f))
-        for s in sorted(directories):
-            s = os.path.join(path, s)
-            if s in ignore_subdirs:
-                ignore_subdirs.remove(s)
-            else:
-                path_list.extend(
-                    modified_walk(
-                        s,
-                        ignore_subdirs=ignore_subdirs,
-                        ignore_exts=ignore_exts,
-                        ignore_dot_files=ignore_dot_files)
-            )
+
     return path_list
 
 
@@ -157,6 +147,7 @@ def hash_input(input_data):
         return hash_file(input_data).hexdigest()
     else:
         raise AssertionError("Provided input {} is not a file or directory".format(input_data))
+
 
 def hash_output(output_data):
     """
@@ -241,6 +232,10 @@ def construct_dict(timestamp, args):
 
 
 def store_hash(hash_dict, timestamp, store):
+
+    assert isinstance(timestamp, str)
+    assert len(timestamp) == 15, "bad format for timestamp"
+
     if not os.path.exists(store):
         os.makedirs(store)
     with open(os.path.join(store, "{}.json".format(timestamp)),"w") as f:
@@ -250,6 +245,7 @@ def store_hash(hash_dict, timestamp, store):
 def load_hash(filepath):
     with open(filepath, "r") as f:
         return json.load(f)
+
 
 def save_csv(hash_dict, timestamp, store):
     """
