@@ -6,9 +6,8 @@ from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 from .compare import compare_hashes, print_comparison
-from .utils import create_timestamp, check_paths_exists
+from .utils import create_timestamp, check_paths_exists, CATALOGUE_DIR
 
-CATALOGUE_DIR = "catalogue_results"
 CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
 
 def git_query(repo_path, commit_changes=False):
@@ -106,5 +105,8 @@ def disengage(args):
         if 'input_data' in compare["matches"] and 'code' in compare["matches"]:
             # add engage timestamp to hash_dict
             hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]["engage"]})
-            ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
+            if args.csv is None:
+                ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
+            else:
+                ct.save_csv(hash_dict, timestamp, os.path.join(CATALOGUE_DIR, args.csv))
         print_comparison(compare)

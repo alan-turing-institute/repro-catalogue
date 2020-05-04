@@ -23,6 +23,14 @@ def fixture2():
     return os.path.join(_FIXTURES_DIR, "fixture2.json")
 
 @pytest.fixture
+def fixture3():
+    return os.path.join(_FIXTURES_DIR, "fixture3.json")
+
+@pytest.fixture
+def fixture4():
+    return os.path.join(_FIXTURES_DIR, "fixture4.csv")
+
+@pytest.fixture
 def empty_hash():
     """Hash produced if no input is provided"""
     return hashlib.sha512().hexdigest()
@@ -55,5 +63,6 @@ def test_args(git_repo):
         command = "engage",
         input_data = os.path.join(git_repo, "data"),
         code = git_repo,
+        csv = None
     )
     return args

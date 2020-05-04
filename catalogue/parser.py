@@ -26,10 +26,12 @@ def main():
     disengage
     ---------
     When running in `disengage` mode, three options can be set: `--input_data`, `--code`
-    and `output_data`. The meaning and defaults for `--input_data` and `code` are the
-    same as when in `engage` mode (see above). The `output_data` argument should also
+    and `--output_data`. The meaning and defaults for `--input_data` and `--code` are the
+    same as when in `engage` mode (see above). The `--output_data` argument should also
     be a string, specifying the directory with the analysis results. The default for
     the `output_data` argument is `"results"` (relative to the current working directory).
+    Optionally, to save results in a CSV file set `--csv` to the desired filename (will
+    create a new file or append to an existing one).
 
     compare
     -------
@@ -39,6 +41,8 @@ def main():
     path of existing json files output from the code. If 2 inputs are given, `compare` checks the
     two inputs, while if 1 input is given that input is compared to the current state.
     If 1 input is given, the usual flags for input, code, and output paths apply.
+    Comparisons can also be made from a CSV file -- set the --csv flag to the desired CSV
+    file where results are saved and then provide one or two timestamps as standard input.
 
     Note that if `compare` mode is used with 1 input, any use of flags to set data or code
     paths must come before the hash file due to how arguments are parsed.
@@ -74,6 +78,15 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containing the analysis output data. Default value is results."),
         default="results")
+
+    output_parser.add_argument(
+        "--csv",
+        type=str,
+        metavar="csv",
+        help=textwrap.dedent("If output to CSV is desired, set this to the desired filename (the file " +
+                             "will be placed in the 'catalogue_results' directory). Optional, default is None "  +
+                             "for no CSV output"),
+        default=None)
 
     # create subparsers
     subparsers = parser.add_subparsers(dest="command")

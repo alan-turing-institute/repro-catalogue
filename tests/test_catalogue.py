@@ -27,10 +27,10 @@ def test_hash_file(fixtures_dir, empty_hash):
         ct.hash_file("abc")
 
 
-def test_modified_walk(fixtures_dir, fixture1, fixture2):
+def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
 
     paths = ct.modified_walk(fixtures_dir)
-    assert paths == [fixture1, fixture2]
+    assert paths == [fixture1, fixture2, fixture3, fixture4]
 
 
 def test_hash_dir_by_file(fixtures_dir, fixture1, empty_hash):
@@ -86,7 +86,7 @@ def test_hash_input(fixtures_dir, fixture1, empty_hash):
         ct.hash_input("abc")
 
 
-def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
+def test_hash_output(fixtures_dir, fixture1, fixture2, fixture3, fixture4, empty_hash):
 
     # input is a directory
     hashes = ct.hash_output(fixtures_dir)
@@ -95,6 +95,8 @@ def test_hash_output(fixtures_dir, fixture1, fixture2, empty_hash):
     assert hashes == {
         fixture1: ct.hash_file(fixture1).hexdigest(),
         fixture2: ct.hash_file(fixture2).hexdigest(),
+        fixture3: ct.hash_file(fixture3).hexdigest(),
+        fixture4: ct.hash_file(fixture4).hexdigest()
     }
 
     # input is a file
@@ -116,7 +118,7 @@ def test_hash_code(git_repo, git_hash):
     assert ct.hash_code(git_repo) == git_hash
 
 
-def test_construct_dir(git_repo, git_hash, test_args):
+def test_construct_dict(git_repo, git_hash, test_args):
 
     data_path = os.path.join(git_repo, "data")
     results_path = os.path.join(git_repo, "results")
@@ -137,10 +139,14 @@ def test_construct_dir(git_repo, git_hash, test_args):
 
     tmp_fixture1 = os.path.join(results_path, "fixture1.json")
     tmp_fixture2 = os.path.join(results_path, "fixture2.json")
+    tmp_fixture3 = os.path.join(results_path, "fixture3.json")
+    tmp_fixture4 = os.path.join(results_path, "fixture4.csv")
     assert hash_dict_2["output_data"] == {
         results_path: {
             tmp_fixture1: ct.hash_file(tmp_fixture1).hexdigest(),
-            tmp_fixture2: ct.hash_file(tmp_fixture2).hexdigest()
+            tmp_fixture2: ct.hash_file(tmp_fixture2).hexdigest(),
+            tmp_fixture3: ct.hash_file(tmp_fixture3).hexdigest(),
+            tmp_fixture4: ct.hash_file(tmp_fixture4).hexdigest()
             }
         }
 
@@ -184,3 +190,53 @@ def test_load_hash(fixture1, fixture2):
         ct.load_hash()
     with pytest.raises(FileNotFoundError):
         ct.load_hash("abc")
+
+
+def test_save_csv(tmpdir, fixture3, fixture4):
+
+    hash_dict = ct.load_hash(fixture3)
+
+    timestamp = hash_dict["timestamp"]["disengage"]
+
+    # save to new temporary file
+    file = tmpdir.join('test.csv')
+    ct.save_csv(hash_dict, timestamp, file.strpath)
+
+    with open(fixture4, 'r') as csv_expected:
+        assert file.read() == csv_expected.read()
+
+    # append to existing file
+    file = tmpdir.join('test.csv')
+    file.write("id,disengage,engage,input_data,input_hash,code,code_hash,output_data,output_file1,output_hash1\n")
+    ct.save_csv(hash_dict, timestamp, file.strpath)
+
+    with open(fixture4, 'r') as csv_expected:
+        assert file.read() == csv_expected.read()
+
+    # raise error if bad headers
+    file = tmpdir.join('test.csv')
+    file.write("id,disengage,engage,input_data\n")
+    with pytest.raises(AssertionError):
+        ct.save_csv(hash_dict, timestamp, file.strpath)
+
+def test_load_csv(tmpdir, fixture3, fixture4):
+
+    hash_dict_1 = ct.load_hash(fixture3)
+
+    timestamp = hash_dict_1["timestamp"]["disengage"]
+
+    # correct functioning
+    hash_dict_2 = ct.load_csv(fixture4, timestamp)
+    assert hash_dict_1 == hash_dict_2
+
+    # badly formatted timestamp
+    with pytest.raises(AssertionError):
+        ct.load_csv(fixture4, "abc")
+
+    # bad type for timestamp
+    with pytest.raises(AssertionError):
+        ct.load_csv(fixture4, 1)
+
+    # well formatted timestamp, but not in file
+    with pytest.raises(EOFError):
+        ct.load_csv(fixture4, "20200430-120000")
