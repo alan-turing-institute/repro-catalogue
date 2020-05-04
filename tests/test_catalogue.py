@@ -39,9 +39,27 @@ def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
     paths = ct.modified_walk(fixtures_dir)
     assert paths == [fixture1, fixture2, fixture3, fixture4]
 
-    # use ingore extensions
-    # paths = ct.modified_walk(fixtures_dir, ignore_exts=["json"])
-    # assert paths == [fixture4]
+    # use ingore_exts
+    paths = ct.modified_walk(fixtures_dir, ignore_exts=[".json"])
+    assert paths == [fixture4]
+
+    paths = ct.modified_walk(fixtures_dir, ignore_exts=[".json", ".csv"])
+    assert paths == []
+
+    paths = ct.modified_walk(fixtures_dir, ignore_exts=[".py"])
+    assert paths == [fixture1, fixture2, fixture3, fixture4]
+
+    # use ignore subdirs
+    base_dir = "tests"
+    subdir = os.path.join(base_dir, "fixtures")
+    paths = ct.modified_walk(base_dir, ignore_subdirs=[subdir])
+    assert (all(
+        [os.path.join(subdir, os.path.basename(fixture)) not in paths
+        for fixture in [fixture1, fixture2, fixture3, fixture4]]))
+
+    # change ignore_dot_files to False
+    paths = ct.modified_walk(".", ignore_dot_files=False)
+    assert "./.gitignore" in paths
 
     # path does not exist or not provided
     with pytest.raises(AssertionError):
@@ -150,6 +168,7 @@ def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixtur
     with pytest.raises(AssertionError):
         ct.hash_output(123)
 
+
 def test_hash_code(git_repo, git_hash):
 
     assert ct.hash_code(git_repo) == git_hash
@@ -190,23 +209,26 @@ def test_construct_dict(git_repo, git_hash, test_args):
             }
         }
 
-    # invalid input
+    # invalid input - path does not exist
     setattr(test_args, "input_data", "xyz")
     with pytest.raises(AssertionError):
         ct.construct_dict(timestamp, test_args)
 
+    # invalid input - path not valid type
     setattr(test_args, "input_data", 123)
     with pytest.raises(AssertionError):
         ct.construct_dict(timestamp, test_args)
 
     # missing inputs
     with pytest.raises(TypeError):
+        ct.construct_dict(test_args)
+    with pytest.raises(TypeError):
         ct.construct_dict()
 
 
 def test_store_hash(tmpdir):
 
-    timestamp = "TIMESTAMP"
+    timestamp = "20200430-000000"
     hash_dict = {"hello": "world"}
     store = "."
 
@@ -214,6 +236,12 @@ def test_store_hash(tmpdir):
     file = tmpdir.join('{}.json'.format(timestamp))
     ct.store_hash(hash_dict, timestamp, tmpdir.strpath)
     assert file.read() == '{"hello": "world"}'
+
+    # invalid timestamp
+    with pytest.raises(AssertionError):
+        ct.store_hash(hash_dict, 123456789, tmpdir.strpath)
+    with pytest.raises(AssertionError):
+        ct.store_hash(hash_dict, "20200430", tmpdir.strpath)
 
     # not all inputs provided
     with pytest.raises(TypeError):
