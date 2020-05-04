@@ -232,7 +232,22 @@ def construct_dict(timestamp, args):
 
 
 def store_hash(hash_dict, timestamp, store):
+    """
+    Save hash information to <timestamp.json> file.
 
+    Parameters
+    ----------
+    hash_dict: dict { str: dict }
+        hash dictionary after completing analysis
+    timestamp: str
+        timestamp (will be used as name of file)
+    store: str
+        directory where to store the file
+
+    Returns
+    -------
+    None
+    """
     assert isinstance(timestamp, str)
     assert len(timestamp) == 15, "bad format for timestamp"
 
@@ -243,6 +258,18 @@ def store_hash(hash_dict, timestamp, store):
 
 
 def load_hash(filepath):
+    """
+    Load hashes from json file.
+
+    Parameters
+    ----------
+    filepath : str
+        path to json file to be loaded
+
+    Returns
+    -------
+    dict { str : dict }
+    """
     with open(filepath, "r") as f:
         return json.load(f)
 
