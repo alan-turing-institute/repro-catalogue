@@ -114,7 +114,6 @@ def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixtur
     # hashes of files == hashes of file copies
     assert sorted(hashes.values()) == sorted(ct.hash_dir_by_file(copy_fixtures_dir).values())
 
-
     # 2. input is a file
     hashes = ct.hash_output(fixture1)
     assert hashes == ct.hash_output(fixture1)
@@ -132,6 +131,9 @@ def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixtur
 def test_hash_code(git_repo, git_hash):
 
     assert ct.hash_code(git_repo) == git_hash
+
+    with pytest.raises(TypeError):
+        ct.hash_code()
 
 
 def test_construct_dict(git_repo, git_hash, test_args):

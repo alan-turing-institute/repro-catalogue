@@ -33,7 +33,7 @@ def fixture4():
 @pytest.fixture
 def empty_hash():
     """
-    Hash produced if no input is provided.
+    Hash produced if no input is provided. 
     """
     return hashlib.sha512().hexdigest()
 
