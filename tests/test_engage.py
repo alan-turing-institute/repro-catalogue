@@ -69,7 +69,7 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     # C: user responds yes
     monkeypatch.setattr('builtins.input', lambda: "y")
     assert git_query(git_repo, True) == True
-    
+
     captured = capsys.readouterr()
     assert "uncommitted changes" in captured.out
 
@@ -90,6 +90,9 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
 
 def test_engage(git_repo, test_args, capsys):
+    """
+    Test engage and disengage commands.
+    """
 
     # NOTE: all catalogue_results directory and files are created in CWD
 

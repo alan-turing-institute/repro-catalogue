@@ -27,14 +27,29 @@ def test_hash_file(fixtures_dir, copy_fixtures_dir, empty_hash):
     # 3. input not provided or does not exist
     with pytest.raises(TypeError):
         ct.hash_file()
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(AssertionError):
         ct.hash_file("abc")
+    with pytest.raises(AssertionError):
+        ct.hash_file(123)
 
 
 def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
 
+    # valid path
     paths = ct.modified_walk(fixtures_dir)
     assert paths == [fixture1, fixture2, fixture3, fixture4]
+
+    # use ingore extensions
+    # paths = ct.modified_walk(fixtures_dir, ignore_exts=["json"])
+    # assert paths == [fixture4]
+
+    # path does not exist or not provided
+    with pytest.raises(AssertionError):
+        ct.modified_walk("abc")
+    with pytest.raises(AssertionError):
+        ct.modified_walk(123)
+    with pytest.raises(TypeError):
+        ct.modified_walk()
 
 
 def test_hash_dir_by_file(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
@@ -55,6 +70,8 @@ def test_hash_dir_by_file(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash)
         ct.hash_dir_by_file()
     with pytest.raises(AssertionError):
         ct.hash_dir_by_file("abc")
+    with pytest.raises(AssertionError):
+        ct.hash_dir_by_file(123)
 
 
 def test_hash_dir_full(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
@@ -75,6 +92,8 @@ def test_hash_dir_full(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
         ct.hash_dir_full()
     with pytest.raises(AssertionError):
         ct.hash_dir_full("abc")
+    with pytest.raises(AssertionError):
+        ct.hash_dir_full(123)
 
 
 def test_hash_input(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
@@ -97,6 +116,8 @@ def test_hash_input(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
         ct.hash_input()
     with pytest.raises(AssertionError):
         ct.hash_input("abc")
+    with pytest.raises(AssertionError):
+        ct.hash_input(123)
 
 
 def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixture3, fixture4, empty_hash):
@@ -126,7 +147,8 @@ def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixtur
         ct.hash_output()
     with pytest.raises(AssertionError):
         ct.hash_output("abc")
-
+    with pytest.raises(AssertionError):
+        ct.hash_output(123)
 
 def test_hash_code(git_repo, git_hash):
 
@@ -173,6 +195,10 @@ def test_construct_dict(git_repo, git_hash, test_args):
     with pytest.raises(AssertionError):
         ct.construct_dict(timestamp, test_args)
 
+    setattr(test_args, "input_data", 123)
+    with pytest.raises(AssertionError):
+        ct.construct_dict(timestamp, test_args)
+
     # missing inputs
     with pytest.raises(TypeError):
         ct.construct_dict()
@@ -208,6 +234,8 @@ def test_load_hash(fixture1, fixture2):
         ct.load_hash()
     with pytest.raises(FileNotFoundError):
         ct.load_hash("abc")
+    with pytest.raises(OSError):
+        ct.load_hash(123)
 
 
 def test_save_csv(tmpdir, fixture3, fixture4):

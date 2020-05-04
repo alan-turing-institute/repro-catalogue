@@ -30,8 +30,8 @@ def test_compare_json(fixture1, fixture2, fixtures_dir, capsys, git_repo):
     setattr(args, "output_data", fixtures_dir)
     compare(args)
 
-    # the file hashes and are not the same as current state --> expect:
-    # no matches & diff timestamp, code and data
+    # the file hashes and are not the same as current state -->
+    # expect no matches & different timestamp, code and data
     # also, files in "output_data" are different --> expect no comparison (2+4 files)
     captured = capsys.readouterr()
     assert "differ in 3 places" in captured.out
@@ -82,8 +82,8 @@ def test_compare_csv(fixture4, fixtures_dir, git_repo, workspace, capsys):
     setattr(args, "output_data", fixtures_dir)
     compare(args)
 
-    # the hashes associated with are not the same as current state --> expect:
-    # no matches & diff timestamp, code and data
+    # the hashes associated with timestamp are not the same as current state -->
+    # expect no matches & different timestamp, code and data
     # also, files in "output_data" are different --> expect no comparison (3+4 files)
     captured = capsys.readouterr()
     assert "differ in 3 places" in captured.out
@@ -108,6 +108,7 @@ def test_compare_csv(fixture4, fixtures_dir, git_repo, workspace, capsys):
     setattr(args, "hashes", ["20200430-172025", "20200430-172025", "20200430-172025"])
     with pytest.raises(AssertionError):
         compare(args)
+
 
 def test_compare_hashes(fixture1, fixture2):
 
