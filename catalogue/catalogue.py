@@ -21,6 +21,8 @@ def hash_file(filepath, m=None):
     -------
     hashlib hash object
     '''
+    assert os.path.exists(filepath), "Path {} does not exist".format(filepath)
+
 
     if m is None:
         m = hashlib.sha512()
@@ -38,8 +40,6 @@ def hash_file(filepath, m=None):
 
 def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=True):
     '''
-    TODO: DECIDE WHETHER WANT TO GET FULL PATH OR RELATIVE PATH TO FILE.
-
     A wrapper on os.walk() to return a list of paths inside directory "folder"
     that do not meet the ignore criteria.
 
@@ -58,6 +58,8 @@ def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=Tr
     list[str]
         A list of accepted paths
     '''
+    assert os.path.exists(folder), "Path {} does not exist".format(folder)
+
     path_list = []
     for path, directories, files in os.walk(folder):
         # loop over files in the top directory
