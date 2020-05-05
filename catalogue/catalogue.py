@@ -21,6 +21,8 @@ def hash_file(filepath, m=None):
     -------
     hashlib hash object
     '''
+    assert os.path.exists(filepath), "Path {} does not exist".format(filepath)
+
 
     if m is None:
         m = hashlib.sha512()
@@ -38,8 +40,6 @@ def hash_file(filepath, m=None):
 
 def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=True):
     '''
-    TODO: DECIDE WHETHER WANT TO GET FULL PATH OR RELATIVE PATH TO FILE.
-
     A wrapper on os.walk() to return a list of paths inside directory "folder"
     that do not meet the ignore criteria.
 
@@ -58,28 +58,20 @@ def modified_walk(folder, ignore_subdirs=[], ignore_exts=[], ignore_dot_files=Tr
     list[str]
         A list of accepted paths
     '''
+    assert os.path.exists(folder), "Path {} does not exist".format(folder)
+
     path_list = []
     for path, directories, files in os.walk(folder):
         # loop over files in the top directory
         for f in sorted(files):
-            root, ext = os.path.splitext(f)#[1]
+            root, ext = os.path.splitext(f)
             if not (
-                (ext in ignore_exts) or (
-                ignore_dot_files and root.startswith("."))):
-                # path_list.append(os.path.join(*directories, f))
+                (ext in ignore_exts) or
+                (ignore_dot_files and root.startswith(".")) or
+                (path in ignore_subdirs)
+                ):
                 path_list.append(os.path.join(path, f))
-        for s in sorted(directories):
-            s = os.path.join(path, s)
-            if s in ignore_subdirs:
-                ignore_subdirs.remove(s)
-            else:
-                path_list.extend(
-                    modified_walk(
-                        s,
-                        ignore_subdirs=ignore_subdirs,
-                        ignore_exts=ignore_exts,
-                        ignore_dot_files=ignore_dot_files)
-            )
+
     return path_list
 
 
@@ -155,6 +147,7 @@ def hash_input(input_data):
         return hash_file(input_data).hexdigest()
     else:
         raise AssertionError("Provided input {} is not a file or directory".format(input_data))
+
 
 def hash_output(output_data):
     """
@@ -239,6 +232,25 @@ def construct_dict(timestamp, args):
 
 
 def store_hash(hash_dict, timestamp, store):
+    """
+    Save hash information to <timestamp.json> file.
+
+    Parameters
+    ----------
+    hash_dict: dict { str: dict }
+        hash dictionary after completing analysis
+    timestamp: str
+        timestamp (will be used as name of file)
+    store: str
+        directory where to store the file
+
+    Returns
+    -------
+    None
+    """
+    assert isinstance(timestamp, str)
+    assert len(timestamp) == 15, "bad format for timestamp"
+
     if not os.path.exists(store):
         os.makedirs(store)
     with open(os.path.join(store, "{}.json".format(timestamp)),"w") as f:
@@ -246,8 +258,21 @@ def store_hash(hash_dict, timestamp, store):
 
 
 def load_hash(filepath):
+    """
+    Load hashes from json file.
+
+    Parameters
+    ----------
+    filepath : str
+        path to json file to be loaded
+
+    Returns
+    -------
+    dict { str : dict }
+    """
     with open(filepath, "r") as f:
         return json.load(f)
+
 
 def save_csv(hash_dict, timestamp, store):
     """
