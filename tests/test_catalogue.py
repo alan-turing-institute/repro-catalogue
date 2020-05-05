@@ -7,6 +7,7 @@ import pytest
 import catalogue.catalogue as ct
 from git import InvalidGitRepositoryError, RepositoryDirtyError
 
+
 def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
 
     # valid path
@@ -34,6 +35,14 @@ def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
     # change ignore_dot_files to False
     paths = ct.modified_walk(".", ignore_dot_files=False)
     assert "./.gitignore" in paths
+
+    # path does not exist or not provided
+    with pytest.raises(AssertionError):
+        ct.modified_walk("abc")
+    with pytest.raises(AssertionError):
+        ct.modified_walk(123)
+    with pytest.raises(TypeError):
+        ct.modified_walk()
 
 
 @pytest.mark.parametrize(
@@ -71,6 +80,7 @@ def test_hash_file(fixtures_dir, copy_fixtures_dir, empty_hash):
 
 @pytest.mark.parametrize("hash_f", [ct.hash_dir_full, ct.hash_dir_by_file])
 def test_hash_dir(hash_f, fixtures_dir, fixture1, empty_hash):
+    """Test calling hash_dir_* functions with directory & file path inputs"""
 
     # input is a directory
     assert hash_f(fixtures_dir) == hash_f(fixtures_dir)
@@ -82,15 +92,13 @@ def test_hash_dir(hash_f, fixtures_dir, fixture1, empty_hash):
 
 
 @pytest.mark.parametrize("hash_f", [ct.hash_dir_by_file, ct.hash_output])
-def test_hash_dir_file_copy(hash_f, fixtures_dir, copy_fixtures_dir):
-
+def test_hash_dir_file_consistent(hash_f, fixtures_dir, copy_fixtures_dir):
     assert (sorted(hash_f(fixtures_dir).values()) ==
             sorted(hash_f(copy_fixtures_dir).values()))
 
 
 @pytest.mark.parametrize("hash_f", [ct.hash_dir_full, ct.hash_input])
-def test_hash_dir_full_copy(hash_f, fixtures_dir, copy_fixtures_dir):
-
+def test_hash_dir_full_consistent(hash_f, fixtures_dir, copy_fixtures_dir):
     assert hash_f(fixtures_dir) == hash_f(copy_fixtures_dir)
 
 
@@ -222,7 +230,6 @@ def test_store_hash(tmpdir):
 
 
 def test_load_hash(fixture1, fixture2):
-    """valid inputs"""
 
     hash_dict_1 = ct.load_hash(fixture1)
     hash_dict_2 = ct.load_hash(fixture2)
@@ -240,7 +247,6 @@ def test_load_hash(fixture1, fixture2):
     [(None, TypeError), ("abc", FileNotFoundError), (123, OSError)]
 )
 def test_load_hash_invalid_path(path, exp_error):
-    """Path not provided or does not exist"""
     with pytest.raises(exp_error):
         ct.load_hash(path)
 
@@ -282,6 +288,10 @@ def test_load_csv(tmpdir, fixture3, fixture4):
     # correct functioning
     hash_dict_2 = ct.load_csv(fixture4, timestamp)
     assert hash_dict_1 == hash_dict_2
+
+    # invalid path
+    with pytest.raises(FileNotFoundError):
+        ct.load_csv("abc.csv", timestamp)
 
 
 @pytest.mark.parametrize(
