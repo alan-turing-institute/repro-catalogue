@@ -92,9 +92,9 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 def test_engage(git_repo, test_args, capsys):
     """
     Test engage and disengage commands.
-    """
 
-    # NOTE: all catalogue_results directory and files are created in CWD
+    NOTE: the catalogue_results directory and files are created in CWD
+    """
 
     # engage
     engage(test_args)
