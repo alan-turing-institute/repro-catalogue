@@ -20,16 +20,16 @@ A command line tool to catalogue versions of data, code and results to support r
 
 ## Introduction
 
-Research projects commonly have data that is being regularly updated. The code is also regularly tweaked. Given this, it is fairly common to save some results and lose track of the context (data and code) in which they were produced.
+Research projects are frequently updated - new data are added, and the code undergoes regular changes. Under these circumstances, it's easy to store results, yet lose track of the context in which they were produced.
 
 To ensure reproducibility of any scientific results we need to reliably record:
-- what input data was used
-- what code was run
-- what outputs were produced
+- what input data was used :floppy_disk:
+- what code was run :desktop_computer:
+- what outputs were produced :chart_with_upwards_trend:
 
-To aid reproducibility, `catalogue` provides a command line interface for recording a hash value of the dataset that was used and the outputs that were produced in an analysis. It also saves the latest git commit hash of the code that was run to do the analysis.
+The `catalogue` tool aids reproducibility by saving **hash values** of the input data and the results, along with the **git commit hash** of the code used to generate those results. The `catalogue` command line interface then allows the user to easily compare the hash values from different occasions on which the analysis was run so that changes to the input data, code and results can be identified and the impact on reproducibility be understood.
 
-Hash functions map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
+**Hash functions** map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
 
 ## Installation
 
@@ -40,6 +40,10 @@ pip install .
 ```
 
 ## Getting started
+
+### Prerequisites
+
+A **pre-requisite** for using `catalogue` is that the directory with the analysis code is a git repository.
 
 ### Catalogue overview
 
@@ -69,8 +73,6 @@ Note that all arguments have default values which will be used if they are not p
 ```{bash}
 catalogue <command> -h
 ```
-
-A **pre-requisite** for using `catalogue` is that the directory with the analysis code is a git repository.
 
 ### Available commands
 
