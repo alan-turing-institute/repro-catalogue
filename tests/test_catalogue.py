@@ -78,60 +78,59 @@ def test_hash_file(fixtures_dir, copy_fixtures_dir, empty_hash):
             assert ct.hash_file(file_path).hexdigest() == ct.hash_file(copy_file_path).hexdigest()
 
 
-@pytest.mark.parametrize("hash_f", [ct.hash_dir_full, ct.hash_dir_by_file])
-def test_hash_dir(hash_f, fixtures_dir, fixture1, empty_hash):
-    """Test calling hash_dir_* functions with directory & file path inputs"""
+def test_hash_dir_by_file(fixtures_dir, copy_fixtures_dir, empty_hash, fixture1):
 
     # input is a directory
-    assert hash_f(fixtures_dir) == hash_f(fixtures_dir)
-    assert hash_f(fixtures_dir) != empty_hash
+    assert ct.hash_dir_by_file(fixtures_dir) == ct.hash_dir_by_file(fixtures_dir)
+    assert (sorted(ct.hash_dir_by_file(fixtures_dir).values()) ==
+            sorted(ct.hash_dir_by_file(copy_fixtures_dir).values()))
+    assert empty_hash not in ct.hash_dir_by_file(fixtures_dir).values()
 
     # input is a file
     with pytest.raises(AssertionError):
-        hash_f(fixture1)
+        ct.hash_dir_by_file(fixture1)
 
 
-@pytest.mark.parametrize("hash_f", [ct.hash_dir_by_file, ct.hash_output])
-def test_hash_dir_file_consistent(hash_f, fixtures_dir, copy_fixtures_dir):
-    assert (sorted(hash_f(fixtures_dir).values()) ==
-            sorted(hash_f(copy_fixtures_dir).values()))
+def test_hash_dir_full(fixtures_dir, copy_fixtures_dir, empty_hash, fixture1):
 
+    # input is a directory
+    assert ct.hash_dir_full(fixtures_dir) == ct.hash_dir_full(fixtures_dir)
+    assert ct.hash_dir_full(fixtures_dir) == ct.hash_dir_full(copy_fixtures_dir)
+    assert ct.hash_dir_full(fixtures_dir) != empty_hash
 
-@pytest.mark.parametrize("hash_f", [ct.hash_dir_full, ct.hash_input])
-def test_hash_dir_full_consistent(hash_f, fixtures_dir, copy_fixtures_dir):
-    assert hash_f(fixtures_dir) == hash_f(copy_fixtures_dir)
+    # input is a file
+    with pytest.raises(AssertionError):
+        ct.hash_dir_full(fixture1)
 
 
 def test_hash_input(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
 
     # 1. input is a directory
     assert ct.hash_input(fixtures_dir) == ct.hash_input(fixtures_dir)
-    assert ct.hash_input(fixtures_dir) == ct.hash_dir_full(fixtures_dir)
+    assert ct.hash_input(fixtures_dir) == ct.hash_input(copy_fixtures_dir)
     assert ct.hash_input(fixtures_dir) != empty_hash
 
     # 2. input is a file
     assert ct.hash_input(fixture1) == ct.hash_input(fixture1)
-    assert ct.hash_input(fixture1) == ct.hash_file(fixture1).hexdigest()
     assert ct.hash_input(fixture1) != empty_hash
 
 
 def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixture3, fixture4, empty_hash):
 
     # 1. input is a directory
-    hashes = ct.hash_output(fixtures_dir)
-    assert hashes == ct.hash_dir_by_file(fixtures_dir)
-    assert hashes == {
+    assert ct.hash_output(fixtures_dir) == {
         fixture1: ct.hash_file(fixture1).hexdigest(),
         fixture2: ct.hash_file(fixture2).hexdigest(),
         fixture3: ct.hash_file(fixture3).hexdigest(),
         fixture4: ct.hash_file(fixture4).hexdigest()
     }
+    assert (sorted(ct.hash_output(fixtures_dir).values()) ==
+            sorted(ct.hash_output(copy_fixtures_dir).values()))
+    assert empty_hash not in ct.hash_output(fixtures_dir).values()
 
     # 2. input is a file
-    hashes = ct.hash_output(fixture1)
-    assert hashes == ct.hash_output(fixture1)
-    assert fixture1 in hashes.keys()
-    assert ct.hash_output(fixture1)[fixture1] == ct.hash_file(fixture1).hexdigest()
+    assert ct.hash_output(fixture1) == ct.hash_output(fixture1)
+    assert fixture1 in ct.hash_output(fixture1).keys()
     assert ct.hash_output(fixture1)[fixture1] != empty_hash
 
 
