@@ -3,7 +3,6 @@ import os
 
 from datetime import datetime
 
-CATALOGUE_DIR = "catalogue_results"
 
 def create_timestamp():
     return datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -22,6 +21,7 @@ def check_paths_exists(args):
     ---------
     Boolean indicating if all filepaths exist.
     """
-    paths = [value for key, value in vars(args).items() if key not in ["command", "func", "csv"]]
+    paths = [value for key, value in vars(args).items()
+            if key not in ["command", "func", "csv", "catalogue_results"]]
     path_checks = [os.path.exists(path) for path in paths]
     return all(path_checks)

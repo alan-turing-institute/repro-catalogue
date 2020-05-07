@@ -1,6 +1,6 @@
 import os
 from . import catalogue as ct
-from .utils import create_timestamp, CATALOGUE_DIR
+from .utils import create_timestamp
 
 def compare(args):
     """
@@ -16,13 +16,13 @@ def compare(args):
     if args.csv is None:
         hash_dict_1 = ct.load_hash(args.hashes[0])
     else:
-        hash_dict_1 = ct.load_csv(os.path.join(CATALOGUE_DIR, args.csv), args.hashes[0])
+        hash_dict_1 = ct.load_csv(os.path.join(args.catalogue_results, args.csv), args.hashes[0])
 
     if len(args.hashes) == 2:
         if args.csv is None:
             hash_dict_2 = ct.load_hash(args.hashes[1])
         else:
-            hash_dict_2 = ct.load_csv(os.path.join(CATALOGUE_DIR, args.csv), args.hashes[1])
+            hash_dict_2 = ct.load_csv(os.path.join(args.catalogue_results, args.csv), args.hashes[1])
     else:
         hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 

@@ -70,6 +70,15 @@ def main():
                              " that is a git repository. Default is the current working directory."),
         default='.')
 
+    common_parser.add_argument(
+        'catalogue_results',
+        type=str,
+        metavar='catalogue_results',
+        help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
+                            " files created by catalogue should be stored. Default is catalogue_results."),
+        default='catalogue_results'
+    )
+
     output_parser = argparse.ArgumentParser(add_help=False)
     output_parser.add_argument(
         '--output_data',

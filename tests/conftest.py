@@ -33,7 +33,7 @@ def fixture4():
 @pytest.fixture
 def empty_hash():
     """
-    Hash produced if no input is provided. 
+    Hash produced if no input is provided.
     """
     return hashlib.sha512().hexdigest()
 
@@ -64,6 +64,7 @@ def test_args(git_repo):
     args = argparse.Namespace(
         command = "engage",
         input_data = os.path.join(git_repo, "data"),
+        catalogue_results = "catalogue_results",
         code = git_repo,
         csv = None
     )

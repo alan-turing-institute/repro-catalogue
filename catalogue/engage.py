@@ -6,9 +6,8 @@ from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 from .compare import compare_hashes, print_comparison
-from .utils import create_timestamp, check_paths_exists, CATALOGUE_DIR
+from .utils import create_timestamp, check_paths_exists
 
-CATALOGUE_LOCK_PATH = os.path.join(CATALOGUE_DIR, ".lock")
 
 def git_query(repo_path, commit_changes=False):
     """
@@ -87,13 +86,13 @@ def engage(args):
 
     if git_query(args.code, True):
         try:
-            assert not os.path.exists(CATALOGUE_LOCK_PATH)
+            assert not os.path.exists(os.path.join(args.catalogue_results, ".lock"))
         except AssertionError:
             print("Already engaged (.lock file exists). To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
         else:
             hash_dict = ct.construct_dict(create_timestamp(), args)
-            ct.store_hash(hash_dict, "", CATALOGUE_DIR, ext="lock")
+            ct.store_hash(hash_dict, "", args.catalogue_results, ext="lock")
             print("'catalogue engage' succeeded. Proceed with analysis")
 
 
@@ -116,8 +115,9 @@ def disengage(args):
 
     timestamp = create_timestamp()
     try:
-        lock_dict = ct.load_hash(CATALOGUE_LOCK_PATH)
-        os.remove(CATALOGUE_LOCK_PATH)
+        LOCK_FILE_PATH = os.path.join(args.catalogue_results, ".lock")
+        lock_dict = ct.load_hash(LOCK_FILE_PATH)
+        os.remove(LOCK_FILE_PATH)
     except FileNotFoundError:
         print("Not currently engaged (could not find .lock file). To engage run 'catalogue engage...'")
         print("See 'catalogue engage --help' for details")
@@ -130,7 +130,7 @@ def disengage(args):
             # add engage timestamp to hash_dict
             hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]["engage"]})
             if args.csv is None:
-                ct.store_hash(hash_dict, timestamp, CATALOGUE_DIR)
+                ct.store_hash(hash_dict, timestamp, args.catalogue_results)
             else:
-                ct.save_csv(hash_dict, timestamp, os.path.join(CATALOGUE_DIR, args.csv))
+                ct.save_csv(hash_dict, timestamp, os.path.join(args.catalogue_results, args.csv))
         print_comparison(compare)
