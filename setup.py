@@ -35,7 +35,7 @@ except FileNotFoundError:
     install_packages = []
 
 setup(
-    name="catalogue",
+    name="repro-catalogue",
     version=version,
     install_requires=install_packages,
     include_package_data=True,
