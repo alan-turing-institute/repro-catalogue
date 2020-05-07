@@ -71,7 +71,7 @@ def main():
         default='.')
 
     common_parser.add_argument(
-        'catalogue_results',
+        '--catalogue_results',
         type=str,
         metavar='catalogue_results',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
