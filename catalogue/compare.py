@@ -6,8 +6,9 @@ def compare(args):
     """
     Compares two hash files
 
-    Compares two hash files, given as input arguments to the command line tool. Prints results
-    on the command line.
+    Compares two hash files, given as input arguments to the command line tool.
+    If only one file is given that input is compared to the current state.
+    Prints results on the command line.
     """
 
     assert len(args.hashes) == 1 or len(args.hashes) == 2, "compare can only accept 1 or 2 hash files"

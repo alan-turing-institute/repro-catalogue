@@ -69,6 +69,20 @@ def git_query(repo_path, commit_changes=False):
 
 
 def engage(args):
+    """
+    The `catalogue engage` command.
+
+    The engage command is used prior to running an analysis. The `args` contain
+    paths to `input_data` and `code` (which must be a git repo).
+
+    The engage command:
+        - does a `git_query()` check of the `code` repo
+        - gets hashes for the input_data and code (from `construct_dict()`)
+        - saves the hashes to a `.lock` file
+
+    Once engaged (a `.lock` file exists), the command cannot be run again until
+    `disengage` has been run.
+    """
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 
     if git_query(args.code, True):
@@ -78,16 +92,26 @@ def engage(args):
             print("Already engaged (.lock file exists). To disengage run 'catalogue disengage...'")
             print("See 'catalogue disengage --help' for details")
         else:
-            if not os.path.exists(CATALOGUE_DIR):
-                os.makedirs(CATALOGUE_DIR)
-
             hash_dict = ct.construct_dict(create_timestamp(), args)
-            with open(CATALOGUE_LOCK_PATH, "w") as f:
-                json.dump(hash_dict, f)
+            ct.store_hash(hash_dict, "", CATALOGUE_DIR, ext="lock")
             print("'catalogue engage' succeeded. Proceed with analysis")
 
 
 def disengage(args):
+    """
+    The `catalogue disengage` command.
+
+    The disengage command is run just after finishing an analysis. It cannot be run
+    unless `engage` was run first.
+
+    The `args` contain paths to `input_data`, `code` (must be a git repo) and `output_data`.
+
+    The disengage command:
+        - reads hashes stored in the `.lock` file created during `engage`
+        - gets hashes for the `input_data`, `code` and `output_data` (from `construct_dict()`)
+        - compares the two sets of hashes (if the same, saves the hashes)
+        - prints the results of the comparison
+    """
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 
     timestamp = create_timestamp()
