@@ -129,7 +129,7 @@
 
  ---
 
- _These Contributing Guidelines have been adapted from the [Contributing Guidelines](https://github.com/bids-standard/bids-starter-kit/blob/master/CONTRIBUTING.md) of [The Turing Way](https://github.com/alan-turing-institute/the-turing-way)! (License: MIT)_
+ _These Contributing Guidelines have been adapted from [The Turing Way Contributing Guidelines](https://github.com/alan-turing-institute/the-turing-way/blob/master/CONTRIBUTING.md)! (License: MIT)_
 
  [repro-catalogue-repo]: https://github.com/alan-turing-institute/repro-catalogue/
  [repro-catalogue-issues]: https://github.com/alan-turing-institute/repro-catalogue/issues
