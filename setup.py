@@ -1,5 +1,31 @@
 from setuptools import setup, find_packages
 
+# version information
+MAJOR = 1
+MINOR = 0
+MICRO = 0
+PRERELEASE = 0
+ISRELEASED = True
+version = "{}.{}.{}".format(MAJOR, MINOR, MICRO)
+
+if not ISRELEASED:
+    version += ".dev{}".format(PRERELEASE)
+
+# write version information to file
+
+def write_version_file(version):
+    "writes version file that is read when importing version number"
+    version_file = """'''
+Version file automatically created by setup.py file
+'''
+version = '{}'
+    """.format(version)
+
+    with open("catalogue/version.py", "w") as fh:
+        fh.write(version_file)
+
+write_version_file(version)
+
 # Source dependencies from requirements.txt file.
 try:
     with open("requirements.txt", "r") as f:
@@ -10,16 +36,16 @@ except FileNotFoundError:
 
 setup(
     name="catalogue",
-    version="",
+    version=version,
     install_requires=install_packages,
     include_package_data=True,
-    python_requires=">=3.7",
-    author="",
+    python_requires=">=3.6",
+    author='The Alan Turing Institute Research Engineering Group',
     author_email="",
-    url="",
+    url="https://github.com/alan-turing-institute/repro-catalogue",
     # this should be a whitespace separated string of keywords, not a list
     keywords="cli-tool management version-control hashing",
-    description="",
+    description="Tool for reproducible analyses",
     long_description=open("./README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="MIT",
