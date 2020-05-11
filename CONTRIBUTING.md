@@ -39,17 +39,15 @@
 
  - [![good-first-issue](https://img.shields.io/badge/-good%20first%20issue-1b3487.svg)][labels-firstissue] _These issues are particularly appropriate if it is your first contribution to repro-catalogue, or to GitHub overall._
 
- - [![Enhancement](https://img.shields.io/badge/-enhancement-84b6eb.svg)][labels-enhancement] _These issues are suggesting new features that can be added to the project._
+ - [![enhancement](https://img.shields.io/badge/-enhancement-84b6eb.svg)][labels-enhancement] _These issues are suggesting new features that can be added to the project._
 
    If you want to ask for something new, please try to make sure that your request is distinct from any others that are already in the queue (or part of repro-catalogue).
    If you find one that's similar but there are subtle differences please reference the other enhancement in your issue.
 
- - [![Bug](https://img.shields.io/badge/-bug-d73a4a.svg)][labels-bug] _These issues are reporting a problem or a mistake in the project._
+ - [![bug](https://img.shields.io/badge/-bug-d73a4a.svg)][labels-bug] _These issues are reporting a problem or a mistake in the project._
 
    The more details you can provide the better!
    If you know how to fix the bug, please open an issue first and then submit a pull request.
-
- - [![project-management](https://img.shields.io/badge/-project%20management-bfd86c.svg)][labels-project-management] _We like to model best practice, so repro-catalogue itself is managed through these issues.
 
  ## Making a change with a pull request
 
