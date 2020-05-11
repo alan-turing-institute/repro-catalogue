@@ -11,7 +11,7 @@ def main():
 
     This is the main function that is called when running the tool. The function parses
     the arguments supplied and calls the appropriate function (`engage`, `disengage`,
-    `checkhashes`, or `compare`). The details of each of these functions is described in
+    or `compare`). The details of each of these functions is described in
     the appropriate docstrings.
 
     engage
@@ -69,6 +69,15 @@ def main():
                              " The code directory must be a git repository, or must have a parent directory" +
                              " that is a git repository. Default is the current working directory."),
         default='.')
+
+    common_parser.add_argument(
+        '--catalogue_results',
+        type=str,
+        metavar='catalogue_results',
+        help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
+                            " files created by catalogue should be stored. Default is catalogue_results."),
+        default='catalogue_results'
+    )
 
     output_parser = argparse.ArgumentParser(add_help=False)
     output_parser.add_argument(

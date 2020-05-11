@@ -215,11 +215,15 @@ def test_store_hash(tmpdir):
     ct.store_hash(hash_dict, timestamp, tmpdir.strpath)
     assert file.read() == '{"hello": "world"}'
 
-    # invalid timestamp
-    with pytest.raises(AssertionError):
-        ct.store_hash(hash_dict, 123456789, tmpdir.strpath)
-    with pytest.raises(AssertionError):
-        ct.store_hash(hash_dict, "20200430", tmpdir.strpath)
+    # save to file in a new subdirectory
+    new_file = tmpdir.join("results", '{}.json'.format(timestamp))
+    ct.store_hash(hash_dict, timestamp, os.path.join(tmpdir.strpath, "results"))
+    assert new_file.read() == '{"hello": "world"}'
+
+    # save to .lock file
+    file = tmpdir.join('.lock')
+    ct.store_hash(hash_dict, "", tmpdir.strpath, ext="lock")
+    assert file.read() == '{"hello": "world"}'
 
     # not all inputs provided
     with pytest.raises(TypeError):

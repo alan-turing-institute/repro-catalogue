@@ -169,6 +169,7 @@ def hash_output(output_data):
     else:
         raise AssertionError("Provided input {} is not a file or directory".format(output_data))
 
+
 def hash_code(repo_path):
     """
     Get commit digest for current HEAD commit
@@ -231,9 +232,9 @@ def construct_dict(timestamp, args):
     return results
 
 
-def store_hash(hash_dict, timestamp, store):
+def store_hash(hash_dict, timestamp, store, ext="json"):
     """
-    Save hash information to <timestamp.json> file.
+    Save hash information to <timestamp.ext> file.
 
     Parameters
     ----------
@@ -243,17 +244,17 @@ def store_hash(hash_dict, timestamp, store):
         timestamp (will be used as name of file)
     store: str
         directory where to store the file
+    ext: str
+        the extension of the file to store the hash info in, default is "json"
 
     Returns
     -------
     None
     """
-    assert isinstance(timestamp, str)
-    assert len(timestamp) == 15, "bad format for timestamp"
 
-    if not os.path.exists(store):
-        os.makedirs(store)
-    with open(os.path.join(store, "{}.json".format(timestamp)),"w") as f:
+    os.makedirs(store, exist_ok=True)
+    
+    with open(os.path.join(store, "{}.{}".format(timestamp, ext)),"w") as f:
         json.dump(hash_dict, f)
 
 

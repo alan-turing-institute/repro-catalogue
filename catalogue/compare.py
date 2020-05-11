@@ -1,13 +1,14 @@
 import os
 from . import catalogue as ct
-from .utils import create_timestamp, CATALOGUE_DIR
+from .utils import create_timestamp
 
 def compare(args):
     """
     Compares two hash files
 
-    Compares two hash files, given as input arguments to the command line tool. Prints results
-    on the command line.
+    Compares two hash files, given as input arguments to the command line tool.
+    If only one file is given that input is compared to the current state.
+    Prints results on the command line.
     """
 
     assert len(args.hashes) == 1 or len(args.hashes) == 2, "compare can only accept 1 or 2 hash files"
@@ -15,17 +16,18 @@ def compare(args):
     if args.csv is None:
         hash_dict_1 = ct.load_hash(args.hashes[0])
     else:
-        hash_dict_1 = ct.load_csv(os.path.join(CATALOGUE_DIR, args.csv), args.hashes[0])
+        hash_dict_1 = ct.load_csv(os.path.join(args.catalogue_results, args.csv), args.hashes[0])
 
     if len(args.hashes) == 2:
         if args.csv is None:
             hash_dict_2 = ct.load_hash(args.hashes[1])
         else:
-            hash_dict_2 = ct.load_csv(os.path.join(CATALOGUE_DIR, args.csv), args.hashes[1])
+            hash_dict_2 = ct.load_csv(os.path.join(args.catalogue_results, args.csv), args.hashes[1])
     else:
         hash_dict_2 = ct.construct_dict(create_timestamp(), args)
 
     print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
+
 
 def compare_hashes(hash_dict_1, hash_dict_2):
     """
@@ -97,6 +99,7 @@ def compare_hashes(hash_dict_1, hash_dict_2):
 
     return { "matches" : matches, "differs" : differs, "failures" : failures }
 
+
 def print_comparison(compare_dict):
     """
     Print a nicely formatted summary of hash comparisons
@@ -112,13 +115,15 @@ def print_comparison(compare_dict):
         raise KeyError("comparison dictionary input to print_comparison is missing a value")
 
     print("\n".join([
-            "results differ in {} places:".format(len(differs)),
+            "NOTE we expect the timestamp hashes to differ.",
+            "\nhashes differ in {} places:".format(len(differs)),
             "===========================",
             *differs,
-            "results match in {} places:".format(len(matches)),
+            "\nhashes match in {} places:".format(len(matches)),
             "==========================",
             *matches,
-            "results could not be compared in {} places:".format(len(failures)),
+            "\nhashes could not be compared in {} places:".format(len(failures)),
             "==========================================",
-            *failures
+            *failures,
+            ""
             ]))

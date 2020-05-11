@@ -16,6 +16,7 @@ def test_compare_json(fixture1, fixture2, fixtures_dir, capsys, git_repo):
         command = "compare",
         input_data = "data",
         output_data = "results",
+        catalogue_results = "catalogue_results",
         code = git_repo,
         csv = None
     )
@@ -68,6 +69,7 @@ def test_compare_csv(fixture4, fixtures_dir, git_repo, workspace, capsys):
         command = "compare",
         input_data = "data",
         output_data = "results",
+        catalogue_results = "catalogue_results",
         code = git_repo,
         csv = fixture4
     )
