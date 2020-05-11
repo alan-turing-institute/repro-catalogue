@@ -28,6 +28,7 @@ def compare(args):
 
     print_comparison(compare_hashes(hash_dict_1, hash_dict_2))
 
+
 def compare_hashes(hash_dict_1, hash_dict_2):
     """
     Compare two hash dictionaries
@@ -98,6 +99,7 @@ def compare_hashes(hash_dict_1, hash_dict_2):
 
     return { "matches" : matches, "differs" : differs, "failures" : failures }
 
+
 def print_comparison(compare_dict):
     """
     Print a nicely formatted summary of hash comparisons
@@ -113,13 +115,15 @@ def print_comparison(compare_dict):
         raise KeyError("comparison dictionary input to print_comparison is missing a value")
 
     print("\n".join([
-            "results differ in {} places:".format(len(differs)),
+            "NOTE we expect the timestamp hashes to differ.",
+            "\nhashes differ in {} places:".format(len(differs)),
             "===========================",
             *differs,
-            "results match in {} places:".format(len(matches)),
+            "\nhashes match in {} places:".format(len(matches)),
             "==========================",
             *matches,
-            "results could not be compared in {} places:".format(len(failures)),
+            "\nhashes could not be compared in {} places:".format(len(failures)),
             "==========================================",
-            *failures
+            *failures,
+            ""
             ]))
