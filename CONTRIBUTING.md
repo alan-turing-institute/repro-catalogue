@@ -39,6 +39,8 @@
 
  - [![good-first-issue](https://img.shields.io/badge/-good%20first%20issue-1b3487.svg)][labels-firstissue] _These issues are particularly appropriate if it is your first contribution to repro-catalogue, or to GitHub overall._
 
+- [![documentation](https://img.shields.io/badge/-documentation-blue)][labels-documentation] _These issues relate to improving or updating the documentation._
+
  - [![enhancement](https://img.shields.io/badge/-enhancement-84b6eb.svg)][labels-enhancement] _These issues are suggesting new features that can be added to the project._
 
    If you want to ask for something new, please try to make sure that your request is distinct from any others that are already in the queue (or part of repro-catalogue).
@@ -146,5 +148,6 @@
  [labels-helpwanted]: https://github.com/alan-turing-institute/repro-catalogue/labels/help%20wanted
  [labels-project-management]: https://github.com/alan-turing-institute/repro-catalogue/labels/project%20management
  [labels-question]: https://github.com/alan-turing-institute/repro-catalogue/labels/question
+ [labels-documentation]: https://github.com/alan-turing-institute/repro-catalogue/labels/documentation
  [link_numpydoc]: https://numpydoc.readthedocs.io/en/latest/format.html
  [link_pep8]: https://www.python.org/dev/peps/pep-0008/
