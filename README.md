@@ -1,6 +1,6 @@
 # repro-catalogue
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A command line tool to catalogue versions of data, code and results to support reproducibility of research projects.
@@ -318,6 +318,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/LouiseABowler"><img src="https://avatars1.githubusercontent.com/u/25640708?v=4" width="100px;" alt=""/><br /><sub><b>Louise Bowler</b></sub></a><br /><a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=LouiseABowler" title="Documentation">📖</a> <a href="#ideas-LouiseABowler" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3ALouiseABowler" title="Reviewed Pull Requests">👀</a> <a href="#projectManagement-LouiseABowler" title="Project Management">📆</a> <a href="#design-LouiseABowler" title="Design">🎨</a> <a href="#maintenance-LouiseABowler" title="Maintenance">🚧</a></td>
     <td align="center"><a href="http://isla.st"><img src="https://avatars2.githubusercontent.com/u/23707851?v=4" width="100px;" alt=""/><br /><sub><b>Isla</b></sub></a><br /><a href="#design-Islast" title="Design">🎨</a> <a href="#ideas-Islast" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=Islast" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=Islast" title="Documentation">📖</a></td>
     <td align="center"><a href="https://whitakerlab.github.io"><img src="https://avatars1.githubusercontent.com/u/3626306?v=4" width="100px;" alt=""/><br /><sub><b>Kirstie Whitaker</b></sub></a><br /><a href="#design-KirstieJane" title="Design">🎨</a> <a href="#ideas-KirstieJane" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-KirstieJane" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://sgibson91.github.io/"><img src="https://avatars2.githubusercontent.com/u/44771837?v=4" width="100px;" alt=""/><br /><sub><b>Sarah Gibson</b></sub></a><br /><a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=sgibson91" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Asgibson91" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
