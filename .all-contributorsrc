@@ -14,7 +14,9 @@
         "doc",
         "ideas",
         "review",
-        "projectManagement"
+        "projectManagement",
+        "design",
+        "maintenance"
       ]
     }
   ],
