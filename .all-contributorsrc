@@ -61,6 +61,21 @@
         "review",
         "userTesting"
       ]
+    },
+    {
+      "login": "edaub",
+      "name": "Eric Daub",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/45598892?v=4",
+      "profile": "https://github.com/edaub",
+      "contributions": [
+        "design",
+        "ideas",
+        "code",
+        "doc",
+        "review",
+        "maintenance",
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7,
