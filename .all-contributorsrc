@@ -41,6 +41,16 @@
         "ideas",
         "infra"
       ]
+    },
+    {
+      "login": "sgibson91",
+      "name": "Sarah Gibson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/44771837?v=4",
+      "profile": "https://sgibson91.github.io/",
+      "contributions": [
+        "code",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
