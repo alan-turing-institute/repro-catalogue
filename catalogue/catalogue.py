@@ -5,6 +5,7 @@ from itertools import chain
 import hashlib
 import git
 from git import InvalidGitRepositoryError, RepositoryDirtyError
+from .utils import prune_files
 
 
 def hash_file(filepath, m=None):
@@ -198,7 +199,7 @@ def hash_code(repo_path, catalogue_dir):
     except InvalidGitRepositoryError:
         raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 
-    untracked = [f for f in repo.untracked_files if catalogue_dir not in f]
+    untracked = prune_files(repo.untracked_files, catalogue_dir)
     if repo.is_dirty() or len(untracked) != 0:
         raise RepositoryDirtyError(repo, "git repository contains uncommitted changes")
 

@@ -6,7 +6,7 @@ from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
 from .compare import compare_hashes, print_comparison
-from .utils import create_timestamp, check_paths_exists
+from .utils import create_timestamp, check_paths_exists, prune_files
 
 
 def git_query(repo_path, catalogue_dir, commit_changes=False):
@@ -46,7 +46,7 @@ def git_query(repo_path, catalogue_dir, commit_changes=False):
     except InvalidGitRepositoryError:
         raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 
-    untracked = [f for f in repo.untracked_files if catalogue_dir not in f]
+    untracked = prune_files(repo.untracked_files, catalogue_dir)
 
     if repo.is_dirty() or (len(untracked) != 0):
         if commit_changes:
