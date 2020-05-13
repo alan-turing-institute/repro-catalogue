@@ -44,8 +44,10 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     # repo is clean
     assert git_query(git_repo, catalogue_results, True) == True
 
-    # create new file -- untracked --> wil ask for user input
+    # create new file (untracked) --> wil ask for user input
     workspace.run("touch test2.csv")
+
+    # user responds no
     monkeypatch.setattr('builtins.input', lambda: "n")
     assert git_query(git_repo, catalogue_results, True) == False
 

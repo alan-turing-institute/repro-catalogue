@@ -139,11 +139,27 @@ def test_hash_code(git_repo, git_hash, workspace):
     # correct functioning
     assert ct.hash_code(git_repo, 'catalogue_results') == git_hash
 
-    # directory has uncommited file
+    # directory has untracked file in `catalogue_results`
+    workspace.run("mkdir catalogue_results")
+    workspace.run("touch catalogue_results/test.csv")
+    assert ct.hash_code(git_repo, 'catalogue_results') == git_hash
+
+    # directory has untracked file
     workspace.run("touch test.csv")
+    with pytest.raises(RepositoryDirtyError):
+        ct.hash_code(git_repo, 'catalogue_results')
+
+    # directory has uncommited file
     workspace.run("git add .")
     with pytest.raises(RepositoryDirtyError):
         ct.hash_code(git_repo, 'catalogue_results')
+
+    # all files committed
+    repo = git.Repo(git_repo)
+    repo.index.commit("Add new file")
+    new_git_hash = repo.head.commit.hexsha
+    assert ct.hash_code(git_repo, 'catalogue_results') != git_hash
+    assert ct.hash_code(git_repo, 'catalogue_results') == new_git_hash
 
     # missing arguments
     with pytest.raises(TypeError):
