@@ -22,8 +22,9 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     # repo is clean
     assert git_query(git_repo, catalogue_results) == True
 
-    # create new file -- untracked
-    workspace.run("touch test.csv")
+    # create new file -- untracked; file path includes `catalogue_results` but
+    # it is not the directory name
+    workspace.run("touch catalogue_results.json")
     assert git_query(git_repo, catalogue_results) == False
 
     # git add file without commit
@@ -36,6 +37,11 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     assert git_hash_0 != git_hash_1
     assert git_query(git_repo, catalogue_results) == True
 
+    # create new file in `catalogue_results` dir
+    workspace.run("mkdir catalogue_results")
+    workspace.run("touch catalogue_results/test.json")
+    assert git_query(git_repo, catalogue_results) == True
+
     #==================================================
     # 2: use with commit_changes=True
     # --> user will get asked to commit changes
@@ -45,7 +51,8 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     assert git_query(git_repo, catalogue_results, True) == True
 
     # create new file (untracked) --> wil ask for user input
-    workspace.run("touch test2.csv")
+    # file path includes `catalogue_results` but it is not the directory name
+    workspace.run("touch new_catalogue_results.json")
 
     # user responds no
     monkeypatch.setattr('builtins.input', lambda: "n")

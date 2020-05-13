@@ -144,8 +144,9 @@ def test_hash_code(git_repo, git_hash, workspace):
     workspace.run("touch catalogue_results/test.csv")
     assert ct.hash_code(git_repo, 'catalogue_results') == git_hash
 
-    # directory has untracked file
-    workspace.run("touch test.csv")
+    # directory has untracked file; file path includes `catalogue_results` but
+    # it is not the directory name
+    workspace.run("touch catalogue_results.csv")
     with pytest.raises(RepositoryDirtyError):
         ct.hash_code(git_repo, 'catalogue_results')
 
