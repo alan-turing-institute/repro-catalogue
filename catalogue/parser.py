@@ -75,7 +75,8 @@ def main():
         type=str,
         metavar='catalogue_results',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
-                            " files created by catalogue should be stored. Default is catalogue_results."),
+                            " files created by catalogue should be stored. It cannot be the same as the `code`" +
+                            " directory. Default is catalogue_results."),
         default='catalogue_results'
     )
 
@@ -116,7 +117,9 @@ def main():
     disengage_parser.set_defaults(func=disengage)
 
     args = parser.parse_args()
+    assert args.code != args.catalogue_results, "The 'catalogue_results' and 'code' paths cannot be the same"
     args.func(args)
+
 
 if __name__ == "__main__":
     main()
