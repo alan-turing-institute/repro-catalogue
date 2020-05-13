@@ -18,6 +18,18 @@
         "design",
         "maintenance"
       ]
+    },
+    {
+      "login": "Islast",
+      "name": "Isla",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/23707851?v=4",
+      "profile": "http://isla.st",
+      "contributions": [
+        "design",
+        "ideas",
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
