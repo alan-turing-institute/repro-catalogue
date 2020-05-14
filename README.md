@@ -2,6 +2,8 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![Build Status](https://travis-ci.com/alan-turing-institute/repro-catalogue.svg?branch=master)](https://travis-ci.com/alan-turing-institute/repro-catalogue)
+[![PyPI version](https://badge.fury.io/py/repro-catalogue.svg)](https://badge.fury.io/py/repro-catalogue)
 
 A command line tool to catalogue versions of data, code and results to support reproducibility of research projects.
 
