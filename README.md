@@ -8,11 +8,13 @@ A command line tool to catalogue versions of data, code and results to support r
 ## Contents
 
 * [Introduction](#introduction)
-* [Installation](#installation)
 * [Getting started](#getting-started)
+  * [Installation](#installation)
   * [Prerequisites](Prerequisites)
+* [Usage](#usage)
   * [Catalogue overview](#catalogue-overview)
   * [Available commands](#available-commands)
+  * [Optional arguments](#optional-arguments)
 * [Useful resources](#useful-resources)
 * [Contributing](#contributing)
 * [Contributors](#contributors)
@@ -30,15 +32,15 @@ The `catalogue` tool aids reproducibility by saving **hash values** of the input
 
 **Hash functions** map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
 
-## Installation
+## Getting started
+
+### Installation
 
 The package is available on PyPI:
 
 ```{bash}
 pip install repro-catalogue
 ```
-
-## Getting started
 
 ### Prerequisites
 
@@ -63,6 +65,8 @@ A pre-requisite for using `catalogue` is that the directory with the analysis co
 The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
 
 Throughout, the tool will require you to provide paths to directories and files. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data_dir/my_data.csv`, whereas on Windows it will be `data_dir\my_data.csv` (i.e., use `\` instead of `/`).
+
+## Usage
 
 ### Catalogue overview
 
@@ -92,6 +96,7 @@ Note that all arguments have default values which will be used if they are not p
 ```{bash}
 catalogue <command> -h
 ```
+
 ### Available commands
 
 #### engage
@@ -213,6 +218,34 @@ results could not be compared in 0 places:
 ```
 
 If only one file is provided to the `compare` command, then the hashes in the file are compared with hashes of the current state of the working directory. In that case, it is possible to also specify paths to the `input_data`, `code` and `output_data`.
+
+### Optional arguments
+
+#### --csv
+
+It is possible to save the outputs from `disengage` to a csv rather than a json file. For this, use the `--csv` flag followed by the name of the file to save results to. For example:
+
+```{bash}
+catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv version_data.csv
+```
+
+Similarly, the `compare` command can be used with a `--csv` flag. In that case, one would provide the two timestamps to compare:
+
+```{bash}
+compare 200510-120000 200514-170500 --csv version_data.csv
+```
+
+Same as when using the json files, it is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
+
+#### --catalogue_results
+
+By default, all files created by `catalogue` are saved in a `catalogue_results` directory. It is possible to change this by using the optional `--catalogue_results` flag. For exmaple:
+
+```
+catalogue engage --input_data data_dir --code code_dir --catalogue_results versioning_files
+```
+
+Note that if you change the default `catalogue_results` directory, you have to use this flag in each subsequent command. Also, this  directory cannot be the same as the `--code` directory.
 
 ## Useful resources
 
