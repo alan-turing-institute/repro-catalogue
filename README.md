@@ -36,10 +36,10 @@ The `catalogue` tool aids reproducibility by saving **hash values** of the input
 
 ## Installation
 
+The package is available on PyPI:
+
 ```{bash}
-git clone https://github.com/alan-turing-institute/repro-catalogue.git
-cd repro-catalogue
-pip install .
+pip install repro-catalogue
 ```
 
 ## Getting started
@@ -62,11 +62,11 @@ To use the tool, we assume you already have a project with some analysis code re
 
 A pre-requisite for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
 
-**Command line interface**
+**Command line**
 
 The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
 
-Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data_dir/my_data.csv`, whereas on Windows it will be `data_dir\my_data.csv` (i.e., use `\` instead of `/`).
+Throughout, the tool will require you to provide paths to directories and files. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data_dir/my_data.csv`, whereas on Windows it will be `data_dir\my_data.csv` (i.e., use `\` instead of `/`).
 
 ### Catalogue overview
 
