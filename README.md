@@ -43,17 +43,17 @@ pip install .
 
 ### Prerequisites
 
-To use the tool, we assume you have already have a project with some data and analysis code. Your project structure might look something like this:
+To use the tool, we assume you already have a project with some analysis code ready to run on your data. Your project structure might look something like this:
 
 ```
 ├── data/
 │   ├── my_data.csv
 ├── analysis/
 │   ├── my_analysis.py
+├── results/
 ```
 
 A **pre-requisite** for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
-
 
 ### Catalogue overview
 
@@ -94,6 +94,12 @@ This command is run before an analysis is conducted:
 catalogue engage --input_data <data directory> --code <code directory>
 ```
 
+Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, it might look something like this:
+
+```{bash}
+catalogue engage --input_data data --code analysis
+```
+
 This will do a series of things. First it will check that the git working tree in our code folder is clean. It gives users a choice:
 
 ```
@@ -118,15 +124,23 @@ If we choose to proceed, `catalogue` will stage and commit all changes in the co
 }
 ```
 
+Once catalogue is engaged, you can run your analysis.
+
 #### disengage
 
-Immediately after finishing the analysis, the `disengage` command should be run to version the results:
+The `disengage` command is run **immediately after finishing the analysis** to version the results:
 
 ```{bash}
 catalogue disengage \
   --input_data <data directory> \
   --code <code directory> \
   --output_data <results directory>
+```
+
+Replace all `<...>`with path to the directory described. In practice, the command might look something like this:
+
+```{bash}
+catalogue disengage --input_data data --code analysis --output_data results
 ```
 
 This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
@@ -154,12 +168,22 @@ This checks that the `input_data` and `code` hashes match the hashes in `.lock` 
 }
 ```
 
+Note that the new file is saved in a `catalogue_results` directory.
+
 #### compare
 
 The `compare` command can be used to compare two catalogue output files against each other:
 
 ```{bash}
 catalogue compare <TIMESTAMP1.json> <TIMESTAMP2.json>
+```
+The arguments should be the path to the two files to be compared.
+
+For example, I might want to compare results produced on different days to check nothing has changed in this period:
+
+```{bash}
+cd catalogue_results
+catalogue compare 200510-120000.json 200514-120000.json
 ```
 
 If the hashes in the files are the same, this means the same analysis was run on the same data with the same outputs both times. In that case, `catalogue` will output something like:
