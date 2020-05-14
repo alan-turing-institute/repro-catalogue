@@ -41,7 +41,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.6",
     author='The Alan Turing Institute Research Engineering Group',
-    author_email="",
+    author_email="hut23@turing.ac.uk",
     url="https://github.com/alan-turing-institute/repro-catalogue",
     # this should be a whitespace separated string of keywords, not a list
     keywords="cli-tool management version-control hashing",
