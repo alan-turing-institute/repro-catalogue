@@ -212,12 +212,12 @@ results could not be compared in 0 places:
 ============================================
 ```
 
-If only one input is provided to the `compare` command, then the input is compared with the current state of the working directory.
+If only one file is provided to the `compare` command, then the hashes in the file are compared with hashes of the current state of the working directory. In that case, it is possible to also specify paths to the `input_data`, `code` and `output_data`.
 
 ## Useful resources
 
-- [Example usage](examples/example_usage.md)
-- [Frequently asked questions](FAQs.md)
+- [Example usage](docs/example_use.md)
+- [Frequently asked questions](docs/FAQs.md)
 
 ## Contributing
 
