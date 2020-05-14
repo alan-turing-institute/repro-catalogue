@@ -13,27 +13,34 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     repo = git.Repo(git_repo)
     git_hash_0 = repo.head.commit.hexsha
+    catalogue_results = 'catalogue_results'
 
     #==================================================
     # 1: use with default commit_changes=False
     #==================================================
 
     # repo is clean
-    assert git_query(git_repo) == True
+    assert git_query(git_repo, catalogue_results) == True
 
-    # create new file -- untracked
-    workspace.run("touch test.csv")
-    assert git_query(git_repo) == True
+    # create new file -- untracked; file path includes `catalogue_results` but
+    # it is not the directory name
+    workspace.run("touch catalogue_results.json")
+    assert git_query(git_repo, catalogue_results) == False
 
     # git add file without commit
     workspace.run("git add .")
-    assert git_query(git_repo) == False
+    assert git_query(git_repo, catalogue_results) == False
 
     # commit new file
     repo.index.commit("Add new file")
     git_hash_1 = repo.head.commit.hexsha
     assert git_hash_0 != git_hash_1
-    assert git_query(git_repo) == True
+    assert git_query(git_repo, catalogue_results) == True
+
+    # create new file in `catalogue_results` dir
+    workspace.run("mkdir catalogue_results")
+    workspace.run("touch catalogue_results/test.json")
+    assert git_query(git_repo, catalogue_results) == True
 
     #==================================================
     # 2: use with commit_changes=True
@@ -41,18 +48,22 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     #==================================================
 
     # repo is clean
-    assert git_query(git_repo, True) == True
+    assert git_query(git_repo, catalogue_results, True) == True
 
-    # create new file -- untracked
-    workspace.run("touch test2.csv")
-    assert git_query(git_repo, True) == True
+    # create new file (untracked) --> wil ask for user input
+    # file path includes `catalogue_results` but it is not the directory name
+    workspace.run("touch new_catalogue_results.json")
+
+    # user responds no
+    monkeypatch.setattr('builtins.input', lambda: "n")
+    assert git_query(git_repo, catalogue_results, True) == False
 
     # git add file without commit -> will ask for user input
     workspace.run("git add .")
 
     # A: user responds no
     monkeypatch.setattr('builtins.input', lambda: "n")
-    assert git_query(git_repo, True) == False
+    assert git_query(git_repo, catalogue_results, True) == False
 
     captured = capsys.readouterr()
     assert "uncommitted changes" in captured.out
@@ -60,7 +71,7 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     # B: user gives other response
     monkeypatch.setattr('builtins.input', lambda: "x")
-    assert git_query(git_repo, True) == False
+    assert git_query(git_repo, catalogue_results, True) == False
 
     captured = capsys.readouterr()
     assert "uncommitted changes" in captured.out
@@ -68,7 +79,7 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     # C: user responds yes
     monkeypatch.setattr('builtins.input', lambda: "y")
-    assert git_query(git_repo, True) == True
+    assert git_query(git_repo, catalogue_results, True) == True
 
     captured = capsys.readouterr()
     assert "uncommitted changes" in captured.out
@@ -84,7 +95,7 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     workspace.run("rm -rf .git")
 
     with pytest.raises(InvalidGitRepositoryError):
-        git_query(git_repo)
+        git_query(git_repo, catalogue_results)
     with pytest.raises(TypeError):
         git_query()
 

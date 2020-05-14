@@ -137,22 +137,39 @@ def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixtur
 def test_hash_code(git_repo, git_hash, workspace):
 
     # correct functioning
-    assert ct.hash_code(git_repo) == git_hash
+    assert ct.hash_code(git_repo, 'catalogue_results') == git_hash
+
+    # directory has untracked file in `catalogue_results`
+    workspace.run("mkdir catalogue_results")
+    workspace.run("touch catalogue_results/test.csv")
+    assert ct.hash_code(git_repo, 'catalogue_results') == git_hash
+
+    # directory has untracked file; file path includes `catalogue_results` but
+    # it is not the directory name
+    workspace.run("touch catalogue_results.csv")
+    with pytest.raises(RepositoryDirtyError):
+        ct.hash_code(git_repo, 'catalogue_results')
 
     # directory has uncommited file
-    workspace.run("touch test.csv")
     workspace.run("git add .")
     with pytest.raises(RepositoryDirtyError):
-        ct.hash_code(git_repo)
+        ct.hash_code(git_repo, 'catalogue_results')
 
-    # invalid path
+    # all files committed
+    repo = git.Repo(git_repo)
+    repo.index.commit("Add new file")
+    new_git_hash = repo.head.commit.hexsha
+    assert ct.hash_code(git_repo, 'catalogue_results') != git_hash
+    assert ct.hash_code(git_repo, 'catalogue_results') == new_git_hash
+
+    # missing arguments
     with pytest.raises(TypeError):
         ct.hash_code()
 
     # path not a git repo
     workspace.run("rm -rf .git")
     with pytest.raises(InvalidGitRepositoryError):
-        ct.hash_code(git_repo)
+        ct.hash_code(git_repo, 'catalogue_results')
 
 
 def test_construct_dict(git_repo, git_hash, test_args):

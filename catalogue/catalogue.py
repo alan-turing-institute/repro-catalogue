@@ -5,6 +5,8 @@ from itertools import chain
 import hashlib
 import git
 from git import InvalidGitRepositoryError, RepositoryDirtyError
+from .utils import prune_files
+
 
 def hash_file(filepath, m=None):
     '''
@@ -170,17 +172,21 @@ def hash_output(output_data):
         raise AssertionError("Provided input {} is not a file or directory".format(output_data))
 
 
-def hash_code(repo_path):
+def hash_code(repo_path, catalogue_dir):
     """
     Get commit digest for current HEAD commit
 
-    Returns the current HEAD commit digest for the code that is run. If the current working
-    directory is not clean, it raises a `RepositoryDirtyError`.
+    Returns the current HEAD commit digest for the code that is run.
+
+    If the current working directory is dirty (or has untracked files other
+    than those held in `catalogue_dir`), it raises a `RepositoryDirtyError`.
 
     Parameters
     ----------
     repo_path: str
         Path to analysis directory git repository.
+    catalogue_dir: str
+        Path to directory with catalogue output files.
 
     Returns
     -------
@@ -193,7 +199,8 @@ def hash_code(repo_path):
     except InvalidGitRepositoryError:
         raise InvalidGitRepositoryError("provided code directory is not a valid git repository")
 
-    if repo.is_dirty():
+    untracked = prune_files(repo.untracked_files, catalogue_dir)
+    if repo.is_dirty() or len(untracked) != 0:
         raise RepositoryDirtyError(repo, "git repository contains uncommitted changes")
 
     return repo.head.commit.hexsha
@@ -223,7 +230,7 @@ def construct_dict(timestamp, args):
             args.input_data : hash_input(args.input_data)
         },
         "code": {
-            args.code : hash_code(args.code)
+            args.code : hash_code(args.code, args.catalogue_results)
         }
     }
     if hasattr(args, 'output_data'):
@@ -253,7 +260,7 @@ def store_hash(hash_dict, timestamp, store, ext="json"):
     """
 
     os.makedirs(store, exist_ok=True)
-    
+
     with open(os.path.join(store, "{}.{}".format(timestamp, ext)),"w") as f:
         json.dump(hash_dict, f)
 

@@ -25,3 +25,21 @@ def check_paths_exists(args):
             if key not in ["command", "func", "csv", "catalogue_results"]]
     path_checks = [os.path.exists(path) for path in paths]
     return all(path_checks)
+
+
+def prune_files(files, dir):
+    """
+    Return files that do not have `dir` as last directory in the file path.
+
+    Parameters:
+    ------------
+    files : list of str
+        list of file paths
+    dir : str
+        directory name, files in this directory are removed
+
+    Returns:
+    ---------
+    list of str
+    """
+    return [f for f in files if dir != os.path.basename(os.path.dirname(f))]
