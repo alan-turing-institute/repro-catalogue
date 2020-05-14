@@ -1,0 +1,103 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "LouiseABowler",
+      "name": "Louise Bowler",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/25640708?v=4",
+      "profile": "https://github.com/LouiseABowler",
+      "contributions": [
+        "doc",
+        "ideas",
+        "review",
+        "projectManagement",
+        "design",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Islast",
+      "name": "Isla",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/23707851?v=4",
+      "profile": "http://isla.st",
+      "contributions": [
+        "design",
+        "ideas",
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "KirstieJane",
+      "name": "Kirstie Whitaker",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3626306?v=4",
+      "profile": "https://whitakerlab.github.io",
+      "contributions": [
+        "design",
+        "ideas",
+        "infra"
+      ]
+    },
+    {
+      "login": "sgibson91",
+      "name": "Sarah Gibson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/44771837?v=4",
+      "profile": "https://sgibson91.github.io/",
+      "contributions": [
+        "code",
+        "review"
+      ]
+    },
+    {
+      "login": "kevinxufs",
+      "name": "kevinxufs",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/48526846?v=4",
+      "profile": "https://github.com/kevinxufs",
+      "contributions": [
+        "review",
+        "userTesting"
+      ]
+    },
+    {
+      "login": "edaub",
+      "name": "Eric Daub",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/45598892?v=4",
+      "profile": "https://github.com/edaub",
+      "contributions": [
+        "design",
+        "ideas",
+        "code",
+        "doc",
+        "review",
+        "maintenance",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "radka-j",
+      "name": "Radka Jersakova",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/29207091?v=4",
+      "profile": "https://github.com/radka-j",
+      "contributions": [
+        "design",
+        "ideas",
+        "code",
+        "review",
+        "doc",
+        "maintenance",
+        "projectManagement",
+        "infra"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "repro-catalogue",
+  "projectOwner": "alan-turing-institute",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
