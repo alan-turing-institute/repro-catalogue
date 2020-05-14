@@ -10,6 +10,7 @@ A command line tool to catalogue versions of data, code and results to support r
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [Getting started](#getting-started)
+  * [Prerequisites](Prerequisites)
   * [Catalogue overview](#catalogue-overview)
   * [Available commands](#available-commands)
 * [Example usage](#example-usage)
@@ -219,8 +220,6 @@ results could not be compared in 0 places:
 ```
 
 If only one input is provided to the `compare` command, then the input is compared with the current state of the working directory.
-
-###
 
 ## Example usage
 
