@@ -61,13 +61,13 @@ A pre-requisite for using `catalogue` is that the directory with the analysis co
 
 **Command line interface**
 
-The tool is a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows.
+The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
 
-All commands ask you to specify a path to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, and on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
+Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, whereas on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
 
 ### Catalogue overview
 
-The tool `catalogue` comes with three commands (`engage`, `disengage`, `compare`) which should be run consecutively:
+The `catalogue` tool comes with three commands (`engage`, `disengage`, `compare`) which should be run consecutively:
 
 ```
 USAGE
@@ -93,7 +93,6 @@ Note that all arguments have default values which will be used if they are not p
 ```{bash}
 catalogue <command> -h
 ```
-
 ### Available commands
 
 #### engage
@@ -104,7 +103,7 @@ This command is run before an analysis is conducted:
 catalogue engage --input_data <data directory> --code <code directory>
 ```
 
-Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, it might look something like this:
+Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, this might look something like this:
 
 ```{bash}
 catalogue engage --input_data data --code analysis
@@ -138,7 +137,7 @@ Once catalogue is engaged, you can run your analysis.
 
 #### disengage
 
-The `disengage` command is run **immediately after finishing the analysis** to version the results:
+The `disengage` command is run **immediately after finishing an analysis** to version the results:
 
 ```{bash}
 catalogue disengage \
@@ -156,7 +155,7 @@ catalogue disengage --input_data data --code analysis --output_data results
 This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
 
 ```json
-// catalogue_results/TIMESTAMP.json
+// catalogue_results/<TIMESTAMP>.json
 {
 "timestamp" : {
      "engage": "<timestamp (of .lock)>",
@@ -185,7 +184,7 @@ Note that the new file is saved in a `catalogue_results` directory.
 The `compare` command can be used to compare two catalogue output files against each other:
 
 ```{bash}
-catalogue compare <TIMESTAMP1.json> <TIMESTAMP2.json>
+catalogue compare <TIMESTAMP1>.json <TIMESTAMP2>.json
 ```
 The arguments should be the path to the two files to be compared.
 
