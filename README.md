@@ -158,7 +158,7 @@ Replace all `<...>`with path to the directory described. In practice, the comman
 catalogue disengage --input_data data_dir --code code_dir --output_data results_dir
 ```
 
-This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
+This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file in a `catalogue_results` directory:
 
 ```json
 // catalogue_results/<TIMESTAMP>.json
@@ -183,8 +183,6 @@ This checks that the `input_data` and `code` hashes match the hashes in `.lock` 
 }
 ```
 
-Note that the new file is saved in a `catalogue_results` directory.
-
 #### compare
 
 The `compare` command can be used to compare two catalogue output files against each other:
@@ -192,17 +190,17 @@ The `compare` command can be used to compare two catalogue output files against 
 ```{bash}
 catalogue compare <TIMESTAMP1>.json <TIMESTAMP2>.json
 ```
-The arguments should be the path to the two files to be compared.
+The arguments should be the paths to the two files to be compared.
 
 For example, I might want to compare results produced on different days to check nothing has changed in this period:
 
 ```{bash}
-compare catalogue_results/200510-120000.json catalogue_results/200514-170500.json
+catalogue compare catalogue_results/200510-120000.json catalogue_results/200514-170500.json
 ```
 
 If the hashes in the files are the same, this means the same analysis was run on the same data with the same outputs both times. In that case, `catalogue` will output something like:
 
-```
+```{bash}
 results differ in 1 places:
 =============================
 timestamp
@@ -226,16 +224,16 @@ If only one file is provided to the `compare` command, then the hashes in the fi
 It is possible to save the outputs from `disengage` to a csv rather than a json file. For this, use the `--csv` flag followed by the name of the file to save results to. For example:
 
 ```{bash}
-catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv version_data.csv
+catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv hashes.csv
 ```
 
-Similarly, the `compare` command can be used with a `--csv` flag. In that case, one would provide the two timestamps to compare (these must exist in the csv file for the command to work):
+The `compare` command can then also be used with a `--csv` flag. In that case, one would provide the two timestamps to compare (these must exist in the csv file for the command to work):
 
 ```{bash}
-catalogue compare 200510-120000 200514-170500 --csv version_data.csv
+catalogue compare 200510-120000 200514-170500 --csv hashes.csv
 ```
 
-Same as when comparing json files, it is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
+Same as when comparing json files, it is possible to provide just one timestamp instead of two and these hashes will be compared against the state of the current working directory.
 
 #### --catalogue_results
 
@@ -245,7 +243,7 @@ By default, all files created by `catalogue` are saved in a `catalogue_results` 
 catalogue engage --input_data data_dir --code code_dir --catalogue_results versioning_files
 ```
 
-Note that if you change the default `catalogue_results` directory, you have to use this flag in each subsequent command. Also, this  directory cannot be the same as the `--code` directory.
+Note that if you change the default `catalogue_results` directory, you have to use this flag in each subsequent command. Also, this directory cannot be the same as the `--code` directory.
 
 ## Useful resources
 
