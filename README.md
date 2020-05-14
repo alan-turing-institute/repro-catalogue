@@ -23,16 +23,16 @@ A command line tool to catalogue versions of data, code and results to support r
 
 ## Introduction
 
-Research projects commonly have data that is being regularly updated. The code is also regularly tweaked. Given this, it is fairly common to save some results and lose track of the context (data and code) in which they were produced.
+Research projects are frequently updated - new data are added, and the code undergoes regular changes. Under these circumstances, it's easy to store results, yet lose track of the context in which they were produced.
 
 To ensure reproducibility of any scientific results we need to reliably record:
-- what input data was used
-- what code was run
-- what outputs were produced
+- what input data was used :floppy_disk:
+- what code was run :desktop_computer:
+- what outputs were produced :chart_with_upwards_trend:
 
-To aid reproducibility, `catalogue` provides a command line interface for recording a hash value of the dataset that was used and the outputs that were produced in an analysis. It also saves the latest git commit hash of the code that was run to do the analysis.
+The `catalogue` tool aids reproducibility by saving **hash values** of the input data and the results, along with the **git commit hash** of the code used to generate those results. The `catalogue` command line interface then allows the user to easily compare the hash values from different occasions on which the analysis was run so that changes to the input data, code and results can be identified and the impact on reproducibility can be understood.
 
-Hash functions map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
+**Hash functions** map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
 
 ## Installation
 
@@ -44,9 +44,33 @@ pip install .
 
 ## Getting started
 
+### Prerequisites
+
+**Data and code**
+
+To use the tool, we assume you already have a project with some analysis code ready to run on your data. Your project structure might look something like this:
+
+```
+├── data/
+│   ├── my_data.csv
+├── analysis/
+│   ├── my_analysis.py
+├── results/
+```
+
+**Git**
+
+A pre-requisite for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
+
+**Command line interface**
+
+The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
+
+Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, whereas on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
+
 ### Catalogue overview
 
-The command line interface `catalogue` comes with three commands (`engage`, `disengage`, `compare`) meant to be run consecutively:
+The `catalogue` tool comes with three commands (`engage`, `disengage`, `compare`) which should be run consecutively:
 
 ```
 USAGE
@@ -72,9 +96,6 @@ Note that all arguments have default values which will be used if they are not p
 ```{bash}
 catalogue <command> -h
 ```
-
-A **pre-requisite** for using `catalogue` is that the directory with the analysis code is a git repository.
-
 ### Available commands
 
 #### engage
@@ -85,33 +106,41 @@ This command is run before an analysis is conducted:
 catalogue engage --input_data <data directory> --code <code directory>
 ```
 
-This will do a series of things. First it will check that the git working tree in our code folder is clean. If gives users a choice:
+Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, this might look something like this:
+
+```{bash}
+catalogue engage --input_data data --code analysis
+```
+
+This will do a series of things. First it will check that the git working tree in our code folder is clean. It gives users a choice:
 
 ```
 Working directory contains uncommitted changes.
 Do you want to stage and commit all changes? (y/[n])
 ```
 
-If we choose to proceed `catalogue` will stage and commit all changes in the code directory. Next it will create a temporary file `.lock` in json format:
+If we choose to proceed, `catalogue` will stage and commit all changes in the code directory. Next it will create a temporary file `.lock` in json format:
 
 ```json
 //catalogue_results/.lock
 {
 "timestamp" : {
-    "engage": <timestamp (of catalogue engage)>
+    "engage": "<timestamp (of catalogue engage)>"
   },
 "input_data": {
-     <data_directory> : <hash of directory>
+     "<data_directory>" : "<hash of directory>"
    },
 "code" : {
-     <code_directory>: <latest git commit hash>
+     "<code_directory>": "<latest git commit hash>"
      }
 }
 ```
 
+Once catalogue is engaged, you can run your analysis.
+
 #### disengage
 
-Immediately after finishing our analysis we run this to version the results:
+The `disengage` command is run **immediately after finishing an analysis** to version the results:
 
 ```{bash}
 catalogue disengage \
@@ -120,44 +149,61 @@ catalogue disengage \
   --output_data <results directory>
 ```
 
+Replace all `<...>`with path to the directory described. In practice, the command might look something like this:
+
+```{bash}
+catalogue disengage --input_data data --code analysis --output_data results
+```
+
 This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
 
 ```json
-// catalogue_results/TIMESTAMP.json
+// catalogue_results/<TIMESTAMP>.json
 {
 "timestamp" : {
-     "engage": <timestamp (of .lock)>,
-     "disengage": <timestamp (new)>
+     "engage": "<timestamp (of .lock)>",
+     "disengage": "<timestamp (new)>"
    },
 "input_data": {
-     <data directory>: <hash of directory>
+     "<data directory>": "<hash of directory>"
    },
 "output_data": {
-       <results directory>:{
-           <output file 1>: <hash of file>,
-           <output file 2>: <hash of file>,
+       "<results directory>":{
+           "<output file 1>": "<hash of file>",
+           "<output file 2>": "<hash of file>",
            ...
            }
      },
 "code" : {
-     <code directory>: <git commit hash>
+     "<code directory>": "<git commit hash>"
      }
 }
 ```
 
+Note that the new file is saved in a `catalogue_results` directory.
+
 #### compare
 
-We can use `catalogue` to compare two catalogue output files against each other:
+The `compare` command can be used to compare two catalogue output files against each other:
 
 ```{bash}
-catalogue compare <TIMESTAMP1.json> <TIMESTAMP2.json>
+catalogue compare <TIMESTAMP1>.json <TIMESTAMP2>.json
+```
+The arguments should be the path to the two files to be compared.
+
+For example, I might want to compare results produced on different days to check nothing has changed in this period:
+
+```{bash}
+cd catalogue_results
+catalogue compare 200510-120000.json 200514-120000.json
 ```
 
 If the hashes in the files are the same, this means the same analysis was run on the same data with the same outputs both times. In that case, `catalogue` will output something like:
 
 ```
-results differ in 0 places:
+results differ in 1 places:
 =============================
+timestamp
 
 results matched in 3 places:
 ==============================
@@ -200,7 +246,7 @@ Elsewhere, in our user directory, perhaps on another computer, things look like 
 
 ### Run analysis
 
-We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the script in our code folder, we run:
+We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the scripts in our code folder, we run:
 
 ```{bash}
 catalogue engage --input_data latest_data --code latest_code
@@ -218,28 +264,28 @@ This will produce the following file:
 // catalogue_results/TIMESTAMP5.json
 {
 "timestamp" : {
-     "engage": <timestamp (of .lock)>,
-     "disengage": <timestamp (new)>
+     "engage": "<timestamp (of .lock)>",
+     "disengage": "<timestamp (new)>"
    },
 "input_data": {
-     "latest_data" : <hash of directory>
+     "latest_data" : "<hash of directory>"
    },
 "output_data": {
        "results/latest results":{
-           "summary.txt": <hash of file>,
-           "output.csv": <hash of file>,
-           "metadata.json": <hash of file>
+           "summary.txt": "<hash of file>",
+           "output.csv": "<hash of file>",
+           "metadata.json": "<hash of file>"
            }
      },
 "code" : {
-     "latest_code": <git commit hash>
+     "latest_code": "<git commit hash>"
      }
 }
 ```
 
 ### Check outputs
 
-Let's suppose that between TIMESTAMP4 and TIMESTAMP5 we modified the code to output a file `summary.txt`, but that otherwise nothing has changed. We would like to check that our file `output.csv` hasn't changed but oops! We've just overwritten it. Luckily we can compare to the json at TIMESTAMP4.
+Let's suppose that between TIMESTAMP4 and TIMESTAMP5 we modified the code to output a further file `summary.txt`, but that otherwise nothing has changed. We would like to check that our file `output.csv` hasn't changed but oops! We've just overwritten it. Luckily we can compare to the json at TIMESTAMP4.
 
 ```
 catalogue compare \
@@ -247,34 +293,37 @@ catalogue compare \
   catalogue_results/TIMESTAMP5.json
 ```
 
-Let us also suppose that the `metadata.json` output includes a timestamp. The diff we would expect would look something like this:
+Let us also suppose that one of the other files generated by our analysis, `metadata.json`, includes a timestamp. The diff would look something like this:
 
 ```
-results differ in *3* places:
+results differ in 3 places:
 =============================
 timestamp
 code
 results/latest_results/metadata.json
 
-results matched in *2* places:
+results matched in 2 places:
 ==============================
 input_data
 results/latest_results/output.csv
 
-results could not be compared in *1* places:
+results could not be compared in 1 places:
 ============================================
 results/latest_results/summary.text
 ```
 
-Of course this is what we *want*.
+Of course this is what we *want*:
+- The code has been updated to produce `summary.txt`, and the timestamps have changed
+- Our data and results have not changed at all
+- Our new file `summary.txt` could not be compared as that file was not present at TIMESTAMP4
 
-Alternatively, we might find that our `output.csv` file *had* changed. In that case `catalogue` would inform us of the problem without us having to permanently store the output of every analysis we run. The hashes alone would not be enough to recover the original TIMESTAMP4 version. But since we have recorded the timestamp, that information can help us track down the data version, and the git commit digest tells us exactly what version of the code is used, making it easier to try and reproduce those results should we wish to do so.
+Alternatively, let's suppose that our changes to the code had affected our results, so that our `output.csv` file *has* changed. In that case `catalogue` would inform us of the problem without us having to permanently store the output of every analysis we run. The hashes alone would not be enough to recover the original TIMESTAMP4 version. But since we have recorded the timestamp, that information can help us track down the data version, and the git commit digest tells us exactly what version of the code is used, making it easier to try and reproduce those results should we wish to do so.
 
 ### Share outputs
 
 We can then send a zip file of the results to a colleague along with the hash json produced during the final analysis (`TIMESTAMP5.json`).
 
-They can rerun the analysis and use `catalogue` to check that the json they received is the same as their state:
+They can rerun the analysis and use `catalogue` to check that the json they received is the same as their own:
 
 ```{bash}
 catalogue compare TIMESTAMP4.json
@@ -286,13 +335,13 @@ catalogue compare TIMESTAMP4.json
 
 The commands `catalogue engage` and `catalogue disengage` are meant to be run in that order.
 
-The `catalogue disengage` command will check that a `.lock` file exists. If it doesn't it will warn:
+The `catalogue engage` command will check that a `.lock` file does *not* exist. If it does, it will warn:
 ```
 Already engaged (.lock file exists). To disengage run 'catalogue disengage...
 See 'catalogue disengage --help' for details
 ```
 
-The `catalogue engage` command will check that a `.lock` file does *not* exist. If it does, it will warn:
+The `catalogue disengage` command will check that a `.lock` file exists. If it doesn't, it will warn:
 ```
 Not currently engaged (could not find .lock file). To engage run 'catalogue engage...
 See 'catalogue engage --help' for details
@@ -304,7 +353,14 @@ It is likely that the analysis includes some preprocessing steps. Ideally all of
 
 ### Randomness
 
+
+Comparing two hashes tells you whether the hashed items are the same or different. This process cannot tell you if something is almost the same. If your analysis is non-deterministic, you will get a different hash every time.
+
+There are several ways by which an analysis can be non-deterministic. One of the most common is the user of random numbers.
+To deal with this, we recommend setting a random seed. Whatever language you're using should be able to provide you with documentation on how to do this - see, for example, the documentation for [Python](https://docs.python.org/3/library/random.html#random.seed).
+
 Hashing tells you whether something is the same, or different. It cannot tell you if something is almost the same. If your analysis is non-deterministic, you will be getting a different hash every time. To deal with this, we recommend setting a random seed. Whatever language you're using should be able to provide you with documentation on how to do this.
+
 
 ## Contributors ✨
 
