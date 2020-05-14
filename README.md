@@ -51,11 +51,11 @@ pip install .
 To use the tool, we assume you already have a project with some analysis code ready to run on your data. Your project structure might look something like this:
 
 ```
-├── data/
+├── data_dir/
 │   ├── my_data.csv
-├── analysis/
+├── code_dir/
 │   ├── my_analysis.py
-├── results/
+├── results_dir/
 ```
 
 **Git**
@@ -66,7 +66,7 @@ A pre-requisite for using `catalogue` is that the directory with the analysis co
 
 The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
 
-Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, whereas on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
+Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data_dir/my_data.csv`, whereas on Windows it will be `data_dir\my_data.csv` (i.e., use `\` instead of `/`).
 
 ### Catalogue overview
 
@@ -106,10 +106,10 @@ This command is run before an analysis is conducted:
 catalogue engage --input_data <data directory> --code <code directory>
 ```
 
-Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, this might look something like this:
+Replace `<data directory>` and `<code directory>` with the path to the data and code directories. In practice, this might look something like this:
 
 ```{bash}
-catalogue engage --input_data data --code analysis
+catalogue engage --input_data data_dir --code code_dir
 ```
 
 This will do a series of things. First it will check that the git working tree in our code folder is clean. It gives users a choice:
@@ -128,10 +128,10 @@ If we choose to proceed, `catalogue` will stage and commit all changes in the co
     "engage": "<timestamp (of catalogue engage)>"
   },
 "input_data": {
-     "<data_directory>" : "<hash of directory>"
+     "<data directory>" : "<hash of directory>"
    },
 "code" : {
-     "<code_directory>": "<latest git commit hash>"
+     "<code directory>": "<latest git commit hash>"
      }
 }
 ```
@@ -140,7 +140,9 @@ Once catalogue is engaged, you can run your analysis.
 
 #### disengage
 
-The `disengage` command is run **immediately after finishing an analysis** to version the results:
+The `disengage` command is run **immediately after finishing an analysis** to version the results.
+
+For example, my analysis is done by running my code as an executable file in command prompt. Once I have finished running this code, I then proceed to the disengage stage:
 
 ```{bash}
 catalogue disengage \
@@ -152,7 +154,7 @@ catalogue disengage \
 Replace all `<...>`with path to the directory described. In practice, the command might look something like this:
 
 ```{bash}
-catalogue disengage --input_data data --code analysis --output_data results
+catalogue disengage --input_data data_dir --code code_dir --output_data results_dir
 ```
 
 This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
@@ -194,8 +196,7 @@ The arguments should be the path to the two files to be compared.
 For example, I might want to compare results produced on different days to check nothing has changed in this period:
 
 ```{bash}
-cd catalogue_results
-catalogue compare 200510-120000.json 200514-120000.json
+compare catalogue_results/200510-120000.json catalogue_results/200514-170500.json
 ```
 
 If the hashes in the files are the same, this means the same analysis was run on the same data with the same outputs both times. In that case, `catalogue` will output something like:
