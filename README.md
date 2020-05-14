@@ -229,19 +229,19 @@ It is possible to save the outputs from `disengage` to a csv rather than a json 
 catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv version_data.csv
 ```
 
-Similarly, the `compare` command can be used with a `--csv` flag. In that case, one would provide the two timestamps to compare:
+Similarly, the `compare` command can be used with a `--csv` flag. In that case, one would provide the two timestamps to compare (these must exist in the csv file for the command to work):
 
 ```{bash}
-compare 200510-120000 200514-170500 --csv version_data.csv
+catalogue compare 200510-120000 200514-170500 --csv version_data.csv
 ```
 
-Same as when using the json files, it is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
+Same as when comparing json files, it is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
 
 #### --catalogue_results
 
 By default, all files created by `catalogue` are saved in a `catalogue_results` directory. It is possible to change this by using the optional `--catalogue_results` flag. For exmaple:
 
-```
+```{bash}
 catalogue engage --input_data data_dir --code code_dir --catalogue_results versioning_files
 ```
 
