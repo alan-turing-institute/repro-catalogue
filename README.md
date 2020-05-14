@@ -43,6 +43,8 @@ pip install .
 
 ### Prerequisites
 
+**Data and code**
+
 To use the tool, we assume you already have a project with some analysis code ready to run on your data. Your project structure might look something like this:
 
 ```
@@ -53,11 +55,19 @@ To use the tool, we assume you already have a project with some analysis code re
 ├── results/
 ```
 
-A **pre-requisite** for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
+**Git**
+
+A pre-requisite for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
+
+**Command line interface**
+
+The tool is a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows.
+
+All commands ask you to specify a path to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, and on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
 
 ### Catalogue overview
 
-The command line interface `catalogue` comes with three commands (`engage`, `disengage`, `compare`) which should be run consecutively:
+The tool `catalogue` comes with three commands (`engage`, `disengage`, `compare`) which should be run consecutively:
 
 ```
 USAGE
