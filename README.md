@@ -20,6 +20,8 @@ A command line tool to catalogue versions of data, code and results to support r
   * [Running in the wrong order](#running-in-the-wrong-order)
   * [Intermediary data processing](#intermediary-data-processing)
   * [Randomness](#randomness)
+* [Contributing](#contributing)
+* [Contributors](#contributors)
 
 ## Introduction
 
@@ -218,6 +220,8 @@ results could not be compared in 0 places:
 
 If only one input is provided to the `compare` command, then the input is compared with the current state of the working directory.
 
+###
+
 ## Example usage
 
 Imagine that on a central sever we have a data repository
@@ -362,6 +366,11 @@ To deal with this, we recommend setting a random seed. Whatever language you're 
 
 Hashing tells you whether something is the same, or different. It cannot tell you if something is almost the same. If your analysis is non-deterministic, you will be getting a different hash every time. To deal with this, we recommend setting a random seed. Whatever language you're using should be able to provide you with documentation on how to do this.
 
+## Contributing
+
+🚧 This repository is always a work in progress and everyone is encouraged to help us build something that is useful to the many. 🚧
+
+Everyone is asked to follow our [code of conduct](CODE_OF_CONDUCT.md) and to checkout our [contributing guidelines](CONTRIBUTING.md) for more information on how to get started.
 
 ## Contributors ✨
 
