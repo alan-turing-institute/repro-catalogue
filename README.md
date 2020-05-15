@@ -143,7 +143,7 @@ Once catalogue is engaged, you can run your analysis.
 
 The `disengage` command is run **immediately after finishing an analysis** to version the results.
 
-For example, my analysis is done by running my code as an executable file in command prompt. Once I have finished running this code, I then proceed to the disengage stage:
+For example, my analysis is done by running my code as an executable file in command prompt. Once I have finished running this code, I proceed to the disengage stage:
 
 ```{bash}
 catalogue disengage \
@@ -152,13 +152,13 @@ catalogue disengage \
   --output_data <results directory>
 ```
 
-Replace all `<...>`with path to the directory described. In practice, the command might look something like this:
+Replace all `<...>` with a path to the directory described. In practice, the command might look something like this:
 
 ```{bash}
 catalogue disengage --input_data data_dir --code code_dir --output_data results_dir
 ```
 
-This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file in a `catalogue_results` directory:
+Running this command checks that the `input_data` and `code` hashes match the hashes in the `.lock` file (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file in a `catalogue_results` directory:
 
 ```json
 // catalogue_results/<TIMESTAMP>.json
@@ -190,9 +190,7 @@ The `compare` command can be used to compare two catalogue output files against 
 ```{bash}
 catalogue compare <TIMESTAMP1>.json <TIMESTAMP2>.json
 ```
-The arguments should be the paths to the two files to be compared.
-
-For example, I might want to compare results produced on different days to check nothing has changed in this period:
+The arguments should be the paths to the two files to be compared. For example, I might want to compare results produced on different days to check nothing has changed in this period:
 
 ```{bash}
 catalogue compare catalogue_results/200510-120000.json catalogue_results/200514-170500.json
@@ -215,13 +213,13 @@ results could not be compared in 0 places:
 ============================================
 ```
 
-If only one file is provided to the `compare` command, then the hashes in the file are compared with hashes of the current state of the working directory. In that case, it is possible to also specify paths to the `input_data`, `code` and `output_data`.
+If only one file is provided to the `compare` command, then the hashes in the file are compared with hashes of the current state of the working directory. In that case, it is possible to also specify paths to the `input_data`, `code` and `output_data` (otherwise the default values are used).
 
 ### Optional arguments
 
 #### --csv
 
-It is possible to save the outputs from `disengage` to a csv rather than a json file. For this, use the `--csv` flag followed by the name of the file to save results to. For example:
+It is possible to save the outputs from `disengage` to a csv rather than a json file. For this, use the `--csv` flag followed by the name of the file to save results to. Each new run will be appended as a new line to the csv file. For example:
 
 ```{bash}
 catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv hashes.csv
@@ -233,7 +231,7 @@ The `compare` command can then also be used with a `--csv` flag. In that case, o
 catalogue compare 200510-120000 200514-170500 --csv hashes.csv
 ```
 
-Same as when comparing json files, it is possible to provide just one timestamp instead of two and these hashes will be compared against the state of the current working directory.
+It is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
 
 #### --catalogue_results
 
@@ -243,7 +241,7 @@ By default, all files created by `catalogue` are saved in a `catalogue_results` 
 catalogue engage --input_data data_dir --code code_dir --catalogue_results versioning_files
 ```
 
-Note that if you change the default `catalogue_results` directory, you have to use this flag in each subsequent command. Also, this directory cannot be the same as the `--code` directory.
+Note that if you change the default `--catalogue_results` directory, you have to use this flag in each subsequent command. Also, this directory cannot be the same as the `--code` directory.
 
 ## Useful resources
 
@@ -254,7 +252,7 @@ Note that if you change the default `catalogue_results` directory, you have to u
 
 🚧 This repository is always a work in progress and everyone is encouraged to help us build something that is useful to the many. 🚧
 
-Everyone is asked to follow our [code of conduct](CODE_OF_CONDUCT.md) and to checkout our [contributing guidelines](CONTRIBUTING.md) for more information on how to get started.
+Everyone is asked to follow our [code of conduct](CODE_OF_CONDUCT.md) and to checkout our [contributing guidelines](CONTRIBUTING.md) for more information on how to get started. 
 
 ## Contributors ✨
 
