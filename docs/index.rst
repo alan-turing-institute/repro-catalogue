@@ -10,6 +10,8 @@ Welcome to repro-catalogue's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   example_use
+   FAQs
 
 
 Indices and tables
