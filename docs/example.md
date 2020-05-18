@@ -71,6 +71,67 @@ As the file is a csv, we can see commas are used to separate each value in the d
 
 ### Writing our first analysis script
 
+The aim of this exercise is to generate a results file that contains some simple descriptive statistics about the birthweight dataset.
+In our first iteration of this script, we'll calculate the mean and standard deviation of the available birthweights and write both values to a file.
+We'll use Python to write this script, but other languages can be used if you prefer.
+
+Our analysis will be stored in the `birthweight-analysis` folder, so let's start by moving into that directory
+```
+cd birthweight-analysis
+```
+We want to track our analysis using `git`.
+Before starting to prepare our analysis scripts, we'll initialise a `git` repository in this folder.
+We can do that by running the following command from the `birthweight-analysis folder`:
+```
+git init
+```
+
+With `git` now ready to use, we'll prepare our analysis script.
+Open a new file in your preferred text editor and copy in the contents of the code block below.
+Once the code is in place, save the file to the `birthweight-analysis` folder with the filename `birthweight-descriptive-stats.py`.
+```python
+import os               # Utility commands for folder names etc.
+import pandas as pd     # Useful module for manipulating data in tables - known as data frames in Pandas
+
+# Read the birthweight data from the csv file (we use a relative path to specify the location of the file)
+birthweights = pd.read_csv(os.path.join(os.getcwd(), "..", "birthweight-data", "Birthweight_reduced_R.csv"))
+
+# Print out the first few rows of the table (not part of the analysis itself, but it's useful to have a look)
+print(birthweights.head())
+
+# Calculate the descriptive statistics that we are interested in
+birthweight_average = birthweights["Birthweight"].mean()
+birthweight_std_dev = birthweights["Birthweight"].std()
+
+# Create a new data frame that contains our summary statistics
+outputs = pd.DataFrame({"average": [birthweight_average],
+                        "std dev": [birthweight_std_dev]})
+
+# Save the outputs to a new csv file
+outputs.to_csv(os.path.join(os.getcwd(), "..", "birthweight-results", "descriptive-stats.csv"),
+               index=False,                     # don't print indices to the output file
+               float_format="%.3f")             # print values to three decimal places
+```
+
+You'll notice that we use a couple of Python packages in this script - `pandas` and `os`.
+The `os` module is included by default with Python, but you may need to install `pandas` if you haven't got it set up already.
+If you need to, you can install `pandas` using `pip` (Python's package manager) by running
+```
+pip install pandas
+```
+
+Now, let's do a trial run of the script.
+```
+python birthweight-descriptive-stats.py
+```
+
+Once it's done, we can have a look at out outputs.
+We can either print the file out at the command line with
+```
+cat ../birthweight-results/descriptive-stats.csv
+```
+or by navigating to the `birthweight-results` folder in a file browser and opening the `descriptive-stats.csv` file from there.
+
 ### Using `catalogue`
 
 ### Modifying the analysis script
