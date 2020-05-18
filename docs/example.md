@@ -38,20 +38,23 @@ We'll set our project up inside a new folder - let's create one called `repro-ca
 ```
 mkdir repro-catalogue-demo
 ```
-Inside that folder, we'll create two more.
-One will contain the code, and the other will hold the data.
+Inside that folder, we'll create three more.
+One will contain the code, one will hold the data and the final folder will be used to store our results.
 We'll now move into the `repro-catalogue-demo` folder and create the new folders there.
 ```
 cd repro-catalogue-demo
 mkdir birthweight-data
 mkdir birthweight-analysis
+mkdir birthweight-results
 ```
 
-Why two separate folders?
+Why three separate folders?
 Our analysis **code** will be worked on regularly, and all changes to it should therefore be tracked using a version control system.
 On the other hand, our **data** will not change (or only be changed very rarely).
 The code that we write will depend on the structure of the dataset, but not on the exact values within it.
 We can therefore treat changes to our code and data **independently**, and the separated folders help us to achieve this.
+The same applies to our **results** - they are dependent on the input data and analysis code, but are not part of either grouping.
+Keeping them separate helps us to pose questions such as _"Our results have changed. Is this due to a change in our analysis method, or a change in our input data?"_
 
 ### Getting the data
 
