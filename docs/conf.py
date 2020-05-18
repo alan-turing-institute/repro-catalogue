@@ -14,6 +14,13 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+# get version from package
+import catalogue
+import re
+# The full version X.Y.Z with development version if needed
+release = catalogue.__version__
+# The short verion X.Y
+version = re.sub(r"(\d+\.\d+)", r"\1", catalogue.__version__)
 
 # -- Project information -----------------------------------------------------
 
