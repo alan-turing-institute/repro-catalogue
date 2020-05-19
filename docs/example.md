@@ -253,3 +253,122 @@ This ensures that we have a record of the code that was run.
 However, the real utility of `catalogue` becomes apparent when we re-run our analysis after making changes to the code.
 
 ### Modifying the analysis script
+
+We'll now illustrate how `catalogue` can be used to highlight the effects changes to different parts of our analysis pipeline.
+In our typical workflow, some changes will have knock-on effects:
+- Changing our input data (e.g. moving from a trial dataset to the full one)
+- Altering our analysis technique
+- Saving more outputs from our pipeline
+
+while others won't (or rather, shouldn't!):
+- Refactoring our code for speed or clarity
+- Reorganising our file structure
+
+We'll now see how we can use `catalogue` to make sure that some simple changes to our pipeline have the expected effects.
+
+#### Refactoring the code
+
+Let's start with a small amount of refactoring.
+In our analysis script, there is one command which prints a few entries of our dataset to the screen.
+We'll now remove that statement (in a slightly contrived example of how to tidy up our code!).
+Open up your `birthweight-descriptive-stats.py` file, and remove the `print()` statement (which should be on line 8).
+Save the file and close your editor, then run
+```
+catalogue engage --input_data ../birthweight-data --code .
+```
+Unlike last time, you should see a warning message
+```
+Working directory contains uncommitted changes.
+Do you want to stage and commit all changes? (y/[n])
+```
+We haven't committed our changes, so we have no record of what we've just done in our version control system.
+If we type `y`, `catalogue` handles the add and commit process for us; alternatively, we can select `n` and run `git add` and `git commit` as we did earlier in this walkthrough to track our changes.
+If you like, run `git status` and `git log` to see the latest commit, before running the command to engage `catalogue` again.
+
+With `catalogue` now engaged, we can run our analysis with
+```
+python birthweight-descriptive-stats.py
+```
+We won't see the output to the screen this time, but no other changes should have occurred.
+If we disengage with
+```
+catalogue disengage --input_data ../birthweight-data --code . --output_data ../birthweight-results
+```
+we get the same output as we did the previous time.
+
+Now, let's compare our outputs on the two occasions.
+The file that contains our results is overwritten each time we call our anaysis script, but we can still use `catalogue` to compare the results.
+We can see what `catalogue` has recorded by listing the files in the `catalogue_results` directory.
+```
+ls catalogue_results
+```
+Two `.json` files will be listed, with different timestamps - these are from the two occasions we have used `catalogue`.
+We can compare the contents of the two files with
+```
+catalogue compare catalogue_results/20200518-184447.json catalogue_results/20200519-141323.json
+```
+Note that the timestamps used in your filenames will be different.
+The comparison should yield
+```
+NOTE we expect the timestamp hashes to differ.
+
+hashes differ in 2 places:
+===========================
+timestamp
+code
+
+hashes match in 2 places:
+==========================
+input_data
+../birthweight-results/descriptive-stats.csv
+
+hashes could not be compared in 0 places:
+==========================================
+```
+In this case, we can see that our timestamp and code have changed between the two occasions on which we ran `catalogue`.
+The timestamp is different due to the times at which we ran the tool, and we made the changes to the code ourselves.
+The hashes of our input data folder (`birthweight-data`) and the files within our output data folder (`birthweight-results`) have not changed, giving us confidence that our small refactoring has not changed any of the functionality of our code.
+
+#### Modifying the data
+
+Let's now try a different case, by altering our input data slightly.
+This might happen when we receive a new version of a data file.
+We'll mimic this by adding a new record to the birthweight dataset.
+
+Open up the data file (`birthweight-data/Birthweight_reduced_R.csv`), and add the following line to the end of the file:
+```
+2137,14,20,7.30,40,1,22,17,62,104,32,12,25,68,0,0,Normal
+```
+Then save the file.
+We'll then run our pipeline using `catalogue` to track the files that are used and generated, and then compare with our previous run:
+```
+catalogue engage --input_data ../birthweight-data --code .
+python birthweight-descriptive-stats.py
+catalogue disengage --input_data ../birthweight-data --code . --output_data ../birthweight-results
+catalogue compare catalogue_results/20200519-141323.json catalogue_results/20200519-173928.json
+```
+Again, noting that your timestamps will be different from those above (you can use `ls catalogue_results` to see the available timestamps).
+The output will let us know where the differences in our pipeline arose:
+```
+NOTE we expect the timestamp hashes to differ.
+
+hashes differ in 3 places:
+===========================
+timestamp
+input_data
+../birthweight-results/descriptive-stats.csv
+
+hashes match in 1 places:
+==========================
+code
+
+hashes could not be compared in 0 places:
+==========================================
+```
+The output reports that our code is unchanged, and (most crucially) informs us that both our input data and our results files have changed.
+If we were trying to track down why we were getting a different set of results, this report from `catalogue` would help us narrow it down to a change in the data as opposed to something having been changed in the code.
+
+And with that, we've come to the end of our first example!
+In this walkthrough, we've covered the main features of `catalogue` and shown how it can be used in a simple analysis pipeline.
+We have discussed how it can be used to highlight changes in the data, code and outputs, but have only lightly touched on the many facets of reproducibility that often come up during analysis projects.
+In our next example, we'll take a closer look at some of the more common challenges in making your project reproducible, and how `catalogue` can help in that process.
