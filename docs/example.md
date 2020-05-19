@@ -123,12 +123,66 @@ If you need to, you can install `pandas` using `pip` (Python's package manager) 
 pip install pandas
 ```
 
-Now, let's do a trial run of the script.
+### Tracking our changes with `git`
+
+With our file ready, let's now track it using our version control system, `git`.
+We track changes in `git` via **commits**.
+A commit is essentially a snapshot of a set of files at a moment in time.
+A message and unique identifier (often called a SHA or hash) are attached to each commit.
+You can think of a commit as a **saved unit of work**.
+It's good practice to commit whenever a set of related changes are complete - and as our initial version of the analysis script certainly meets that criteria, it's time to commit our work.
+
+Let's take a look at `git`'s current status by running
+```
+git status
+```
+You should see something along the lines of this output:
+```
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        birthweight-descriptive-stats.py
+```
+We won't focus on branches in this tutorial (if you're curious, see [Chapter 3](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell) of the Pro Git book); the following sections of the output are more relevant to us.
+As expected, we don't have any commits yet.
+However, `git` has detected that a new file is present in the `birthweight-analysis` folder.
+We need to let `git` know that it is supposed to track this file, which we do with the following command:
+```
+git add birthweight-descriptive-statistics.py
+```
+If we run `git status` again, we can see that the output has changed:
+```
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+        new file:   birthweight-descriptive-stats.py
+```
+`git` has recognised that we've added a new file, and we can now commit that change.
+Our commit will contain changes to all files listed in the `Changes to be committed:` section.
+Let's now commit those changes (we use the `-m` option to pass a message to the `commit` command) and then inspect our commit.
+```
+git commit -m "Add first version of analysis script"
+git log
+```
+
+The output of `git log` will show some details about the commit: the author, date, commit message and - importantly for our use of `catalogue` later on - the unique commit identifier.
+
+### Checking the script
+
+Now, let's do a trial run of the script to make sure everything works as expected before we move on.
 ```
 python birthweight-descriptive-stats.py
 ```
 
-Once it's done, we can have a look at out outputs.
+Once it's done, we can have a look at our outputs.
 We can either print the file out at the command line with
 ```
 cat ../birthweight-results/descriptive-stats.csv
@@ -136,5 +190,66 @@ cat ../birthweight-results/descriptive-stats.csv
 or by navigating to the `birthweight-results` folder in a file browser and opening the `descriptive-stats.csv` file from there.
 
 ### Using `catalogue`
+
+Now, let's start using `catalogue` to track our results.
+Later on, we'll start to make changes to different aspects of this example and we want to understand the impact of those changes as we proceed.
+
+To start using `catalogue`, we need to specify the folders that contain our data and our code as we call the utility
+```
+catalogue engage --input_data ../birthweight-data --code .
+```
+As our current working directory is the `birthweight-analysis` folder, we give a relative path to the data folder and pass our current directory as the code folder.
+We should receive the following output:
+```
+'catalogue engage' succeeded. Proceed with analysis
+```
+We can now run our analysis scripts, using whichever tools we like.
+For our case, we run the Python script we wrote earlier.
+```
+python birthweight-descriptive-stats.py
+```
+
+Once our analysis is complete (which could involve several steps if we have a more complex pipeline), we can disengage the `catalogue` tool.
+As before, we provide the location of our input data and code, and this time we also provide the location of our output files.
+```
+catalogue disengage --input_data ../birthweight-data --code . --output_data ../birthweight-results
+```
+Running the `disengage` command should provide some output:
+```
+NOTE we expect the timestamp hashes to differ.
+
+hashes differ in 1 places:
+===========================
+timestamp
+
+hashes match in 2 places:
+==========================
+input_data
+code
+
+hashes could not be compared in 1 places:
+==========================================
+../birthweight-results/descriptive-stats.csv
+```
+
+The **hashes** that the output refers to are mappings of the contents of the relevant files to a unique string.
+If two files are the same, the hashes of those files will also be the same.
+If the files differ, even by a single character, their hashes will be different.
+
+The output from `catalogue disengage` utilises the hashes of the files that we provided as options to `catalogue engage` and `catalogue disengage`.
+- `timestamp` is generated by `catalogue` itself - it records the time at which `engage` and `disengage` occurred. As these two commands can't be performed at exactly the same time, their hashes will always differ.
+- Our input data and code did not change in the time between when `catalogue engage` and `catalogue disengage` were ran.
+- Our results were generated while we were using the catalogue tool, so a before/after comparison cannot be performed.
+The hashes themselves can be seen in the timestamped `.json` file in newly-generated `catalogue_results` folder.
+You can open that file in a text editor, of view the contents with
+```
+cat catalogue_results/20200518-184447.json
+```
+Note that the exact name of your file will be different as it will have been generated at a different time.
+
+This process is useful for making sure that we didn't unintentionally made changes to our input data or code as we ran our analysis pipeline.
+When we run `catalogue engage`, the tool checks all changes to the code have been committed to our version control system.
+This ensures that we have a record of the code that was run.
+However, the real utility of `catalogue` becomes apparent when we re-run our analysis after making changes to the code.
 
 ### Modifying the analysis script
