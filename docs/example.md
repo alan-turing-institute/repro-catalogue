@@ -152,7 +152,7 @@ As expected, we don't have any commits yet.
 However, `git` has detected that a new file is present in the `birthweight-analysis` folder.
 We need to let `git` know that it is supposed to track this file, which we do with the following command:
 ```
-git add birthweight-descriptive-statistics.py
+git add birthweight-descriptive-stats.py
 ```
 If we run `git status` again, we can see that the output has changed:
 ```
