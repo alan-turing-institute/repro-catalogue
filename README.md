@@ -1,25 +1,23 @@
 # repro-catalogue
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![Build Status](https://travis-ci.com/alan-turing-institute/repro-catalogue.svg?branch=master)](https://travis-ci.com/alan-turing-institute/repro-catalogue)
+[![PyPI version](https://badge.fury.io/py/repro-catalogue.svg)](https://badge.fury.io/py/repro-catalogue)
 
 A command line tool to catalogue versions of data, code and results to support reproducibility of research projects.
 
 ## Contents
 
 * [Introduction](#introduction)
-* [Installation](#installation)
 * [Getting started](#getting-started)
+  * [Installation](#installation)
+  * [Prerequisites](Prerequisites)
+* [Usage](#usage)
   * [Catalogue overview](#catalogue-overview)
   * [Available commands](#available-commands)
-* [Example usage](#example-usage)
-  * [Run analysis](#run-analysis)
-  * [Check outputs](#check-outputs)
-  * [Share outputs](#share-outputs)
-* [FAQs](#faqs)
-  * [Running in the wrong order](#running-in-the-wrong-order)
-  * [Intermediary data processing](#intermediary-data-processing)
-  * [Randomness](#randomness)
+  * [Optional arguments](#optional-arguments)
+* [Useful resources](#useful-resources)
+* [Contributing](#contributing)
+* [Contributors](#contributors)
 
 ## Introduction
 
@@ -34,15 +32,15 @@ The `catalogue` tool aids reproducibility by saving **hash values** of the input
 
 **Hash functions** map arbitrary sized data to a binary "word" of a fixed length. The mapping is deterministic and the generated hash values are (for all practical purposes) unique. This means that hashing the same file (or a directory of files) will always produce the same value unless something in the files has changed, in which case the hash function would produce a new value. Because the hash value of a given input is unique, comparing hash values is a quick and easy way to check whether two files are the same.
 
-## Installation
+## Getting started
+
+### Installation
+
+The package is available on PyPI:
 
 ```{bash}
-git clone https://github.com/alan-turing-institute/repro-catalogue.git
-cd repro-catalogue
-pip install .
+pip install repro-catalogue
 ```
-
-## Getting started
 
 ### Prerequisites
 
@@ -51,22 +49,24 @@ pip install .
 To use the tool, we assume you already have a project with some analysis code ready to run on your data. Your project structure might look something like this:
 
 ```
-├── data/
+├── data_dir/
 │   ├── my_data.csv
-├── analysis/
+├── code_dir/
 │   ├── my_analysis.py
-├── results/
+├── results_dir/
 ```
 
 **Git**
 
 A pre-requisite for using `catalogue` is that the directory with the analysis code is a git repository. [Git](https://git-scm.com) is a really useful tool for version control (GitHub sits on top of git).
 
-**Command line interface**
+**Command line**
 
 The tool has a command line interface so you will need to open something like Terminal in macOS or Command Prompt in Windows to use it.
 
-Throughout, the tool will require you to provide paths to some directory or file. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data/my_data.csv`, whereas on Windows it will be `data\my_data.csv` (i.e., use a `\` instead of `/`).
+Throughout, the tool will require you to provide paths to directories and files. Note that the directory path will look different on different operating systems. On Linux and macOS it may look like `data_dir/my_data.csv`, whereas on Windows it will be `data_dir\my_data.csv` (i.e., use `\` instead of `/`).
+
+## Usage
 
 ### Catalogue overview
 
@@ -96,6 +96,7 @@ Note that all arguments have default values which will be used if they are not p
 ```{bash}
 catalogue <command> -h
 ```
+
 ### Available commands
 
 #### engage
@@ -106,10 +107,10 @@ This command is run before an analysis is conducted:
 catalogue engage --input_data <data directory> --code <code directory>
 ```
 
-Replace `<data directory>` and `<code directory>` with the full or relative path to the data and code directories. In practice, this might look something like this:
+Replace `<data directory>` and `<code directory>` with the path to the data and code directories. In practice, this might look something like this:
 
 ```{bash}
-catalogue engage --input_data data --code analysis
+catalogue engage --input_data data_dir --code code_dir
 ```
 
 This will do a series of things. First it will check that the git working tree in our code folder is clean. It gives users a choice:
@@ -128,10 +129,10 @@ If we choose to proceed, `catalogue` will stage and commit all changes in the co
     "engage": "<timestamp (of catalogue engage)>"
   },
 "input_data": {
-     "<data_directory>" : "<hash of directory>"
+     "<data directory>" : "<hash of directory>"
    },
 "code" : {
-     "<code_directory>": "<latest git commit hash>"
+     "<code directory>": "<latest git commit hash>"
      }
 }
 ```
@@ -140,7 +141,9 @@ Once catalogue is engaged, you can run your analysis.
 
 #### disengage
 
-The `disengage` command is run **immediately after finishing an analysis** to version the results:
+The `disengage` command is run **immediately after finishing an analysis** to version the results.
+
+For example, my analysis is done by running my code as an executable file in command prompt. Once I have finished running this code, I proceed to the disengage stage:
 
 ```{bash}
 catalogue disengage \
@@ -149,13 +152,13 @@ catalogue disengage \
   --output_data <results directory>
 ```
 
-Replace all `<...>`with path to the directory described. In practice, the command might look something like this:
+Replace all `<...>` with a path to the directory described. In practice, the command might look something like this:
 
 ```{bash}
-catalogue disengage --input_data data --code analysis --output_data results
+catalogue disengage --input_data data_dir --code code_dir --output_data results_dir
 ```
 
-This checks that the `input_data` and `code` hashes match the hashes in `.lock` (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file:
+Running this command checks that the `input_data` and `code` hashes match the hashes in the `.lock` file (created during `engage`). If they do, it will take hashes of the files in `output_data` and produce the following file in a `catalogue_results` directory:
 
 ```json
 // catalogue_results/<TIMESTAMP>.json
@@ -180,8 +183,6 @@ This checks that the `input_data` and `code` hashes match the hashes in `.lock` 
 }
 ```
 
-Note that the new file is saved in a `catalogue_results` directory.
-
 #### compare
 
 The `compare` command can be used to compare two catalogue output files against each other:
@@ -189,18 +190,15 @@ The `compare` command can be used to compare two catalogue output files against 
 ```{bash}
 catalogue compare <TIMESTAMP1>.json <TIMESTAMP2>.json
 ```
-The arguments should be the path to the two files to be compared.
-
-For example, I might want to compare results produced on different days to check nothing has changed in this period:
+The arguments should be the paths to the two files to be compared. For example, I might want to compare results produced on different days to check nothing has changed in this period:
 
 ```{bash}
-cd catalogue_results
-catalogue compare 200510-120000.json 200514-120000.json
+catalogue compare catalogue_results/200510-120000.json catalogue_results/200514-170500.json
 ```
 
 If the hashes in the files are the same, this means the same analysis was run on the same data with the same outputs both times. In that case, `catalogue` will output something like:
 
-```
+```{bash}
 results differ in 1 places:
 =============================
 timestamp
@@ -215,152 +213,46 @@ results could not be compared in 0 places:
 ============================================
 ```
 
-If only one input is provided to the `compare` command, then the input is compared with the current state of the working directory.
+If only one file is provided to the `compare` command, then the hashes in the file are compared with hashes of the current state of the working directory. In that case, it is possible to also specify paths to the `input_data`, `code` and `output_data` (otherwise the default values are used).
 
-## Example usage
+### Optional arguments
 
-Imagine that on a central sever we have a data repository
-```
-├── Data folder/
-│   ├── database release 1/
-│   ├── database release 2/
-⋮    ⋮
-│   └── version index
-```
+#### --csv
 
-Elsewhere, in our user directory, perhaps on another computer, things look like this.
-
-```
-├── latest_data/
-├── latest_code/
-├── results/
-│   ├── old_results_with_inputs_1/
-│   ├── old_results_with_inputs_2/
-│   └── latest_results/
-├── catalogue_results/
-│   ├── TIMESTAMP1.json
-│   ├── TIMESTAMP2.json
-│   ├── TIMESTAMP3.json
-│   └── TIMESTAMP4.json
-```
-
-### Run analysis
-
-We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the scripts in our code folder, we run:
+It is possible to save the outputs from `disengage` to a csv rather than a json file. For this, use the `--csv` flag followed by the name of the file to save results to. Each new run will be appended as a new line to the csv file. For example:
 
 ```{bash}
-catalogue engage --input_data latest_data --code latest_code
+catalogue disengage --input_data data_dir --code code_dir --output_data results_dir --csv hashes.csv
 ```
 
-Now we run whatever we need to perform our analysis. Immediately after finishing this we run:
+The `compare` command can then also be used with a `--csv` flag. In that case, one would provide the two timestamps to compare (these must exist in the csv file for the command to work):
 
 ```{bash}
-catalogue disengage --input_data latest_data --output_data results/latest_results  --code latest_code
+catalogue compare 200510-120000 200514-170500 --csv hashes.csv
 ```
 
-This will produce the following file:
+It is possible to provide just one timestamp instead of two and this will be compared against the state of the current working directory.
 
-```json
-// catalogue_results/TIMESTAMP5.json
-{
-"timestamp" : {
-     "engage": "<timestamp (of .lock)>",
-     "disengage": "<timestamp (new)>"
-   },
-"input_data": {
-     "latest_data" : "<hash of directory>"
-   },
-"output_data": {
-       "results/latest results":{
-           "summary.txt": "<hash of file>",
-           "output.csv": "<hash of file>",
-           "metadata.json": "<hash of file>"
-           }
-     },
-"code" : {
-     "latest_code": "<git commit hash>"
-     }
-}
-```
+#### --catalogue_results
 
-### Check outputs
-
-Let's suppose that between TIMESTAMP4 and TIMESTAMP5 we modified the code to output a further file `summary.txt`, but that otherwise nothing has changed. We would like to check that our file `output.csv` hasn't changed but oops! We've just overwritten it. Luckily we can compare to the json at TIMESTAMP4.
-
-```
-catalogue compare \
-  catalogue_results/TIMESTAMP4.json \
-  catalogue_results/TIMESTAMP5.json
-```
-
-Let us also suppose that one of the other files generated by our analysis, `metadata.json`, includes a timestamp. The diff would look something like this:
-
-```
-results differ in 3 places:
-=============================
-timestamp
-code
-results/latest_results/metadata.json
-
-results matched in 2 places:
-==============================
-input_data
-results/latest_results/output.csv
-
-results could not be compared in 1 places:
-============================================
-results/latest_results/summary.text
-```
-
-Of course this is what we *want*:
-- The code has been updated to produce `summary.txt`, and the timestamps have changed
-- Our data and results have not changed at all
-- Our new file `summary.txt` could not be compared as that file was not present at TIMESTAMP4
-
-Alternatively, let's suppose that our changes to the code had affected our results, so that our `output.csv` file *has* changed. In that case `catalogue` would inform us of the problem without us having to permanently store the output of every analysis we run. The hashes alone would not be enough to recover the original TIMESTAMP4 version. But since we have recorded the timestamp, that information can help us track down the data version, and the git commit digest tells us exactly what version of the code is used, making it easier to try and reproduce those results should we wish to do so.
-
-### Share outputs
-
-We can then send a zip file of the results to a colleague along with the hash json produced during the final analysis (`TIMESTAMP5.json`).
-
-They can rerun the analysis and use `catalogue` to check that the json they received is the same as their own:
+By default, all files created by `catalogue` are saved in a `catalogue_results` directory. It is possible to change this by using the optional `--catalogue_results` flag. For exmaple:
 
 ```{bash}
-catalogue compare TIMESTAMP4.json
+catalogue engage --input_data data_dir --code code_dir --catalogue_results versioning_files
 ```
 
-## FAQs
+Note that if you change the default `--catalogue_results` directory, you have to use this flag in each subsequent command. Also, this directory cannot be the same as the `--code` directory.
 
-### Running in the wrong order
+## Useful resources
 
-The commands `catalogue engage` and `catalogue disengage` are meant to be run in that order.
+- [Example usage](docs/example_use.md)
+- [Frequently asked questions](docs/FAQs.md)
 
-The `catalogue engage` command will check that a `.lock` file does *not* exist. If it does, it will warn:
-```
-Already engaged (.lock file exists). To disengage run 'catalogue disengage...
-See 'catalogue disengage --help' for details
-```
+## Contributing
 
-The `catalogue disengage` command will check that a `.lock` file exists. If it doesn't, it will warn:
-```
-Not currently engaged (could not find .lock file). To engage run 'catalogue engage...
-See 'catalogue engage --help' for details
-```
+🚧 This repository is always a work in progress and everyone is encouraged to help us build something that is useful to the many. 🚧
 
-### Intermediary data processing
-
-It is likely that the analysis includes some preprocessing steps. Ideally all of this preprocessing would be run automatically in synchrony with the rest of our code. In that case we consider it output data, and it should be contained in the `output_data` folder.
-
-### Randomness
-
-
-Comparing two hashes tells you whether the hashed items are the same or different. This process cannot tell you if something is almost the same. If your analysis is non-deterministic, you will get a different hash every time.
-
-There are several ways by which an analysis can be non-deterministic. One of the most common is the user of random numbers.
-To deal with this, we recommend setting a random seed. Whatever language you're using should be able to provide you with documentation on how to do this - see, for example, the documentation for [Python](https://docs.python.org/3/library/random.html#random.seed).
-
-Hashing tells you whether something is the same, or different. It cannot tell you if something is almost the same. If your analysis is non-deterministic, you will be getting a different hash every time. To deal with this, we recommend setting a random seed. Whatever language you're using should be able to provide you with documentation on how to do this.
-
+Everyone is asked to follow our [code of conduct](CODE_OF_CONDUCT.md) and to checkout our [contributing guidelines](CONTRIBUTING.md) for more information on how to get started. 
 
 ## Contributors ✨
 
@@ -375,7 +267,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://isla.st"><img src="https://avatars2.githubusercontent.com/u/23707851?v=4" width="100px;" alt=""/><br /><sub><b>Isla</b></sub></a><br /><a href="#design-Islast" title="Design">🎨</a> <a href="#ideas-Islast" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=Islast" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=Islast" title="Documentation">📖</a></td>
     <td align="center"><a href="https://whitakerlab.github.io"><img src="https://avatars1.githubusercontent.com/u/3626306?v=4" width="100px;" alt=""/><br /><sub><b>Kirstie Whitaker</b></sub></a><br /><a href="#design-KirstieJane" title="Design">🎨</a> <a href="#ideas-KirstieJane" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-KirstieJane" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://sgibson91.github.io/"><img src="https://avatars2.githubusercontent.com/u/44771837?v=4" width="100px;" alt=""/><br /><sub><b>Sarah Gibson</b></sub></a><br /><a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=sgibson91" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Asgibson91" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://github.com/kevinxufs"><img src="https://avatars2.githubusercontent.com/u/48526846?v=4" width="100px;" alt=""/><br /><sub><b>kevinxufs</b></sub></a><br /><a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Akevinxufs" title="Reviewed Pull Requests">👀</a> <a href="#userTesting-kevinxufs" title="User Testing">📓</a></td>
+    <td align="center"><a href="https://github.com/kevinxufs"><img src="https://avatars2.githubusercontent.com/u/48526846?v=4" width="100px;" alt=""/><br /><sub><b>kevinxufs</b></sub></a><br /><a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Akevinxufs" title="Reviewed Pull Requests">👀</a> <a href="#userTesting-kevinxufs" title="User Testing">📓</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=kevinxufs" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/edaub"><img src="https://avatars0.githubusercontent.com/u/45598892?v=4" width="100px;" alt=""/><br /><sub><b>Eric Daub</b></sub></a><br /><a href="#design-edaub" title="Design">🎨</a> <a href="#ideas-edaub" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=edaub" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=edaub" title="Documentation">📖</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Aedaub" title="Reviewed Pull Requests">👀</a> <a href="#maintenance-edaub" title="Maintenance">🚧</a> <a href="#projectManagement-edaub" title="Project Management">📆</a></td>
     <td align="center"><a href="https://github.com/radka-j"><img src="https://avatars2.githubusercontent.com/u/29207091?v=4" width="100px;" alt=""/><br /><sub><b>Radka Jersakova</b></sub></a><br /><a href="#design-radka-j" title="Design">🎨</a> <a href="#ideas-radka-j" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=radka-j" title="Code">💻</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/pulls?q=is%3Apr+reviewed-by%3Aradka-j" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/alan-turing-institute/repro-catalogue/commits?author=radka-j" title="Documentation">📖</a> <a href="#maintenance-radka-j" title="Maintenance">🚧</a> <a href="#projectManagement-radka-j" title="Project Management">📆</a> <a href="#infra-radka-j" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
   </tr>
