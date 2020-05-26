@@ -11,6 +11,7 @@ Welcome to repro-catalogue's documentation!
    :caption: Contents:
 
    example_use
+   example
    FAQs
 
 
