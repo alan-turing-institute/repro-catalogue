@@ -1,0 +1,4 @@
+sphinx
+sphinxemoji
+sphinx_rtd_theme
+recommonmark

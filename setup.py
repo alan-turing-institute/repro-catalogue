@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # version information
 MAJOR = 1
 MINOR = 0
-MICRO = 1
+MICRO = 2
 PRERELEASE = 0
 ISRELEASED = True
 version = "{}.{}.{}".format(MAJOR, MINOR, MICRO)
