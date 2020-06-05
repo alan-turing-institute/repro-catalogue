@@ -1,12 +1,7 @@
 # Example usage
 
-## Contents
-* [Overview](#overview)
-* [Run analysis](#run-analysis)
-* [Check outputs](#check-outputs)
-* [Share outputs](#share-outputs)
 
-### Overview
+## Overview
 
 Imagine that on a central sever we have a data repository
 ```
@@ -33,7 +28,7 @@ Elsewhere, in our user directory, perhaps on another computer, things look like 
 │   └── TIMESTAMP4.json
 ```
 
-### Run analysis
+## Run analysis
 
 We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the scripts in our code folder, we run:
 
@@ -72,7 +67,7 @@ This will produce the following file:
 }
 ```
 
-### Check outputs
+## Check outputs
 
 Let's suppose that between TIMESTAMP4 and TIMESTAMP5 we modified the code to output a further file `summary.txt`, but that otherwise nothing has changed. We would like to check that our file `output.csv` hasn't changed but oops! We've just overwritten it. Luckily we can compare to the json at TIMESTAMP4.
 
@@ -108,7 +103,7 @@ Of course this is what we *want*:
 
 Alternatively, let's suppose that our changes to the code had affected our results, so that our `output.csv` file *has* changed. In that case `catalogue` would inform us of the problem without us having to permanently store the output of every analysis we run. The hashes alone would not be enough to recover the original TIMESTAMP4 version. But since we have recorded the timestamp, that information can help us track down the data version, and the git commit digest tells us exactly what version of the code is used, making it easier to try and reproduce those results should we wish to do so.
 
-### Share outputs
+## Share outputs
 
 We can then send a zip file of the results to a colleague along with the hash json produced during the final analysis (`TIMESTAMP5.json`).
 

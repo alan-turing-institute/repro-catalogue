@@ -1,12 +1,6 @@
 # FAQs
 
-## Contents
-
-* [Running in the wrong order](#running-in-the-wrong-order)
-* [Intermediary data processing](#intermediary-data-processing)
-* [Randomness](#randomness)
-
-### Running in the wrong order
+## Running in the wrong order
 
 The commands `catalogue engage` and `catalogue disengage` are meant to be run in that order.
 
@@ -22,11 +16,11 @@ Not currently engaged (could not find .lock file). To engage run 'catalogue enga
 See 'catalogue engage --help' for details
 ```
 
-### Intermediary data processing
+## Intermediary data processing
 
 It is likely that the analysis includes some preprocessing steps. Ideally all of this preprocessing would be run automatically in synchrony with the rest of our code. In that case we consider it output data, and it should be contained in the `output_data` folder.
 
-### Randomness
+## Randomness
 
 Comparing two hashes tells you whether the hashed items are the same or different. This process cannot tell you if something is almost the same. If your analysis is non-deterministic, you will get a different hash every time.
 
