@@ -28,7 +28,7 @@ The package is available on PyPI and requires Python 3 to use:
 pip install repro-catalogue
 ```
 
-See [https://repro-catalogue.readthedocs.io/en](https://repro-catalogue.readthedocs.io/en) for full documentation on how to install and use the tool.
+See [https://repro-catalogue.readthedocs.io](https://repro-catalogue.readthedocs.io) for full documentation on how to install and use the tool.
 
 
 ## Contributing
