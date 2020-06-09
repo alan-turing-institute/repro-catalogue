@@ -37,13 +37,13 @@ Elsewhere, in our user directory, perhaps on another computer, things look like 
 
 We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the scripts in our code folder, we run:
 
-```{bash}
+```bash
 catalogue engage --input_data latest_data --code latest_code
 ```
 
 Now we run whatever we need to perform our analysis. Immediately after finishing this we run:
 
-```{bash}
+```bash
 catalogue disengage --input_data latest_data --output_data results/latest_results  --code latest_code
 ```
 
@@ -114,6 +114,6 @@ We can then send a zip file of the results to a colleague along with the hash js
 
 They can rerun the analysis and use `catalogue` to check that the json they received is the same as their own:
 
-```{bash}
+```bash
 catalogue compare TIMESTAMP4.json
 ```
