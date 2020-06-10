@@ -1,5 +1,11 @@
 # FAQs
 
+## Contents
+
+* [Running in the wrong order](#running-in-the-wrong-order)
+* [Intermediary data processing](#intermediary-data-processing)
+* [Randomness](#randomness)
+
 ## Running in the wrong order
 
 The commands `catalogue engage` and `catalogue disengage` are meant to be run in that order.

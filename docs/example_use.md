@@ -1,5 +1,11 @@
 # Example usage
 
+## Contents
+
+* [Overview](#overview)
+* [Run analysis](#run-analysis)
+* [Check outputs](#check-outputs)
+* [Share outputs](#share-outputs)
 
 ## Overview
 
