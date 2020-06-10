@@ -1,5 +1,13 @@
 # Getting started with `catalogue`
 
+## Contents
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Our first example](#our-first-example)
+
+## Overview
+
 In this example, we'll show you how to use the `catalogue` tool to check the reproducibility of a small analysis pipeline.
 We want to make sure that we reliably get the same numerical result from our analysis before we pass our scripts along to a colleague, or publish a report that uses our results.
 `catalogue` gives us a simple method that we can use to compare our results as we update our input data and our code.
@@ -67,7 +75,7 @@ or download the birthweight dataset in CSV format from the [website](https://www
 
 If you open up the file in your preferred text editor, or view the output by running
 ```
-cat birthweight-data/Birthweight_reduced_R.csv 
+cat birthweight-data/Birthweight_reduced_R.csv
 ```
 you'll see that there is one header row followed by 42 rows of data.
 As the file is a csv, we can see commas are used to separate each value in the dataset.
