@@ -6,6 +6,7 @@ from argparse import Namespace
 import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
+from .config import config
 
 
 
@@ -15,6 +16,8 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter)
 
     common_parser = argparse.ArgumentParser(add_help=False)
+
+    # default dictionary is used for comparisons against the default. main_dict will represent the arguments used
     default_dict = {'input_data': None, 'code': None, 'catalogue_results': None, 'output_data': None, 'csv': None}
     main_dict = {'input_data': None, 'code': None, 'catalogue_results': None, 'output_data': None, 'csv': None}
 
@@ -64,14 +67,21 @@ def main():
 
     common_args = common_parser.parse_args()
     output_args = output_parser.parse_args()
-    config_file_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
 
+    # location of the configuration file that will be compared against
+    config_file_loc = 'catalogue_config.csv'
+
+    # if a config file exists, we read the config file and convert it into a dictionary. We then set our main_dict as
+    # equal to the config file dictionary. I.e config args > default args
     if os.path.isfile(config_file_loc):
-        config_dict = pd.read_csv('catalogue_config.csv', header=None, index_col=0, squeeze=True).to_dict()
+        config_dict = pd.read_csv(config_file_loc, header=None, index_col=0, squeeze=True).to_dict()
         assert config_dict.keys() == main_dict.keys()
         for key in main_dict.keys():
             main_dict[key] = config_dict[key]
 
+    # here we implement given args > config args > default args. If the given arg is different to default args then it
+    # will take priority. If it is not different then this usually means the specific argument was not provided and thus
+    # it is set to default.
     for key in vars(common_args):
         if vars(common_args)[key] is not default_dict[key]:
             main_dict[key] = vars(common_args)[key]
@@ -80,7 +90,8 @@ def main():
         if vars(output_args)[key] is not default_dict[key]:
             main_dict[key] = vars(output_args)[key]
 
-# I now have a main dict file that I need to update on.
+    # the main dictionary is now complete, and we update the arguments.
+    #
 
     for key in vars(common_args):
         vars(common_args)[key] = main_dict[key]
@@ -88,7 +99,7 @@ def main():
     for key in vars(output_args):
         vars(output_args)[key] = main_dict[key]
 
-# so now my common and output parsers should be correct and I can use the remaining code
+    # so now my common and output parsers should be correct and I should be able to use the remaining code
 
     # create subparsers
     subparsers = parser.add_subparsers(dest="command")
@@ -107,6 +118,11 @@ def main():
         "disengage", parents=[common_parser, output_parser], description="", help=""
     )
     disengage_parser.set_defaults(func=disengage)
+
+    # We need to add an additional subparser here
+
+    config_parser = subparsers.add_parser("config", parents = [common_parser, output_parser], description="", help="")
+    config_parser.set_defaults(func=config)
 
     args = parser.parse_args()
     assert args.code != args.catalogue_results, "The 'catalogue_results' and 'code' paths cannot be the same"
