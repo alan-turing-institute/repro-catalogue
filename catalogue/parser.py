@@ -1,8 +1,10 @@
 import argparse
 import textwrap
-
+import os
+import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
+from .config import config
 
 
 def main():
@@ -51,6 +53,20 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
+    main_dict = {'input_data' : 'C:/Users/xukev/TuringDataStories/cata_test/input_data',
+                     'code':'C:/Users/xukev/TuringDataStories/cata_test/code',
+                     'catalogue_results' : 'C:/Users/xukev/TuringDataStories/catalogue_results',
+                     'output_data': 'C:/Users/xukev/TuringDataStories/cata_test/output_data',
+                     'csv' :'exns.csv'}
+
+    config_file_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
+
+    if os.path.isfile(config_file_loc):
+        config_dict = pd.read_csv(config_file_loc, header=None, index_col=0, squeeze=True).to_dict()
+        for key in config_dict.keys():
+            main_dict[key] = config_dict[key]
+
+
     # declare shared arguments here
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument(
@@ -59,7 +75,7 @@ def main():
         metavar='input_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containing the input data. Default value is data."),
-        default='data')
+        default=main_dict['input_data'])
 
     common_parser.add_argument(
         '--code',
@@ -68,7 +84,7 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the code directory." +
                              " The code directory must be a git repository, or must have a parent directory" +
                              " that is a git repository. Default is the current working directory."),
-        default='.')
+        default=main_dict['code'])
 
     common_parser.add_argument(
         '--catalogue_results',
@@ -77,7 +93,7 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
                             " files created by catalogue should be stored. It cannot be the same as the `code`" +
                             " directory. Default is catalogue_results."),
-        default='catalogue_results'
+        default=main_dict['catalogue_results']
     )
 
     output_parser = argparse.ArgumentParser(add_help=False)
@@ -87,7 +103,7 @@ def main():
         metavar='output_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containing the analysis output data. Default value is results."),
-        default="results")
+        default= main_dict['output_data'])
 
     output_parser.add_argument(
         "--csv",
@@ -96,7 +112,7 @@ def main():
         help=textwrap.dedent("If output to CSV is desired, set this to the desired filename (the file " +
                              "will be placed in the 'catalogue_results' directory). Optional, default is None "  +
                              "for no CSV output"),
-        default=None)
+        default= main_dict['csv'])
 
     # create subparsers
     subparsers = parser.add_subparsers(dest="command")
@@ -115,6 +131,9 @@ def main():
         "disengage", parents=[common_parser, output_parser], description="", help=""
     )
     disengage_parser.set_defaults(func=disengage)
+
+    config_parser = subparsers.add_parser("config", parents=[common_parser, output_parser], description="", help="")
+    config_parser.set_defaults(func=config)
 
     args = parser.parse_args()
     assert args.code != args.catalogue_results, "The 'catalogue_results' and 'code' paths cannot be the same"

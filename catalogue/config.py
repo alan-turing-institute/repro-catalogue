@@ -5,16 +5,21 @@ import argparse
 from argparse import Namespace
 import pandas as pd
 
+# The given args is a Namespace object
+# to test, create an example Namespace, e.g:
+# exns = Namespace(input_data = 'C:/Users/xukev/TuringDataStories/cata_test/input_data',
+#                  code='C:/Users/xukev/TuringDataStories/cata_test/code',
+#                  catalogue_results= 'C:/Users/xukev/TuringDataStories/catalogue_results',
+#                  output_data='C:/Users/xukev/TuringDataStories/cata_test/output_data',
+#                  csv='exns.csv')
 
-def dictionary_printer(dict):
-    for key in dict:
-        print('{}:{}'.format(key, dict[key]))
 
 def config(args):
 
     #location of config file
-    config_loc = 'catalogue_config.csv'
+    config_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
 
+    config_keys = ['input_data', 'code', 'catalogue_results', 'output_data', 'csv']
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
 
     if os.path.isfile(config_loc) is False:
@@ -24,19 +29,20 @@ def config(args):
     else:
         dict = pd.read_csv(config_loc, header=None, index_col=0, squeeze=True).to_dict()
         print('Previous config file found with values:')
-        dictionary_printer(dict)
+        for key in dict:
+            print('{}:{}'.format(key, dict[key]))
 
-    print('Now generating new csv file')
-
-    #example dict
-    test_dict = {'input_data': 2, 'code': 3, 'catalogue_results': 4, 'output_data': 5, 'csv': 7}
+    print("Now generating new csv file 'catalogue_config.csv' ")
 
     # write the new csv file. At the moment it uses test_dict, but in practice it will use the provided 'args'
     # dictionary. 'args' is currently a Namespace file.
-    with open('dict.csv', 'w', newline='') as csv_file:
+    with open(config_loc, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        for key, value in test_dict.items():
-            writer.writerow([key, value])
+        for key, value in vars(args).items():
+            if key in config_keys:
+                writer.writerow([key, value])
     print('New config file values:')
-    dictionary_printer(test_dict)
+
+    for key in config_keys:
+        print('{}:{}'.format(key, vars(args)[key]))
 
