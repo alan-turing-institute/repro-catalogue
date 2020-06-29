@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0d82f1d1-ef17-4e2b-836d-0a3d0f2ec1a9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue/parsermod.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/parsermod.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue_config.csv" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,7 +60,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/catalogue/parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
+            <state relative-caret-position="722">
               <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -73,10 +69,22 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/catalogue_config.csv">
+          <provider editor-type-id="csv-table-editor">
+            <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+          </provider>
+          <provider selected="true" editor-type-id="csv-text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/catalogue/engage.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
+            <state relative-caret-position="1717">
               <caret line="151" column="54" lean-forward="true" selection-start-line="151" selection-start-column="54" selection-end-line="151" selection-end-column="54" />
               <folding>
                 <element signature="e#1#10#0" expanded="true" />
@@ -192,7 +200,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1513" height="973" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494929" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -285,13 +292,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/catalogue/catalogue_config.csv" />
-    <entry file="file://$PROJECT_DIR$/catalogue/version.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_parser.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.travis.yml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/catalogue/config.py">
@@ -328,8 +329,8 @@
         <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
       </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="68" />
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
       <provider editor-type-id="text-editor">
@@ -338,9 +339,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/catalogue/version.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/catalogue/parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
+        <state relative-caret-position="722">
           <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
@@ -350,7 +357,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/catalogue/engage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
+        <state relative-caret-position="1717">
           <caret line="151" column="54" lean-forward="true" selection-start-line="151" selection-start-column="54" selection-end-line="151" selection-end-column="54" />
           <folding>
             <element signature="e#1#10#0" expanded="true" />
