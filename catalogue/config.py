@@ -17,7 +17,7 @@ import pandas as pd
 def config(args):
 
     #location of config file
-    config_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
+    config_loc = r'C:\Users\xukev\repro-catalogue\catalogue_config.csv'
 
     config_keys = ['input_data', 'code', 'catalogue_results', 'output_data', 'csv']
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
@@ -33,6 +33,7 @@ def config(args):
             print('{}:{}'.format(key, dict[key]))
 
     print("Now generating new csv file 'catalogue_config.csv' ")
+    print(vars(args))
 
     # write the new csv file. At the moment it uses test_dict, but in practice it will use the provided 'args'
     # dictionary. 'args' is currently a Namespace file.

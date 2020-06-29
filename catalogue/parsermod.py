@@ -63,7 +63,7 @@ def main():
         help=textwrap.dedent("If output to CSV is desired, set this to the desired filename (the file " +
                              "will be placed in the 'catalogue_results' directory). Optional, default is None " +
                              "for no CSV output"),
-        default= default_dict['csv'])
+        default=default_dict['csv'])
 
     common_args = common_parser.parse_args()
     output_args = output_parser.parse_args()
