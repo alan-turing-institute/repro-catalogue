@@ -88,11 +88,6 @@
               <item name="repro-catalogue" type="462c0819:PsiDirectoryNode" />
               <item name="catalogue" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="repro-catalogue" type="b2602c69:ProjectViewProjectNode" />
-              <item name="repro-catalogue" type="462c0819:PsiDirectoryNode" />
-              <item name="catalogue_results" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -131,14 +126,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1513" height="973" extended-state="6" />
+    <frame x="-7" y="-7" width="1513" height="973" extended-state="7" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494929" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494929" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Python Console" weight="0.32938388" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.3957346" />
+      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.3957346" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32938388" />
