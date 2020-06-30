@@ -17,7 +17,6 @@ def config(args):
     #location of config file
     config_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
 
-    config_keys = ['input_data', 'code', 'catalogue_results', 'output_data', 'csv']
 
 
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
@@ -39,7 +38,7 @@ def config(args):
     with open('catalogue_config.csv', 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in vars(args).items():
-            if key in config_keys:
+            if key not in ["command", "func"]:
                 writer.writerow([key, value])
                 print('{}:{}'.format(key, vars(args)[key]))
 
