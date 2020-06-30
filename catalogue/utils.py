@@ -21,6 +21,7 @@ def check_paths_exists(args):
     ---------
     Boolean indicating if all filepaths exist.
     """
+    print(args)
     paths = [value for key, value in vars(args).items()
             if key not in ["command", "func", "csv", "catalogue_results"]]
     path_checks = [os.path.exists(path) for path in paths]

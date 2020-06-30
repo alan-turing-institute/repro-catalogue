@@ -1,7 +1,5 @@
-command,config
-input_data,C:\Users\xukev\repro-catalogue
-code,C:/Users/xukev/TuringDataStories/binder
-catalogue_results,C:/Users/xukev/TuringDataStories/catalogue_results
-output_data,C:/Users/xukev/TuringDataStories/cata_test/output_data
-csv,'lol.csv'
-func,<function config at 0x000001BE260F0C80>
+input_data,C:\Users\xukev\repro-catalogue\cata_test\input_data
+code,C:\Users\xukev\repro-catalogue\cata_test\code
+catalogue_results,C:\Users\xukev\repro-catalogue\catalogue_results
+output_data,C:\Users\xukev\repro-catalogue\cata_test\output_data
+csv,exns.csv

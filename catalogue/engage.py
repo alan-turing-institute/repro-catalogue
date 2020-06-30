@@ -98,7 +98,13 @@ def engage(args):
     ---------
     None
     """
-    assert check_paths_exists(args), 'Not all provided filepaths exist.'
+
+    # assert check_paths_exists(args), 'Not all provided filepaths exist.'
+
+    paths = [value for key, value in vars(args).items()
+             if key not in ["command", "func", "csv", "catalogue_results"]]
+    path_checks = [os.path.exists(path) for path in paths]
+    print(path_checks)
 
     if git_query(args.code, args.catalogue_results, True):
         try:
