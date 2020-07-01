@@ -11,6 +11,9 @@ def compare(args):
     Prints results on the command line.
     """
 
+    if type(args.csv) == float:
+        args.csv = None
+
     assert len(args.hashes) == 1 or len(args.hashes) == 2, "compare can only accept 1 or 2 hash files"
 
     if args.csv is None:

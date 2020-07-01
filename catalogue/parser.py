@@ -53,14 +53,14 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
-    main_dict = {'input_data' : r'C:\Users\xukev\repro-catalogue\cata_test\input_data',
-                     'code': r'C:\Users\xukev\repro-catalogue\cata_test\code',
+    main_dict = {'input_data' : r'C:\Users\xukev\TuringDataStories\cata_test\input_data',
+                     'code': r'C:\Users\xukev\TuringDataStories\cata_test\code',
                      'catalogue_results' : r'C:\Users\xukev\repro-catalogue\catalogue_results',
-                     'output_data': r'C:\Users\xukev\repro-catalogue\cata_test\output_data',
-                     'csv' : r'exns.csv'}
+                     'output_data': r'C:\Users\xukev\TuringDataStories\cata_test\output_data',
+                     'csv' : None}
 
 
-    config_file_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
+    config_file_loc = r'C:\Users\xukev\repro-catalogue\catalogue_config.csv'
 
     if os.path.isfile(config_file_loc):
         config_dict = pd.read_csv(config_file_loc, header=None, index_col=0, squeeze=True).to_dict()
