@@ -53,10 +53,10 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
-    main_dict = {'input_data' : r'C:\Users\xukev\TuringDataStories\cata_test\input_data',
-                     'code': r'C:\Users\xukev\TuringDataStories\cata_test\code',
-                     'catalogue_results' : r'C:\Users\xukev\repro-catalogue\catalogue_results',
-                     'output_data': r'C:\Users\xukev\TuringDataStories\cata_test\output_data',
+    main_dict = {'input_data' : r'/home/kevinxu/TuringDataStories/cata_test/input_data',
+                     'code': r'/home/kevinxu/TuringDataStories/cata_test/code',
+                     'catalogue_results' : r'/home/kevinxu/TuringDataStories/catalogue_results',
+                     'output_data': r'/home/kevinxu/TuringDataStories/cata_test/output_data',
                      'csv' : None}
 
 

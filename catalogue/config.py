@@ -15,9 +15,8 @@ import pandas as pd
 def config(args):
 
     #location of config file
-    config_loc = 'C:/Users/xukev/repro-catalogue/catalogue_config.csv'
-
-
+    config_loc = 'catalogue_config.csv'
+    print(config_loc)
 
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
 
@@ -41,5 +40,3 @@ def config(args):
             if key not in ["command", "func"]:
                 writer.writerow([key, value])
                 print('{}:{}'.format(key, vars(args)[key]))
-
-
