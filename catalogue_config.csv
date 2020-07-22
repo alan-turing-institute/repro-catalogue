@@ -1,5 +1,5 @@
-input_data,/tmp/tmp_q_cb82i/data
-catalogue_results,catalogue_results
+input_data,hi
 code,/tmp/tmp_q_cb82i
-csv,
+catalogue_results,catalogue_results
 output_data,/tmp/tmp_q_cb82i/results2_test
+csv,nan

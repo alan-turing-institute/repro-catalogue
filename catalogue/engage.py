@@ -100,7 +100,6 @@ def engage(args):
     ---------
     None
     """
-    print(vars(args))
 
 
 
@@ -145,18 +144,8 @@ def disengage(args):
     None
     """
 
-    paths = [value for key, value in vars(args).items()
-             if key not in ["command", "func", "csv", "catalogue_results"]]
-    print(paths)
-    path_checks = [os.path.exists(path) for path in paths]
-    print(path_checks)
-    print('hi')
     if type(args.csv) == float:
         args.csv = None
-    for key in vars(args):
-        print(type(vars(args)[key]))
-
-
 
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 

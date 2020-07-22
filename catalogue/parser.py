@@ -60,7 +60,7 @@ def main():
                      'csv' : None}
 
 
-    config_file_loc = r'C:\Users\xukev\repro-catalogue\catalogue_config.csv'
+    config_file_loc = 'catalogue_config.csv'
 
     if os.path.isfile(config_file_loc):
         config_dict = pd.read_csv(config_file_loc, header=None, index_col=0, squeeze=True).to_dict()

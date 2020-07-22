@@ -16,7 +16,6 @@ def config(args):
 
     #location of config file
     config_loc = 'catalogue_config.csv'
-    print(config_loc)
 
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
 
