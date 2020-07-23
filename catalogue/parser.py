@@ -5,6 +5,7 @@ import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
 from .config import config
+from .utils import read_config_file
 
 
 def main():
@@ -53,17 +54,17 @@ def main():
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
 
-    main_dict = {'input_data' : r'/home/kevinxu/TuringDataStories/cata_test/input_data',
-                     'code': r'/home/kevinxu/TuringDataStories/cata_test/code',
-                     'catalogue_results' : r'/home/kevinxu/TuringDataStories/catalogue_results',
-                     'output_data': r'/home/kevinxu/TuringDataStories/cata_test/output_data',
+    main_dict = {'input_data' : r'input_data',
+                     'code': r'code',
+                     'catalogue_results' : r'catalogue_results',
+                     'output_data': r'output_data',
                      'csv' : None}
 
 
     config_file_loc = 'catalogue_config.csv'
 
     if os.path.isfile(config_file_loc):
-        config_dict = pd.read_csv(config_file_loc, header=None, index_col=0, squeeze=True).to_dict()
+        config_dict = read_config_file(config_file_loc)
         for key in config_dict.keys():
             main_dict[key] = config_dict[key]
 

@@ -44,3 +44,9 @@ def prune_files(files, dir):
     list of str
     """
     return [f for f in files if dir != os.path.basename(os.path.dirname(f))]
+
+
+
+def read_config_file(config_file):
+    dict = pd.read_csv(config_loc, header=None, index_col=0, squeeze=True).to_dict()
+    return(dict)

@@ -4,13 +4,8 @@ import csv
 import argparse
 from argparse import Namespace
 import pandas as pd
+from .utils import read_config_file
 
-# To test, create an example namespace, e.g:
-# exns = Namespace(input_data = r'C:\Users\xukev\repro-catalogue\cata_test\input_data',
-#                  code=r'C:\Users\xukev\repro-catalogue\cata_test\code',
-#                  catalogue_results= r'C:\Users\xukev\repro-catalogue\catalogue_results',
-#                  output_data=r'C:\Users\xukev\repro-catalogue\cata_test\output_data',
-#                  csv=r'exns.csv')
 
 def config(args):
 
@@ -24,7 +19,7 @@ def config(args):
         print('Creating config file')
 
     else:
-        dict = pd.read_csv(config_loc, header=None, index_col=0, squeeze=True).to_dict()
+        dict = read_config_file(config_loc)
         print('Previous config file found with values:')
         for key in dict:
             print('{}:{}'.format(key, dict[key]))
