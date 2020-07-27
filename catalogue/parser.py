@@ -5,7 +5,8 @@ import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
 from .config import config
-from .utils import read_config_file
+from .utils import read_config_file, CONFIG_LOC, dictionary_printer
+
 
 
 def main():
@@ -60,13 +61,13 @@ def main():
                      'output_data': r'output_data',
                      'csv' : None}
 
-
-    config_file_loc = 'catalogue_config.csv'
-
-    if os.path.isfile(config_file_loc):
-        config_dict = read_config_file(config_file_loc)
-        for key in config_dict.keys():
-            main_dict[key] = config_dict[key]
+    if os.path.isfile(CONFIG_LOC):
+        try:
+            config_dict = read_config_file(CONFIG_LOC)
+            for key in config_dict.keys():
+                main_dict[key] = config_dict[key]
+        except:
+            print("empty yaml_file")
 
 
     # declare shared arguments here

@@ -2,8 +2,6 @@
 import os
 import json
 import git
-import numpy
-import math
 from git import InvalidGitRepositoryError
 
 from . import catalogue as ct
@@ -144,8 +142,6 @@ def disengage(args):
     None
     """
 
-    if type(args.csv) == float:
-        args.csv = None
 
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 

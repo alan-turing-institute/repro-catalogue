@@ -30,11 +30,13 @@ def test_existing_config(git_repo, test_args, capsys, workspace):
     input_dir = os.path.join(git_repo, 'data')
     setattr(test_args, "output_data", output_dir)
     os.chdir(git_repo)
-    config(test_args)
+
+    #TODO: manually create something (e.g. a fixture) instead of just running it twice
+
     #First time there should be no config file, second time one should exist
     config(test_args)
     captured = capsys.readouterr()
-    config_file = os.path.join(os.getcwd(),'catalogue_config.csv')
+    config_file = os.path.join(git_repo,'catalogue_config.csv')
     assert os.path.isfile(config_file)
     assert "Previous config file found with values:" in captured.out
 
@@ -51,15 +53,17 @@ def test_generate_new_config(git_repo, test_args, capsys, workspace):
         code = git_repo,
         output_data = os.path.join(git_repo, "results"),
         csv = None
-
     )
     config(weird_args)
     captured = capsys.readouterr()
     assert "Now generating new csv file 'catalogue_config.csv'" in captured.out
     assert weird_args.input_data in captured.out
-    config_file = os.path.join(os.getcwd(),'catalogue_config.csv')
+    config_file = os.path.join(git_repo,'catalogue_config.csv')
     assert os.path.isfile(config_file)
 
     with open(config_file, "r") as f:
         string = f.read()
     assert string == "input_data,{}/data_weird\ncatalogue_results,catalogue_results\ncode,{}\noutput_data,{}/results\ncsv,\n".format(git_repo, git_repo, git_repo)
+
+def test_csv_file_format():
+    pass

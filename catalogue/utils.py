@@ -1,8 +1,10 @@
 
 import os
 
+import yaml
 from datetime import datetime
 
+CONFIG_LOC = 'catalogue_config.yaml'
 
 def create_timestamp():
     return datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -48,5 +50,11 @@ def prune_files(files, dir):
 
 
 def read_config_file(config_file):
-    dict = pd.read_csv(config_loc, header=None, index_col=0, squeeze=True).to_dict()
-    return(dict)
+    with open(config_file) as f:
+        config_data = yaml.load(f, Loader = yaml.FullLoader)
+    return config_file
+
+
+def dictionary_printer(dict):
+    for key, value in dict.items():
+        print('{}:{}'.format(key, value))
