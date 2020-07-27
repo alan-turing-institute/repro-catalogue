@@ -5,11 +5,10 @@ import argparse
 from argparse import Namespace
 import pandas as pd
 import yaml
-from .utils import read_config_file, CONFIG_LOC, dictionary_printer
+from .utils import read_config_file, CONFIG_LOC, dictionary_printer, config_validator
 
 
 def config(args):
-
 
     #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
 
@@ -21,6 +20,7 @@ def config(args):
         dict = read_config_file(CONFIG_LOC)
         print('Previous config file found with values:')
         dictionary_printer(dict)
+
 
     print("Now generating new config file 'catalogue_config.yaml' with config file values:")
 

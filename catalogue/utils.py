@@ -59,3 +59,39 @@ def read_config_file(config_file):
 def dictionary_printer(dict):
     for key, value in dict.items():
         print('{}:{}'.format(key, value))
+
+def config_validator(config_loc):
+    print('Validating config')
+    config_dict = read_config_file(config_loc)
+    valid = True
+    valid_keys = ['catalogue_results','code','csv','input_data','output_data']
+
+    # checks that the config keys are a subset of the correct ones
+    if not set(config_dict.keys()).issubset(valid_keys):
+        valid = False
+        print('Config error: invalid keys present in the yaml file')
+
+
+    # check that any csv configurations have the .csv extension
+    if 'csv' in config_dict.keys() and config_dict['csv'] is not None:
+        filename = config_dict['csv']
+        extension = filename[-4:]
+        if extension != '.csv':
+            valid = False
+            print('Config error: csv argument has an invalid extension')
+
+
+    # check that all config file keys only have string values (i.e. no nested)
+    values_list = list(config_dict.values())
+    for value in values_list:
+        if not isinstance(value, str) and value is not None:
+            valid = False
+            print('Config error: config files are not all strings')
+
+    # check that there are no duplicate keys
+    if valid:
+        print('Config file is valid')
+    else:
+        print('Config file is invalid')
+
+    return valid
