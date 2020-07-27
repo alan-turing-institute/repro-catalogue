@@ -62,13 +62,9 @@ def main():
                      'csv' : None}
 
     if os.path.isfile(CONFIG_LOC):
-        try:
             config_dict = read_config_file(CONFIG_LOC)
             for key in config_dict.keys():
                 main_dict[key] = config_dict[key]
-        except:
-            print("empty yaml_file")
-
 
     # declare shared arguments here
     common_parser = argparse.ArgumentParser(add_help=False)

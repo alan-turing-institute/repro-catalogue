@@ -27,6 +27,7 @@ def check_paths_exists(args):
     paths = [value for key, value in vars(args).items()
             if key not in ["command", "func", "csv", "catalogue_results"]]
     path_checks = [os.path.exists(path) for path in paths]
+    print(path_checks)
     return all(path_checks)
 
 
@@ -52,7 +53,7 @@ def prune_files(files, dir):
 def read_config_file(config_file):
     with open(config_file) as f:
         config_data = yaml.load(f, Loader = yaml.FullLoader)
-    return config_file
+    return config_data
 
 
 def dictionary_printer(dict):

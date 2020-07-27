@@ -99,8 +99,6 @@ def engage(args):
     None
     """
 
-
-
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 
 
