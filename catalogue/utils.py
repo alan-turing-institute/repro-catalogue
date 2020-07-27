@@ -63,7 +63,13 @@ def dictionary_printer(dict):
 def config_validator(config_loc):
     print('Validating config')
     config_dict = read_config_file(config_loc)
+
     valid = True
+
+    # check config_dict is in fact a dictionary
+    if not isinstance(config_dict, dict):
+        valid = False
+
     valid_keys = ['catalogue_results','code','csv','input_data','output_data']
 
     # checks that the config keys are a subset of the correct ones
