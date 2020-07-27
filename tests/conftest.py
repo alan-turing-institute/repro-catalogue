@@ -31,6 +31,10 @@ def fixture4():
     return os.path.join(_FIXTURES_DIR, "fixture4.csv")
 
 @pytest.fixture
+def fixture5():
+    return os.path.join(_FIXTURES_DIR, "fixture5.yaml")
+
+@pytest.fixture
 def empty_hash():
     """
     Hash produced if no input is provided.

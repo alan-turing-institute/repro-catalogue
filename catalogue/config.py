@@ -22,7 +22,7 @@ def config(args):
         print('Previous config file found with values:')
         dictionary_printer(dict)
 
-    print("Now generating new yaml file 'catalogue_config.yaml' with config file values:")
+    print("Now generating new config file 'catalogue_config.yaml' with config file values:")
 
     # write the new csv file. At the moment it uses test_dict, but in practice it will use the provided 'args'
     # dictionary. 'args' is currently a Namespace file.
