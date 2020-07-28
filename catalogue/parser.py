@@ -1,7 +1,6 @@
 import argparse
 import textwrap
 import os
-import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
 from .config import config, config_validator

@@ -8,7 +8,6 @@ import pytest
 import csv
 import argparse
 from argparse import Namespace
-import pandas as pd
 import yaml
 from catalogue.config import config, config_validator
 

@@ -3,7 +3,6 @@ import os.path
 import csv
 import argparse
 from argparse import Namespace
-import pandas as pd
 import yaml
 from .utils import read_config_file, CONFIG_LOC, dictionary_printer
 
