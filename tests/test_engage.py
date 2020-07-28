@@ -99,6 +99,20 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
     with pytest.raises(TypeError):
         git_query()
 
+def test_git_query_new_repo(git_repo_no_commits, capsys, workspace, monkeypatch):
+
+    # Check that git_query correctly determines that the repo is not currently clean
+    assert git_query(git_repo_no_commits, "catalogue_results") == False
+
+    # Select "no" when asked whether to commit local changes; repo will still not be clean
+    monkeypatch.setattr('builtins.input', lambda: "n")
+    assert git_query(git_repo_no_commits, "catalogue_results", True) == False
+
+    # Select "yes" when asked whether to commit local changes
+    # This should throw a sensible error, as a branch can't be generated yet (no initial commit)
+    monkeypatch.setattr('builtins.input', lambda: "y")
+    git_query(git_repo_no_commits, "catalogue_results", True)   # Check for more informative error here
+
 
 def test_engage(git_repo, test_args, capsys):
     """
