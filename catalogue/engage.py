@@ -58,7 +58,7 @@ def git_query(repo_path, catalogue_dir, commit_changes=False):
                 try:
                     new_branch = repo.create_head("catalogue-" + timestamp)
                 except BadName as e:
-                    print("Cannot create branch as there are no existing commits.\nMake a commit manually, then run catalogue engage again.")
+                    print("\nCannot create a branch for this commit as there are no existing commits.\nMake a commit manually, then run catalogue engage again.\n")
                     return False
                 new_branch.checkout()
                 changed_files = [ item.a_path for item in repo.index.diff(None) ]
