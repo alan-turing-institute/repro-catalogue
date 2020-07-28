@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from .engage import engage, disengage
 from .compare import compare
-from .config import config
+from .config import config, config_validator
 from .utils import read_config_file, CONFIG_LOC, dictionary_printer
 
 
@@ -62,6 +62,7 @@ def main():
                      'csv' : None}
 
     if os.path.isfile(CONFIG_LOC):
+        if config_validator(CONFIG_LOC):
             config_dict = read_config_file(CONFIG_LOC)
             for key in config_dict.keys():
                 main_dict[key] = config_dict[key]

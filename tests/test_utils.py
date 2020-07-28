@@ -1,5 +1,6 @@
 
 import pytest
+import os
 
 from catalogue.utils import check_paths_exists, create_timestamp, read_config_file, dictionary_printer
 
@@ -25,8 +26,10 @@ def test_check_paths_exists(test_args):
     setattr(test_args, "output_data", 123)
     assert check_paths_exists(test_args) == False
 
-def test_read_config_file(fixture5):
-    dict = read_config_file(fixture5)
+def test_read_config_file(good_config):
+
+
+    dict = read_config_file(good_config)
     assert dict['code'] == 'code'
     assert dict['input_data'] == 'input_data'
     assert dict['csv'] == None

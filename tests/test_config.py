@@ -10,9 +10,9 @@ import argparse
 from argparse import Namespace
 import pandas as pd
 import yaml
-from catalogue.config import config
+from catalogue.config import config, config_validator
 
-def test_no_config(git_repo, test_args, capsys, workspace):
+def test_no_config(git_repo, test_args, capsys):
 
     #Ensure no file
     config_file = os.path.join(git_repo,'catalogue_config.yaml')
@@ -24,7 +24,7 @@ def test_no_config(git_repo, test_args, capsys, workspace):
 
 
 
-def test_existing_config(git_repo, test_args, capsys, workspace):
+def test_existing_config(git_repo, test_args, capsys):
 
     # With existing config file
     output_dir = os.path.join(git_repo, 'results')
@@ -36,7 +36,7 @@ def test_existing_config(git_repo, test_args, capsys, workspace):
     config_example = {
     'catalogue_results': 'catalogue_results',
     'code': 'code',
-    'csv': 'null',
+    'csv': None,
     'input_data': '{}/data'.format(git_repo),
     'output_data': '{}/results'.format(git_repo)
     }
@@ -48,13 +48,13 @@ def test_existing_config(git_repo, test_args, capsys, workspace):
     captured = capsys.readouterr()
     config_file = os.path.join(git_repo,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
-    assert "Previous config file found with values:" in captured.out
+    assert "Previous valid config file found with values:" in captured.out
 
     assert output_dir in captured.out
     assert input_dir in captured.out
 
 
-def test_generate_new_config(git_repo, test_args, capsys, workspace):
+def test_generate_new_config(git_repo, test_args, capsys):
 
     os.chdir(git_repo)
     weird_args = argparse.Namespace(
@@ -77,5 +77,26 @@ def test_generate_new_config(git_repo, test_args, capsys, workspace):
     # assert string == 'hi'
     assert string == "catalogue_results: catalogue_results\ncode: {}\ncsv: null\ninput_data: {}/data_weird\noutput_data: {}/results\n".format(git_repo, git_repo, git_repo)
 
-def test_csv_file_format():
-    pass
+
+
+def test_config_validator(git_repo, capsys, good_config, bad_config1, bad_config2):
+
+    # validates good config file
+    valid_file = config_validator(good_config)
+    assert valid_file
+
+    # determines config file is invalid because it is not read as a dicionatry
+    not_dictionary = config_validator(bad_config2)
+    captured = capsys.readouterr()
+    assert 'Config error: yaml file cannot be read as a dictionary' in captured.out
+    assert not not_dictionary
+
+    # determines config file is valid because it fails all four sub validity conditions
+    invalid_file = config_validator(bad_config1)
+    captured = capsys.readouterr()
+    assert 'Config error: invalid keys present in the yaml file' in captured.out
+    assert 'Config error: csv argument has an invalid extension' in captured.out
+    assert 'Config error: config files are not all strings'in captured.out
+    assert True #placeholder for double key test
+
+    assert not invalid_file

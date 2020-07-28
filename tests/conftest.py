@@ -31,8 +31,20 @@ def fixture4():
     return os.path.join(_FIXTURES_DIR, "fixture4.csv")
 
 @pytest.fixture
-def fixture5():
-    return os.path.join(_FIXTURES_DIR, "fixture5.yaml")
+def good_config():
+    return os.path.join(_ROOT_DIR, 'good_config.yaml')
+
+@pytest.fixture
+def bad_config1():
+    return os.path.join(_ROOT_DIR, 'bad_config1.yaml')
+
+@pytest.fixture
+def bad_config2():
+    return os.path.join(_ROOT_DIR, 'bad_config2.yaml')
+
+
+
+
 
 @pytest.fixture
 def empty_hash():
