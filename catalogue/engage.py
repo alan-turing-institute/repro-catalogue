@@ -69,7 +69,7 @@ def git_query(repo_path, catalogue_dir, commit_changes=False):
             elif user_choice == "n" or user_choice == "no" or user_choice == "":
                 return False
             else:
-                print("Unrecognized response, leaving repository unchaged")
+                print("Unrecognized response, leaving repository unchanged")
                 return False
         else:
             return False
