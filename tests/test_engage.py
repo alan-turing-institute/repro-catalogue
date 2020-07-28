@@ -111,8 +111,9 @@ def test_git_query_new_repo(git_repo_no_commits, capsys, workspace, monkeypatch)
     # Select "yes" when asked whether to commit local changes
     # This should throw a sensible error, as a branch can't be generated yet (no initial commit)
     monkeypatch.setattr('builtins.input', lambda: "y")
-    git_query(git_repo_no_commits, "catalogue_results", True)   # Check for more informative error here
-
+    assert git_query(git_repo_no_commits, "catalogue_results", True) == False
+    captured = capsys.readouterr()
+    assert "Cannot create branch as there are no existing commits.\nMake a commit manually, then run catalogue engage again." in captured.out
 
 def test_engage(git_repo, test_args, capsys):
     """
