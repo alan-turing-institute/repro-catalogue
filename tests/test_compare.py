@@ -37,7 +37,7 @@ def test_compare_json(fixture1, fixture2, fixtures_dir, capsys, git_repo):
     captured = capsys.readouterr()
     assert "differ in 3 places" in captured.out
     assert "match in 0 places" in captured.out
-    assert "could not be compared in 6 places" in captured.out
+    assert "could not be compared in 9 places" in captured.out
 
     # provide 2 valid file paths for comparison
     setattr(args, "hashes", [fixture1, fixture2])
@@ -90,7 +90,7 @@ def test_compare_csv(fixture4, fixtures_dir, git_repo, workspace, capsys):
     captured = capsys.readouterr()
     assert "differ in 3 places" in captured.out
     assert "match in 0 places" in captured.out
-    assert "could not be compared in 7 places" in captured.out
+    assert "could not be compared in 10 places" in captured.out
 
     # provide 2 valid timestamps
     setattr(args, "hashes", ["20200430-172025", "20200430-172025"])

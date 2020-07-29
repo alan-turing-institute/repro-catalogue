@@ -32,15 +32,15 @@ def fixture4():
 
 @pytest.fixture
 def good_config():
-    return os.path.join(_ROOT_DIR, 'good_config.yaml')
+    return os.path.join(_FIXTURES_DIR, 'good_config.yaml')
 
 @pytest.fixture
 def bad_config1():
-    return os.path.join(_ROOT_DIR, 'bad_config1.yaml')
+    return os.path.join(_FIXTURES_DIR, 'bad_config1.yaml')
 
 @pytest.fixture
 def bad_config2():
-    return os.path.join(_ROOT_DIR, 'bad_config2.yaml')
+    return os.path.join(_FIXTURES_DIR, 'bad_config2.yaml')
 
 
 

@@ -1,0 +1,8 @@
+catalogue_results: catalogue_results
+code: code
+csv: badconfigs.xlsx
+input_data:
+  list_field: lists
+output_data: output_data
+output_data: repeated
+new_field: hi

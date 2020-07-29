@@ -108,6 +108,7 @@ def test_engage(git_repo, test_args, capsys):
     """
 
     # engage
+    os.chdir(git_repo)
     engage(test_args)
     lock_file = os.path.join("catalogue_results", ".lock")
     assert os.path.exists(lock_file)
@@ -118,6 +119,7 @@ def test_engage(git_repo, test_args, capsys):
     assert "Already engaged" in captured.out
 
     # call disengage - output_data path does not exist
+
     setattr(test_args, "output_data", "results")
     with pytest.raises(AssertionError):
         disengage(test_args)

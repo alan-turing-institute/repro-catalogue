@@ -23,6 +23,8 @@ def config_validator(config_loc):
         # check that any csv configurations have the .csv extension
         if 'csv' in config_dict.keys() and config_dict['csv'] is not None:
             filename = config_dict['csv']
+
+            #change to use os path
             extension = filename[-4:]
             if extension != '.csv':
                 valid = False
