@@ -9,6 +9,7 @@ from git import InvalidGitRepositoryError
 from catalogue.engage import engage, disengage, git_query
 
 
+
 def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     repo = git.Repo(git_repo)
@@ -108,7 +109,7 @@ def test_engage(git_repo, test_args, capsys):
     """
 
     # engage
-    os.chdir(git_repo)
+
     engage(test_args)
     lock_file = os.path.join("catalogue_results", ".lock")
     assert os.path.exists(lock_file)

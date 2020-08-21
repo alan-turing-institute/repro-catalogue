@@ -37,7 +37,7 @@ def config_validator(config_loc):
                 valid = False
                 print('Config error: config files are not all strings')
 
-        # check that there are no double keys
+        
 
     else:
         valid = False
