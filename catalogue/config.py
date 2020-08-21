@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 import os.path
 import csv
 import argparse
