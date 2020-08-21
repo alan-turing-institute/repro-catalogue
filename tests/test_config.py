@@ -11,33 +11,36 @@ from argparse import Namespace
 import yaml
 from catalogue.config import config, config_validator
 
-def test_no_config(git_repo, test_args, capsys):
+
+
+
+def test_no_config(test_args, capsys, tmpdir):
 
     #Ensure no file
-    config_file = os.path.join(git_repo,'catalogue_config.yaml')
+    config_file = os.path.join(tmpdir,'catalogue_config.yaml')
 
-    os.chdir(git_repo)
+    os.chdir(tmpdir)
     config(test_args)
     captured = capsys.readouterr()
     assert "No previous config file found" in captured.out
 
 
 
-def test_existing_config(git_repo, test_args, capsys):
+def test_existing_config(test_args, capsys, tmpdir):
 
     # With existing config file
-    output_dir = os.path.join(git_repo, 'results')
-    input_dir = os.path.join(git_repo, 'data')
+    output_dir = os.path.join(tmpdir, 'results')
+    input_dir = os.path.join(tmpdir, 'data')
     setattr(test_args, "output_data", output_dir)
-    os.chdir(git_repo)
+    os.chdir(tmpdir)
 
     #TODO: manually create something (e.g. a fixture) instead of just running it twice
     config_example = {
     'catalogue_results': 'catalogue_results',
     'code': 'code',
     'csv': None,
-    'input_data': '{}/data'.format(git_repo),
-    'output_data': '{}/results'.format(git_repo)
+    'input_data': '{}/data'.format(tmpdir),
+    'output_data': '{}/results'.format(tmpdir)
     }
 
     with open('catalogue_config.yaml', 'w', newline='') as yaml_file:
@@ -45,7 +48,7 @@ def test_existing_config(git_repo, test_args, capsys):
 
     config(test_args)
     captured = capsys.readouterr()
-    config_file = os.path.join(git_repo,'catalogue_config.yaml')
+    config_file = os.path.join(tmpdir,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
     assert "Previous valid config file found with values:" in captured.out
 
@@ -53,32 +56,33 @@ def test_existing_config(git_repo, test_args, capsys):
     assert input_dir in captured.out
 
 
-def test_generate_new_config(git_repo, test_args, capsys):
+def test_generate_new_config(tmpdir, test_args, capsys):
 
-    os.chdir(git_repo)
+    os.chdir(tmpdir)
     weird_args = argparse.Namespace(
         command = "engage",
         catalogue_results = "catalogue_results",
-        code = str(git_repo),
+        code = str(tmpdir),
         csv = None,
-        input_data = str(os.path.join(git_repo, "data_weird")),
-        output_data = str(os.path.join(git_repo, "results"))
+        input_data = str(os.path.join(tmpdir, "data_weird")),
+        output_data = str(os.path.join(tmpdir, "results"))
     )
     config(weird_args)
     captured = capsys.readouterr()
     assert "Now generating new config file 'catalogue_config.yaml'" in captured.out
     assert weird_args.input_data in captured.out
-    config_file = os.path.join(git_repo,'catalogue_config.yaml')
+    config_file = os.path.join(tmpdir,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
 
     with open(config_file, "r") as f:
         string = f.read()
     # assert string == 'hi'
-    assert string == "catalogue_results: catalogue_results\ncode: {}\ncsv: null\ninput_data: {}/data_weird\noutput_data: {}/results\n".format(git_repo, git_repo, git_repo)
+    assert string == "catalogue_results: catalogue_results\ncode: {}\ncsv: null\ninput_data: {}/data_weird\noutput_data: {}/results\n".format(tmpdir, tmpdir, tmpdir)
 
 
 
-def test_config_validator(git_repo, capsys, good_config, bad_config1, bad_config2):
+
+def test_config_validator(tmpdir, capsys, good_config, bad_config1, bad_config2):
 
     # validates good config file
     valid_file = config_validator(good_config)
@@ -96,6 +100,6 @@ def test_config_validator(git_repo, capsys, good_config, bad_config1, bad_config
     assert 'Config error: invalid keys present in the yaml file' in captured.out
     assert 'Config error: csv argument has an invalid extension' in captured.out
     assert 'Config error: config files are not all strings'in captured.out
-    assert True #placeholder for double key test
+
 
     assert not invalid_file
