@@ -6,6 +6,33 @@ import yaml
 from .utils import read_config_file, CONFIG_LOC, dictionary_printer
 
 def config_validator(config_loc):
+
+    """
+    Validate the format of a configuration file.
+
+    Applies the following checks, all of which are needed for the file to be
+    validated:
+
+    - config file can be read as a dictionary
+    - argument keys are a subset of (`--input_data`, `--code`, `--output_data`, `-csv`
+    `catalogue_results`)
+    - csv options specify a csv file
+    - argument values are all strings
+
+    config_loc specifies the location of the config file. Commands that involve
+    existing config files (such as the parser), will only use a validated config file.
+
+
+    Parameters:
+    ------------
+    config_loc : str
+
+    Returns:
+    ---------
+    Boolean indicating if a given config file is validated
+
+    """
+
     config_dict = read_config_file(config_loc)
 
     valid = True
@@ -42,14 +69,33 @@ def config_validator(config_loc):
         valid = False
         print('Config error: yaml file cannot be read as a dictionary')
 
-
     return valid
 
 
 
 def config(args):
 
-    #Check if a config file exists already. If a config file already exists, convert to dictionary and print values
+    """
+    The `catalogue engage` command.
+
+    The config command is used to generate config files that allow the user
+    to specify argument inputs in advance. These config arguments will be used
+    by the parser to parse the relevant arguments for the other commands.
+
+    The config command:
+        - Checks if there already exists a validated config file
+        - Creates a new config file using specified input options
+        - Saves the config file in the base repository under `catalogue_config.yaml`
+
+    Parameters:
+    ------------
+    args : obj
+        Command line input arguments (argparse.Namespace).
+
+    Returns:
+    ---------
+    None
+    """
 
     if not os.path.isfile(CONFIG_LOC):
         print('No previous config file found')
@@ -67,9 +113,6 @@ def config(args):
             print('Creating config file')
 
     print("Now generating new config file 'catalogue_config.yaml' with config file values:")
-
-    # write the new csv file. At the moment it uses test_dict, but in practice it will use the provided 'args'
-    # dictionary. 'args' is currently a Namespace file.
 
     cata_dict = {key: value for key, value in vars(args).items() if key not in ["command", "func"]}
 
