@@ -16,9 +16,6 @@ from catalogue.config import config, config_validator
 
 def test_no_config(test_args, capsys, tmpdir):
 
-    #Ensure no file
-    config_file = os.path.join(tmpdir,'catalogue_config.yaml')
-
     os.chdir(tmpdir)
     config(test_args)
     captured = capsys.readouterr()
