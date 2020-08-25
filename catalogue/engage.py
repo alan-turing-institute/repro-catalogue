@@ -98,9 +98,7 @@ def engage(args):
     ---------
     None
     """
-
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
-
 
     if git_query(args.code, args.catalogue_results, True):
         try:
@@ -112,7 +110,6 @@ def engage(args):
             hash_dict = ct.construct_dict(create_timestamp(), args)
             ct.store_hash(hash_dict, "", args.catalogue_results, ext="lock")
             print("'catalogue engage' succeeded. Proceed with analysis")
-
 
 def disengage(args):
     """
@@ -139,8 +136,6 @@ def disengage(args):
     ---------
     None
     """
-
-
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 
     timestamp = create_timestamp()

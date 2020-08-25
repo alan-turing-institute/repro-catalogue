@@ -1,7 +1,4 @@
-
 import pytest
-import os
-
 from catalogue.utils import check_paths_exists, create_timestamp, read_config_file, dictionary_printer
 
 
@@ -28,17 +25,13 @@ def test_check_paths_exists(test_args):
 
 def test_read_config_file(good_config):
 
-
     dict = read_config_file(good_config)
     assert dict['code'] == 'code'
     assert dict['input_data'] == 'input_data'
-    assert dict['csv'] == None
-
-
+    assert dict['csv'] is None
 
 def test_dictionary_printer(capsys):
     dict = {'a': 'hi', 'b' :'bye'}
     dictionary_printer(dict)
     captured = capsys.readouterr()
-
-    assert 'a:hi\nb:bye' in captured.out
+    assert 'a: hi\nb: bye' in captured.out

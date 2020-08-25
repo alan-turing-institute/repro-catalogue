@@ -1,8 +1,4 @@
-
 import os.path
-import csv
-import argparse
-from argparse import Namespace
 import yaml
 from .utils import read_config_file, CONFIG_LOC, dictionary_printer
 
@@ -33,17 +29,12 @@ def config_validator(config_loc):
         # check that all config file keys only have string values (i.e. no nested)
         values_list = list(config_dict.values())
         for value in values_list:
-            if not isinstance(value, str) and value is not None:
+            if not isinstance(value, (str, type(None))):
                 valid = False
                 print('Config error: config files are not all strings')
-
-        
-
     else:
         valid = False
         print('Config error: yaml file cannot be read as a dictionary')
-
-
     return valid
 
 
@@ -54,20 +45,18 @@ def config(args):
 
     if not os.path.isfile(CONFIG_LOC):
         print('No previous config file found')
-        print('Creating config file')
 
     else:
         print('Config file identified, checking validity')
-        config_validator(CONFIG_LOC)
         if config_validator(CONFIG_LOC):
             dict = read_config_file(CONFIG_LOC)
             print('Previous valid config file found with values:')
             dictionary_printer(dict)
         else:
             print('Identified config file is invalid')
-            print('Creating config file')
 
-    print("Now generating new config file 'catalogue_config.yaml' with config file values:")
+
+    print("Generating new config file 'catalogue_config.yaml' with config file values:")
 
     # write the new csv file. At the moment it uses test_dict, but in practice it will use the provided 'args'
     # dictionary. 'args' is currently a Namespace file.

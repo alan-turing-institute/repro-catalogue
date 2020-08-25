@@ -1,17 +1,10 @@
-
 import os
-import sys
 import git
 import glob
 import pytest
-
-import csv
-import argparse
 from argparse import Namespace
 import yaml
 from catalogue.config import config, config_validator
-
-
 
 
 def test_no_config(test_args, capsys, tmpdir):
@@ -34,7 +27,6 @@ def test_existing_config(test_args, capsys, tmpdir):
     setattr(test_args, "output_data", output_dir)
     os.chdir(tmpdir)
 
-    #TODO: manually create something (e.g. a fixture) instead of just running it twice
     config_example = {
     'catalogue_results': 'catalogue_results',
     'code': 'code',
@@ -51,7 +43,6 @@ def test_existing_config(test_args, capsys, tmpdir):
     config_file = os.path.join(tmpdir,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
     assert "Previous valid config file found with values:" in captured.out
-
     assert output_dir in captured.out
     assert input_dir in captured.out
 
@@ -59,7 +50,7 @@ def test_existing_config(test_args, capsys, tmpdir):
 def test_generate_new_config(tmpdir, test_args, capsys):
 
     os.chdir(tmpdir)
-    weird_args = argparse.Namespace(
+    weird_args = Namespace(
         command = "engage",
         catalogue_results = "catalogue_results",
         code = str(tmpdir),
@@ -69,7 +60,7 @@ def test_generate_new_config(tmpdir, test_args, capsys):
     )
     config(weird_args)
     captured = capsys.readouterr()
-    assert "Now generating new config file 'catalogue_config.yaml'" in captured.out
+    assert "Generating new config file 'catalogue_config.yaml' with config file values:" in captured.out
     assert weird_args.input_data in captured.out
     config_file = os.path.join(tmpdir,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
@@ -85,21 +76,16 @@ def test_generate_new_config(tmpdir, test_args, capsys):
 def test_config_validator(tmpdir, capsys, good_config, bad_config1, bad_config2):
 
     # validates good config file
-    valid_file = config_validator(good_config)
-    assert valid_file
+    assert config_validator(good_config)
 
     # determines config file is invalid because it is not read as a dicionatry
-    not_dictionary = config_validator(bad_config2)
+    assert not config_validator(bad_config2)
     captured = capsys.readouterr()
     assert 'Config error: yaml file cannot be read as a dictionary' in captured.out
-    assert not not_dictionary
 
     # determines config file is valid because it fails all four sub validity conditions
-    invalid_file = config_validator(bad_config1)
+    assert not config_validator(bad_config1)
     captured = capsys.readouterr()
     assert 'Config error: invalid keys present in the yaml file' in captured.out
     assert 'Config error: csv argument has an invalid extension' in captured.out
     assert 'Config error: config files are not all strings'in captured.out
-
-
-    assert not invalid_file

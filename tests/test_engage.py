@@ -8,8 +8,6 @@ import pytest
 from git import InvalidGitRepositoryError
 from catalogue.engage import engage, disengage, git_query
 
-
-
 def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     repo = git.Repo(git_repo)
@@ -109,7 +107,6 @@ def test_engage(git_repo, test_args, capsys):
     """
 
     # engage
-
     engage(test_args)
     lock_file = os.path.join("catalogue_results", ".lock")
     assert os.path.exists(lock_file)
@@ -120,7 +117,6 @@ def test_engage(git_repo, test_args, capsys):
     assert "Already engaged" in captured.out
 
     # call disengage - output_data path does not exist
-
     setattr(test_args, "output_data", "results")
     with pytest.raises(AssertionError):
         disengage(test_args)

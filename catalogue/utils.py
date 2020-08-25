@@ -1,6 +1,4 @@
-
 import os
-
 import yaml
 from datetime import datetime
 
@@ -23,11 +21,9 @@ def check_paths_exists(args):
     ---------
     Boolean indicating if all filepaths exist.
     """
-    print(args)
     paths = [value for key, value in vars(args).items()
             if key not in ["command", "func", "csv", "catalogue_results"]]
     path_checks = [os.path.exists(path) for path in paths]
-    print(path_checks)
     return all(path_checks)
 
 
@@ -56,6 +52,6 @@ def read_config_file(config_file):
     return config_data
 
 
-def dictionary_printer(dict):
-    for key, value in dict.items():
-        print('{}:{}'.format(key, value))
+def dictionary_printer(dict_to_print):
+    for key, value in dict_to_print.items():
+        print('{}: {}'.format(key, value))
