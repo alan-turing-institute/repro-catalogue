@@ -102,16 +102,16 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
 def test_git_query_new_repo(git_repo_no_commits, capsys, workspace, monkeypatch):
 
     # Check that git_query correctly determines that the repo is not currently clean
-    assert git_query(git_repo_no_commits, "catalogue_results") == False
+    assert not git_query(git_repo_no_commits, "catalogue_results")
 
     # Select "no" when asked whether to commit local changes; repo will still not be clean
     monkeypatch.setattr('builtins.input', lambda: "n")
-    assert git_query(git_repo_no_commits, "catalogue_results", True) == False
+    assert not git_query(git_repo_no_commits, "catalogue_results", True)
 
     # Select "yes" when asked whether to commit local changes
     # This should throw a sensible error, as a branch can't be generated yet (no initial commit)
     monkeypatch.setattr('builtins.input', lambda: "y")
-    assert git_query(git_repo_no_commits, "catalogue_results", True) == False
+    assert not git_query(git_repo_no_commits, "catalogue_results", True)
     captured = capsys.readouterr()
     assert "Cannot create a branch for this commit as there are no existing commits.\nMake a commit manually, then run catalogue engage again." in captured.out
 
