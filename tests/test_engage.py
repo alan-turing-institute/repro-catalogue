@@ -100,6 +100,9 @@ def test_git_query(git_repo, capsys, workspace, monkeypatch):
         git_query()
 
 def test_git_query_new_repo(git_repo_no_commits, capsys, workspace, monkeypatch):
+    """
+    Test that the engage command exits correctly when the code repo is new and contains uncommitted changes.
+    """
 
     # Check that git_query correctly determines that the repo is not currently clean
     assert not git_query(git_repo_no_commits, "catalogue_results")
