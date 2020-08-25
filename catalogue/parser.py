@@ -14,7 +14,7 @@ def main():
 
     This is the main function that is called when running the tool. The function parses
     the arguments supplied and calls the appropriate function (`engage`, `disengage`,
-    or `compare`). The details of each of these functions is described in
+    `compare` or `config`). The details of each of these functions is described in
     the appropriate docstrings.
 
     engage
@@ -34,7 +34,9 @@ def main():
     be a string, specifying the directory with the analysis results. The default for
     the `output_data` argument is `"results"` (relative to the current working directory).
     Optionally, to save results in a CSV file set `--csv` to the desired filename (will
-    create a new file or append to an existing one).
+    create a new file or append to an existing one). Result files are by default saved
+    under a seperate `catalogue_results` directory. Optionally to specify a different location
+    for the saved results, set `--catalogue_results` to the desired results directory.
 
     compare
     -------
@@ -49,6 +51,22 @@ def main():
 
     Note that if `compare` mode is used with 1 input, any use of flags to set data or code
     paths must come before the hash file due to how arguments are parsed.
+
+    config
+    ------
+    The `config` mode is used to generate config files that aid in the use of the library
+    by allowing the user to specify their input arguments in advance.
+    All of the earlier input arguments can be set (`--input_data`, `--code`, `--output_data`, `-csv`
+    `catalogue_results`). Any input arguments will be added to a config file located
+    in the base repository.
+
+    The parser will use the config file to parse arguments for all other modes.
+    The parser parses arguments using the following priority:
+    `specified arguments` > `config file arguments` (if the arguments exists) > `default arguments`.
+
+
+
+
     """
     parser = argparse.ArgumentParser(
         description="",
