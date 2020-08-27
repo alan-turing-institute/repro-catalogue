@@ -57,7 +57,8 @@ def test_generate_new_config(tmpdir, test_args, capsys):
     )
     config(weird_args)
     captured = capsys.readouterr()
-    assert "Generating new config file 'catalogue_config.yaml' with config file values:" in captured.out
+    assert "No previous config file found"
+    assert "Now generating new config file 'catalogue_config.yaml' with config file values:" in captured.out
     assert weird_args.input_data in captured.out
     config_file = os.path.join(tmpdir,'catalogue_config.yaml')
     assert os.path.isfile(config_file)
