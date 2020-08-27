@@ -99,5 +99,5 @@ def config(args):
 
 
     with open('catalogue_config.yaml', 'w', newline='') as yaml_file:
-        writer = yaml.dump(cata_dict, yaml_file)
+        yaml.dump(cata_dict, yaml_file)
         dictionary_printer(cata_dict)

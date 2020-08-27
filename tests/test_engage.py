@@ -158,7 +158,7 @@ def test_csv_with_ext(git_repo, test_args, capsys):
     os.rmdir("catalogue_results")
 
 def test_csv_without_ext(git_repo, test_args, capsys):
-    setattr(test_args, "csv", "catalog2ue_res")
+    setattr(test_args, "csv", "catalogue_res")
     engage(test_args)
     results_path = os.path.join(git_repo, "results")
     setattr(test_args, "output_data", results_path)
@@ -167,7 +167,6 @@ def test_csv_without_ext(git_repo, test_args, capsys):
     output_filecsv = glob.glob("catalogue_results/*.csv")
     output_filejson = glob.glob("catalogue_results/*.json")
     print(output_filecsv)
-
     print(output_filejson)
     assert len(output_filecsv) == 0
     assert len(output_filejson) == 1
