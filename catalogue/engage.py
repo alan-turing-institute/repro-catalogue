@@ -98,7 +98,6 @@ def engage(args):
     ---------
     None
     """
-    print(args)
     assert check_paths_exists(args), 'Not all provided filepaths exist.'
 
     if git_query(args.code, args.catalogue_results, True):

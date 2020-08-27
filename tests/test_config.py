@@ -6,15 +6,12 @@ from argparse import Namespace
 import yaml
 from catalogue.config import config, config_validator
 
-
 def test_no_config(test_args, capsys, tmpdir):
 
     os.chdir(tmpdir)
     config(test_args)
     captured = capsys.readouterr()
     assert "No previous config file found" in captured.out
-
-
 
 def test_existing_config(test_args, capsys, tmpdir):
 
@@ -43,7 +40,6 @@ def test_existing_config(test_args, capsys, tmpdir):
     assert output_dir in captured.out
     assert input_dir in captured.out
 
-
 def test_generate_new_config(tmpdir, test_args, capsys):
 
     os.chdir(tmpdir)
@@ -67,9 +63,6 @@ def test_generate_new_config(tmpdir, test_args, capsys):
         string = f.read()
     # assert string == 'hi'
     assert string == "catalogue_results: catalogue_results\ncode: {}\ncsv: null\ninput_data: {}/data_weird\noutput_data: {}/results\n".format(tmpdir, tmpdir, tmpdir)
-
-
-
 
 def test_config_validator(tmpdir, capsys, good_config, bad_config1, bad_config2):
 
