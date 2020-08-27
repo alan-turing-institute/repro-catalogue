@@ -85,5 +85,4 @@ def test_config_validator(tmpdir, capsys, good_config, bad_config1, bad_config2)
     assert not config_validator(bad_config1)
     captured = capsys.readouterr()
     assert 'Config error: invalid keys present in the yaml file' in captured.out
-    assert 'Config error: csv argument has an invalid extension' in captured.out
     assert 'Config error: config files are not all strings'in captured.out

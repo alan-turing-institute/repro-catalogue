@@ -1,5 +1,4 @@
 import os.path
-from argparse import Namespace
 import yaml
 from .utils import read_config_file, CONFIG_LOC, dictionary_printer
 
@@ -44,25 +43,12 @@ def config_validator(config_loc):
             valid = False
             print('Config error: invalid keys present in the yaml file')
 
-        # check that any csv configurations have the .csv extension
-        if 'csv' in config_dict.keys() and config_dict['csv'] is not None:
-            filename = config_dict['csv']
-
-            #change to use os path
-            extension = filename[-4:]
-            if extension != '.csv':
-                valid = False
-                print('Config error: csv argument has an invalid extension')
-
         # check that all config file keys only have string values (i.e. no nested)
         values_list = list(config_dict.values())
         for value in values_list:
             if not isinstance(value, str) and value is not None:
                 valid = False
                 print('Config error: config files are not all strings')
-
-        # check that there are no double keys
-
     else:
         valid = False
         print('Config error: yaml file cannot be read as a dictionary')
