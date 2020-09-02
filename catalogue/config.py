@@ -13,7 +13,6 @@ def config_validator(config_loc):
     - config file can be read as a dictionary
     - argument keys are a subset of (`--input_data`, `--code`, `--output_data`, `-csv`
     `catalogue_results`)
-    - csv options specify a csv file
     - argument values are all strings
 
     config_loc specifies the location of the config file. Commands that involve
