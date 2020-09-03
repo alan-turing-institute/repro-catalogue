@@ -147,5 +147,4 @@ They can rerun the analysis and use `catalogue` to check that the json they rece
 catalogue compare TIMESTAMP4.json
 ```
 
-Another way to share output is to share a copy of our directory to a colleague, including a copy of the configuration file. This will allow
-our colleague to freely run `catalogue engage` and `catalogue disengage` without worrying about getting the correct directory paths.
+Another way to share output is to share a copy of our user directory to a colleague, including separately, a copy of our configuration file. This will allow our colleague to freely run `catalogue engage` and `catalogue disengage` without worrying about getting the correct directory paths.

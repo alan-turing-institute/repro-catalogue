@@ -29,9 +29,9 @@ If you haven't used `git` before, it's an incredibly useful tool for tracking ch
 We'll give full explanations of the commands we need during the example, and if you want to find out more we highly recommend the [Software Carpentry `git` lesson](https://swcarpentry.github.io/git-novice/).
 
 We'll also make use of the command line to run `git`, Python, and the `catalogue` tool itself.
-We will explain the necessary commands as we go along, and you can check out chapters 1-3 of the [Software Carpentry Unix shell lesson](http://swcarpentry.github.io/shell-novice/) if you'd like more details on any of the commands we use.
-If you would rather create the folders and download files in an alternative way, feel free to do so :slightly_smiling_face:
+We will explain the necessary commands as we go along, and you can check out chapters 1-3 of the [Software Carpentry Unix shell lesson](http://swcarpentry.github.io/shell-novice/) if you'd like more details on any of the commands we use. This tutorial will primarily assume you are using the Unix command line. Some of the command line navigation commands will differ if you are using Windows. In such cases, we will note a windows equivalent command.
 
+If you would rather create the folders and download files in an alternative way, feel free to do so :slightly_smiling_face:
 
 And now, let's walk through our first example!
 
@@ -71,12 +71,18 @@ To download the data into our `birthweight-data` folder, run the following comma
 ```
 curl 'https://www.sheffield.ac.uk/polopoly_fs/1.886038!/file/Birthweight_reduced_R.csv' --output birthweight-data/Birthweight_reduced_R.csv
 ```
+
+:warning: **Windows equivalent:** Use double quotes surrounding the link instead
+
 or download the birthweight dataset in CSV format from the [website](https://www.sheffield.ac.uk/mash/statistics/datasets) and manually save it to the `birthweight-data` folder.
 
 If you open up the file in your preferred text editor, or view the output by running
 ```
 cat birthweight-data/Birthweight_reduced_R.csv
 ```
+:warning: **Windows equivalent:** use the `type` command instead of `cat`
+
+
 you'll see that there is one header row followed by 42 rows of data.
 As the file is a csv, we can see commas are used to separate each value in the dataset.
 
@@ -195,6 +201,9 @@ We can either print the file out at the command line with
 ```
 cat ../birthweight-results/descriptive-stats.csv
 ```
+
+:warning: **Windows equivalent:** use the `type` command instead of `cat`
+
 or by navigating to the `birthweight-results` folder in a file browser and opening the `descriptive-stats.csv` file from there.
 
 ### Using `catalogue`
@@ -253,6 +262,8 @@ You can open that file in a text editor, of view the contents with
 ```
 cat catalogue_results/20200518-184447.json
 ```
+:warning: **Windows equivalent:** use the `type` command instead of `cat`
+
 Note that the exact name of your file will be different as it will have been generated at a different time.
 
 This process is useful for making sure that we didn't unintentionally made changes to our input data or code as we ran our analysis pipeline.
@@ -310,12 +321,14 @@ We can see what `catalogue` has recorded by listing the files in the `catalogue_
 ```
 ls catalogue_results
 ```
+:warning: **Windows equivalent:** use the `dir` command instead of `ls`
+
 Two `.json` files will be listed, with different timestamps - these are from the two occasions we have used `catalogue`.
 We can compare the contents of the two files with
 ```
 catalogue compare catalogue_results/20200518-184447.json catalogue_results/20200519-141323.json
 ```
-Note that the timestamps used in your filenames will be different.
+Note that the timestamps used in your filenames will be different as they depend on the time you ran `disengage`.
 The comparison should yield
 ```
 NOTE we expect the timestamp hashes to differ.
@@ -348,7 +361,8 @@ Open up the data file (`birthweight-data/Birthweight_reduced_R.csv`), and add th
 2137,14,20,7.30,40,1,22,17,62,104,32,12,25,68,0,0,Normal
 ```
 Then save the file.
-We'll then run our pipeline using `catalogue` to track the files that are used and generated, and then compare with our previous run:
+We'll then run our pipeline using `catalogue` to track the files that are used and generated, and then compare with our directly previous run:
+
 ```
 catalogue engage --input_data ../birthweight-data --code .
 python birthweight-descriptive-stats.py
