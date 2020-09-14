@@ -34,45 +34,21 @@ Elsewhere, in our user directory, perhaps on another computer, things look like 
 │   └── TIMESTAMP4.json
 ```
 
-## Set up config
 
-We first set up a configuration file for the arguments that we will be using. The creation and sharing of configuration files
-increases the reproducibility of the overall analysis process.
-
-``bash
-catalogue config --input_data latest_data --code latest_code --output_data results/latest_results
-``
-
-This creates the following configuration file `catalogue_config.yaml` stored within the base user directory.
-
-```
-input_data: latest_data
-code:latest_code
-output_data: results/latest_results
-csv: None
-catalogue_results: catalogue_results
-```
-
-Note that we did not specify values for `--csv` or `--catalogue_results` and thus `config` takes the default values.
 
 ## Run analysis
 
 We've just made some minor tweaks to our code and now we want to run our analysis. Before we start running any of the scripts in our code folder, we run:
 
 ```bash
-catalogue engage
+catalogue engage --input_data latest_data --code latest_code
 ```
-
-Note that `engage` here will take in arguments based on our configuration file.
 
 Now we run whatever we need to perform our analysis. Immediately after finishing this we run:
 
 ```bash
-catalogue disengage
+catalogue disengage --input_data latest_data --output_data results/latest_results  --code latest_code
 ```
-
-Again, `disengage` will take in arguments based on configuration file.
-
 
 This will produce the following file:
 
@@ -147,4 +123,9 @@ They can rerun the analysis and use `catalogue` to check that the json they rece
 catalogue compare TIMESTAMP4.json
 ```
 
-Another way to share output is to share a copy of our user directory to a colleague, including separately, a copy of our configuration file. This will allow our colleague to freely run `catalogue engage` and `catalogue disengage` without worrying about getting the correct directory paths.
+### OPTIONAL: config
+
+The `config` command creates a configuration file with argument values for the previous commands.
+This helps ensure that the process of using `repro-catalogue` is itself reproducible. Another way to share output is to share a copy of our user directory to a colleague, including separately, a copy of our configuration file. This will allow our colleague to freely run `catalogue engage` and `catalogue disengage` without worrying about getting the correct directory paths.
+
+For a detailed example on using `config`, see the **Getting started with `catalogue`** section of this documentation.
