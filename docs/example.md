@@ -224,6 +224,17 @@ We can print out this config file at the command line within
 cat catalogue_config.yaml
 ```
 
+This should print out the following result:
+
+```
+catalogue_results: catalogue_results
+code: .
+csv: null
+input_data: ../birthweight-data
+output_data: ../birthweight-results
+
+```
+
 :warning: **Windows equivalent:** use the `type` command instead of `cat`
 
 We can now run `engage`:
@@ -233,7 +244,7 @@ catalogue engage
 ```
 
 Note that `engage` requires at least the `--input_data` and `--code` arguments. Here they are being provided by our configuration file.
-If you choose not to use a configuration file, you will need to manually input this like such:
+If you choose not to use a configuration file, you will need to manually input this as follows:
 
 ```
 catalogue engage --input_data ../birthweight-data --code .
@@ -260,7 +271,7 @@ catalogue disengage
 ```
 
 Disengaging requires we provide the location for `--input_data`, `--code` and `--output_data`. Here they are provided by our configuration file.
-If you choose not to use a configuration file, you will need to manually input this like such:
+If you choose not to use a configuration file, you will need to manually input this as follows:
 
 ```
 catalogue disengage --input_data ../birthweight-data --code . --output_data ../birthweight-results
