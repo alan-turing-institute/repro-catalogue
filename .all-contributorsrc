@@ -1,6 +1,7 @@
 {
   "files": [
-    "README.md", "docs/6.contributing.md"
+    "README.md",
+    "docs/6.contributing.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -61,7 +62,10 @@
       "contributions": [
         "review",
         "userTesting",
-        "doc"
+        "doc",
+        "code",
+        "design",
+        "ideas"
       ]
     },
     {
