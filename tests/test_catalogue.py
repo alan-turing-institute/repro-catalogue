@@ -8,21 +8,21 @@ import catalogue.catalogue as ct
 from git import InvalidGitRepositoryError, RepositoryDirtyError
 
 
-def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
+def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4, good_config, bad_config1, bad_config2):
 
     # valid path
     paths = ct.modified_walk(fixtures_dir)
-    assert paths == [fixture1, fixture2, fixture3, fixture4]
+    assert paths == [bad_config1, bad_config2, fixture1, fixture2, fixture3, fixture4, good_config]
 
     # use ingore_exts
     paths = ct.modified_walk(fixtures_dir, ignore_exts=[".json"])
-    assert paths == [fixture4]
+    assert paths == [bad_config1, bad_config2, fixture4, good_config]
 
     paths = ct.modified_walk(fixtures_dir, ignore_exts=[".json", ".csv"])
-    assert paths == []
+    assert paths == [bad_config1, bad_config2, good_config]
 
     paths = ct.modified_walk(fixtures_dir, ignore_exts=[".py"])
-    assert paths == [fixture1, fixture2, fixture3, fixture4]
+    assert paths == [bad_config1, bad_config2, fixture1, fixture2, fixture3, fixture4, good_config ]
 
     # use ignore_subdirs
     base_dir = "tests"
@@ -30,7 +30,7 @@ def test_modified_walk(fixtures_dir, fixture1, fixture2, fixture3, fixture4):
     paths = ct.modified_walk(base_dir, ignore_subdirs=[subdir])
     assert (all(
         [os.path.join(subdir, os.path.basename(fixture)) not in paths
-        for fixture in [fixture1, fixture2, fixture3, fixture4]]))
+        for fixture in [bad_config1, bad_config2, fixture1, fixture2, fixture3, fixture4, good_config]]))
 
     # change ignore_dot_files to False
     paths = ct.modified_walk(".", ignore_dot_files=False)
@@ -115,14 +115,18 @@ def test_hash_input(fixtures_dir, copy_fixtures_dir, fixture1, empty_hash):
     assert ct.hash_input(fixture1) != empty_hash
 
 
-def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixture3, fixture4, empty_hash):
+def test_hash_output(fixtures_dir, copy_fixtures_dir, fixture1, fixture2, fixture3, fixture4, empty_hash, bad_config1, bad_config2, good_config):
 
     # 1. input is a directory
     assert ct.hash_output(fixtures_dir) == {
         fixture1: ct.hash_file(fixture1).hexdigest(),
         fixture2: ct.hash_file(fixture2).hexdigest(),
         fixture3: ct.hash_file(fixture3).hexdigest(),
-        fixture4: ct.hash_file(fixture4).hexdigest()
+        fixture4: ct.hash_file(fixture4).hexdigest(),
+        good_config: ct.hash_file(good_config).hexdigest(),
+        bad_config1: ct.hash_file(bad_config1).hexdigest(),
+        bad_config2: ct.hash_file(bad_config2).hexdigest()
+
     }
     assert (sorted(ct.hash_output(fixtures_dir).values()) ==
             sorted(ct.hash_output(copy_fixtures_dir).values()))
@@ -195,12 +199,21 @@ def test_construct_dict(git_repo, git_hash, test_args):
     tmp_fixture2 = os.path.join(results_path, "fixture2.json")
     tmp_fixture3 = os.path.join(results_path, "fixture3.json")
     tmp_fixture4 = os.path.join(results_path, "fixture4.csv")
+    tmp_good_config = os.path.join(results_path, "good_config.yaml")
+    tmp_bad_config1 = os.path.join(results_path, "bad_config1.yaml")
+    tmp_bad_config2 = os.path.join(results_path, "bad_config2.yaml")
+
     assert hash_dict_2["output_data"] == {
         results_path: {
             tmp_fixture1: ct.hash_file(tmp_fixture1).hexdigest(),
             tmp_fixture2: ct.hash_file(tmp_fixture2).hexdigest(),
             tmp_fixture3: ct.hash_file(tmp_fixture3).hexdigest(),
-            tmp_fixture4: ct.hash_file(tmp_fixture4).hexdigest()
+            tmp_fixture4: ct.hash_file(tmp_fixture4).hexdigest(),
+            tmp_good_config: ct.hash_file(tmp_good_config).hexdigest(),
+            tmp_bad_config1: ct.hash_file(tmp_bad_config1).hexdigest(),
+            tmp_bad_config2: ct.hash_file(tmp_bad_config2).hexdigest(),
+
+
             }
         }
 

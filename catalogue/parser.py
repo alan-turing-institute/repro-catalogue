@@ -1,8 +1,11 @@
 import argparse
 import textwrap
-
+import os
 from .engage import engage, disengage
 from .compare import compare
+from .config import config, config_validator
+from .utils import read_config_file, CONFIG_LOC, dictionary_printer
+
 
 
 def main():
@@ -11,7 +14,7 @@ def main():
 
     This is the main function that is called when running the tool. The function parses
     the arguments supplied and calls the appropriate function (`engage`, `disengage`,
-    or `compare`). The details of each of these functions is described in
+    `compare` or `config`). The details of each of these functions is described in
     the appropriate docstrings.
 
     engage
@@ -31,7 +34,9 @@ def main():
     be a string, specifying the directory with the analysis results. The default for
     the `output_data` argument is `"results"` (relative to the current working directory).
     Optionally, to save results in a CSV file set `--csv` to the desired filename (will
-    create a new file or append to an existing one).
+    create a new file or append to an existing one). Result files are by default saved
+    under a seperate `catalogue_results` directory. Optionally to specify a different location
+    for the saved results, set `--catalogue_results` to the desired results directory.
 
     compare
     -------
@@ -46,10 +51,38 @@ def main():
 
     Note that if `compare` mode is used with 1 input, any use of flags to set data or code
     paths must come before the hash file due to how arguments are parsed.
+
+    config
+    ------
+    The `config` mode is used to generate config files that aid in the use of the library
+    by allowing the user to specify their input arguments in advance.
+    All of the earlier input arguments can be set (`--input_data`, `--code`, `--output_data`, `-csv`
+    `catalogue_results`). Any input arguments will be added to a config file located
+    in the base repository.
+
+    The parser will use the config file to parse arguments for all other modes.
+    The parser parses arguments using the following priority:
+    `specified arguments` > `config file arguments` (if the arguments exists) > `default arguments`.
+
+
+
+
     """
     parser = argparse.ArgumentParser(
         description="",
         formatter_class=argparse.RawTextHelpFormatter)
+
+    main_dict = {'input_data' : r'input_data',
+                     'code': r'code',
+                     'catalogue_results' : r'catalogue_results',
+                     'output_data': r'output_data',
+                     'csv' : None}
+
+    if os.path.isfile(CONFIG_LOC):
+        if config_validator(CONFIG_LOC):
+            config_dict = read_config_file(CONFIG_LOC)
+            for key in config_dict.keys():
+                main_dict[key] = config_dict[key]
 
     # declare shared arguments here
     common_parser = argparse.ArgumentParser(add_help=False)
@@ -59,7 +92,7 @@ def main():
         metavar='input_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containing the input data. Default value is data."),
-        default='data')
+        default=main_dict['input_data'])
 
     common_parser.add_argument(
         '--code',
@@ -68,7 +101,7 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the code directory." +
                              " The code directory must be a git repository, or must have a parent directory" +
                              " that is a git repository. Default is the current working directory."),
-        default='.')
+        default=main_dict['code'])
 
     common_parser.add_argument(
         '--catalogue_results',
@@ -77,7 +110,7 @@ def main():
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory where any" +
                             " files created by catalogue should be stored. It cannot be the same as the `code`" +
                             " directory. Default is catalogue_results."),
-        default='catalogue_results'
+        default=main_dict['catalogue_results']
     )
 
     output_parser = argparse.ArgumentParser(add_help=False)
@@ -87,7 +120,7 @@ def main():
         metavar='output_data',
         help=textwrap.dedent("This argument should be the path (full or relative) to the directory" +
                              " containing the analysis output data. Default value is results."),
-        default="results")
+        default= main_dict['output_data'])
 
     output_parser.add_argument(
         "--csv",
@@ -96,7 +129,7 @@ def main():
         help=textwrap.dedent("If output to CSV is desired, set this to the desired filename (the file " +
                              "will be placed in the 'catalogue_results' directory). Optional, default is None "  +
                              "for no CSV output"),
-        default=None)
+        default= main_dict['csv'])
 
     # create subparsers
     subparsers = parser.add_subparsers(dest="command")
@@ -115,6 +148,9 @@ def main():
         "disengage", parents=[common_parser, output_parser], description="", help=""
     )
     disengage_parser.set_defaults(func=disengage)
+
+    config_parser = subparsers.add_parser("config", parents=[common_parser, output_parser], description="", help="")
+    config_parser.set_defaults(func=config)
 
     args = parser.parse_args()
     assert args.code != args.catalogue_results, "The 'catalogue_results' and 'code' paths cannot be the same"

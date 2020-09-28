@@ -31,6 +31,22 @@ def fixture4():
     return os.path.join(_FIXTURES_DIR, "fixture4.csv")
 
 @pytest.fixture
+def good_config():
+    return os.path.join(_FIXTURES_DIR, 'good_config.yaml')
+
+@pytest.fixture
+def bad_config1():
+    return os.path.join(_FIXTURES_DIR, 'bad_config1.yaml')
+
+@pytest.fixture
+def bad_config2():
+    return os.path.join(_FIXTURES_DIR, 'bad_config2.yaml')
+
+
+
+
+
+@pytest.fixture
 def empty_hash():
     """
     Hash produced if no input is provided.

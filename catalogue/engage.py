@@ -111,7 +111,6 @@ def engage(args):
             ct.store_hash(hash_dict, "", args.catalogue_results, ext="lock")
             print("'catalogue engage' succeeded. Proceed with analysis")
 
-
 def disengage(args):
     """
     The `catalogue disengage` command.
@@ -155,8 +154,8 @@ def disengage(args):
         if 'input_data' in compare["matches"] and 'code' in compare["matches"]:
             # add engage timestamp to hash_dict
             hash_dict["timestamp"].update({"engage": lock_dict["timestamp"]["engage"]})
-            if args.csv is None:
-                ct.store_hash(hash_dict, timestamp, args.catalogue_results)
-            else:
+            if (args.csv is not None) and (os.path.splitext(args.csv)[1] == '.csv'):
                 ct.save_csv(hash_dict, timestamp, os.path.join(args.catalogue_results, args.csv))
+            else:
+                ct.store_hash(hash_dict, timestamp, args.catalogue_results)
         print_comparison(compare)
