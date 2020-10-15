@@ -1,8 +1,7 @@
-
 import os
 import json
 import git
-from git import InvalidGitRepositoryError
+from git import InvalidGitRepositoryError, BadName
 
 from . import catalogue as ct
 from .compare import compare_hashes, print_comparison
@@ -55,7 +54,11 @@ def git_query(repo_path, catalogue_dir, commit_changes=False):
             user_choice = input().strip().lower()
             if user_choice == "y" or user_choice == "yes":
                 timestamp = create_timestamp()
-                new_branch = repo.create_head("catalogue-" + timestamp)
+                try:
+                    new_branch = repo.create_head("catalogue-" + timestamp)
+                except BadName:
+                    print("\nCannot create a branch for this commit as there are no existing commits.\nMake a commit manually, then run catalogue engage again.\n")
+                    return False
                 new_branch.checkout()
                 changed_files = [ item.a_path for item in repo.index.diff(None) ]
                 changed_files.extend(untracked)

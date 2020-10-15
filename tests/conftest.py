@@ -68,6 +68,19 @@ def git_repo(workspace, fixtures_dir):
     return workspace.workspace
 
 @pytest.fixture
+def git_repo_no_commits(workspace, fixtures_dir):
+    """
+    Create git repository in temporary workspace (from pytest-shutil).
+    This repo has just been created, so there is no initial commit yet.
+    Copy in files from fixtures.
+    Return path to repo.
+    """
+    repo = git.Repo.init(workspace.workspace)
+    workspace.run("cp -R {} data/".format(fixtures_dir))
+    workspace.run("cp -R {} results/".format(fixtures_dir))
+    return workspace.workspace
+
+@pytest.fixture
 def git_hash(git_repo):
     """
     Git commit digest for the current HEAD commit of the temp git repository.
