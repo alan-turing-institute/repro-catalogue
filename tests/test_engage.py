@@ -8,7 +8,6 @@ import pytest
 from git import InvalidGitRepositoryError
 from catalogue.engage import engage, disengage, git_query
 
-
 def test_git_query(git_repo, capsys, workspace, monkeypatch):
 
     repo = git.Repo(git_repo)
@@ -124,7 +123,6 @@ def test_engage(git_repo, test_args, capsys):
 
     NOTE: the catalogue_results directory and files are created in CWD
     """
-
     # engage
     engage(test_args)
     lock_file = os.path.join("catalogue_results", ".lock")
@@ -160,3 +158,37 @@ def test_engage(git_repo, test_args, capsys):
     setattr(test_args, "input_data", "data")
     with pytest.raises(AssertionError):
         engage(test_args)
+
+def test_csv_with_ext(git_repo, test_args, capsys):
+    setattr(test_args, "csv", "catalogue_res.csv")
+
+    engage(test_args)
+    results_path = os.path.join(git_repo, "results")
+    setattr(test_args, "output_data", results_path)
+    setattr(test_args, 'command', 'disengage')
+    disengage(test_args)
+    output_file = glob.glob("catalogue_results/*.csv")
+    print(output_file)
+    assert len(output_file) == 1
+
+    # clean up: delete files created in CWD
+    os.remove(output_file[0])
+    os.rmdir("catalogue_results")
+
+def test_csv_without_ext(git_repo, test_args, capsys):
+    setattr(test_args, "csv", "catalogue_res")
+    engage(test_args)
+    results_path = os.path.join(git_repo, "results")
+    setattr(test_args, "output_data", results_path)
+    setattr(test_args, 'command', 'disengage')
+    disengage(test_args)
+    output_filecsv = glob.glob("catalogue_results/*.csv")
+    output_filejson = glob.glob("catalogue_results/*.json")
+    print(output_filecsv)
+    print(output_filejson)
+    assert len(output_filecsv) == 0
+    assert len(output_filejson) == 1
+
+    # clean up: delete files created in CWD
+    os.remove(output_filejson[0])
+    os.rmdir("catalogue_results")
